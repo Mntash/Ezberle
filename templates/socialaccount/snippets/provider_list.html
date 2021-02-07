@@ -1,0 +1,26 @@
+{% load socialaccount %}
+{% load static %}
+
+{% get_providers as socialaccount_providers %}
+
+{% for provider in socialaccount_providers %}
+{% if provider.id == "openid" %}
+{% for brand in provider.get_brands %}
+<li>
+  <a title="{{brand.name}}"
+     class="socialaccount_provider {{provider.id}} {{brand.id}}" 
+     href="{% provider_login_url provider.id openid=brand.openid_url process=process %}"
+     >{{brand.name}}</a>
+</li>
+{% endfor %}
+{% endif %}
+<li class="social">
+    <button style="border:none;background:none  ">
+    <a title="{{provider.name}}" class="socialaccount_provider {{provider.id}} gmail"
+    href="{% provider_login_url provider.id process=process scope=scope auth_params=auth_params %}">
+        <img src="{% static 'img/google.svg' %}" alt="Google" height=18px" width="18px" style="margin-right:0.25em">
+        Google ile giriş yap
+    </a>
+    </button>
+</li>
+{% endfor %}

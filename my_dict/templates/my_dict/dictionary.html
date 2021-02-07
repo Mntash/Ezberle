@@ -1,0 +1,446 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %} Sözlük {% endblock %}
+
+{% block content %}
+
+<div class="container-media" style="padding-top:48px">
+
+<div class="row">
+<div class="col-md-9 pd-neg">
+    <div class="search">
+        <div class="search-top d-flex justify-content-between">
+            <div class="d-flex">
+                <input title="Bir kelime arayın" class="srch-i" type="search" placeholder="Kelime ara.." onClick="this.setSelectionRange(0, this.value.length)" aria-autocomplete="none" autofocus>
+                <button class="srch-btn" type="submit"><i style="color:white;margin-left:3px;margin-top:3px" class="material-icons">search</i></button>
+                <div class="text-capitalize word align-self-center ml-2">
+                    <span>{{word|capfirst}}</span>
+                </div>
+            </div>
+            {% if data %}
+            {% if is_english %}
+            <div class="d-flex">
+                {% if audio %}
+                <div class="align-self-center mt-2">
+                    <i title="Dinle" style="cursor:pointer;" id="audio" class="material-icons">volume_up</i>
+                    <audio src="{{audio}}"></audio>
+                </div>
+                {% else %}
+                <div class="align-self-center mt-2">
+                    <i title="Ses mevcut değil" style="cursor:pointer;" class="material-icons ">volume_off</i>
+                    <audio src=""></audio>
+                </div>
+                {% endif %}
+                {% if user.is_authenticated %}
+                    {% if not word_exists %}
+                    <div title="Kelimeyi ekle" class="add-btn mx-1 position-relative align-self-center">
+                        <span class="plus"></span>
+                        <span class="minus"></span>
+                    </div>
+                    {% else %}
+                    <div title="Kelimeyi sil" class="add-btn mx-1 position-relative align-self-center change">
+                        <span class="plus"></span>
+                        <span class="minus"></span>
+                    </div>
+                    {% endif %}
+                {% else %}
+                <div title="Kelimeyi ekle" class="add-btn add-btn-modal mx-1 position-relative align-self-center">
+                    <div class="plus"></div>
+                    <div class="minus"></div>
+                </div>
+                {% endif %}
+            </div>
+            {% endif %}
+            {% endif %}
+        </div>
+
+        <div class="search-body">
+            {% if data %}
+                {% if is_english %}
+                <table class="table table-hover table-striped">
+                  <thead>
+                    <tr>
+                        <th class="category" scope="col">#</th>
+                        <th class="category" scope="col">Kategori</th>
+                        <th scope="col">İngilizce</th>
+                        <th scope="col">Türkçe</th>
+                        <th scope="col">Ekle</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                  {% for col in data %}
+                    <tr class="tr-first">
+                        <th class="category" scope="row">{{ forloop.counter }}</th>
+                        <td class="category">{{ col.0 }}</td>
+                        <td>{{ col.1 }}</td>
+                        <td id="tr-first"><a class="en-search" href="{% url 'dictionary' col.2 %}">{{ col.2 }}</a></td>
+                        <td><label style="display:none" for="{{forloop.counter}}"></label><input id="{{forloop.counter}}" type="checkbox" value="{{ col.2 }}" style="height:16px;width:16px"/></td>
+                    </tr>
+                  {% endfor %}
+                  </tbody>
+                </table>
+                {% if data_2 %}
+                <div style="padding:10px;background:#f0e5e5">
+                    <p>"{{word|capfirst}}" kelimesinin içinde geçtiği bazı kalıplar</p>
+                </div>
+                <table class="table table-hover table-striped">
+                  <thead>
+                    <tr>
+                        <th class="category" scope="col">#</th>
+                        <th class="category" scope="col">Kategori</th>
+                        <th scope="col">İngilizce</th>
+                        <th scope="col">Türkçe</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                  {% for col in data_2 %}
+                    <tr class="tr-first">
+                        <th class="category" scope="row">{{ forloop.counter }}</th>
+                        <td class="category">{{ col.0 }}</td>
+                        <td>{{ col.1 }}</td>
+                        <td><a class="en-search" href="{% url 'dictionary' col.2 %}">{{ col.2 }}</a></td>
+                    </tr>
+                  {% endfor %}
+                  </tbody>
+                </table>
+                {% endif %}
+
+                {% else %} <!-- is_turkish -->
+                <table class="table table-striped">
+                  <thead>
+                    <tr>
+                        <th class="category" scope="col">#</th>
+                        <th class="category" scope="col">Kategori</th>
+                        <th scope="col">Türkçe</th>
+                        <th scope="col">İngilizce</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                  {% for col in data %}
+                    <tr class="tr-first">
+                        <th class="category" scope="row">{{ forloop.counter }}</th>
+                        <td class="category">{{ col.0 }}</td>
+                        <td>{{ col.1 }}</td>
+                        <td><a class="tr-search" href="{% url 'dictionary' col.2 %}">{{ col.2 }}</a></td>
+                    </tr>
+                  {% endfor %}
+                  </tbody>
+                </table>
+            {% if data_2 %}
+                <div style="padding:10px;background:#f0e5e5">
+                    <p>"{{word|capfirst}}" kelimesinin içinde geçtiği bazı kalıplar veya cümle</p>
+                </div>
+                <table class="table table-hover table-striped">
+                  <thead>
+                    <tr>
+                        <th class="category" scope="col">#</th>
+                        <th class="category" scope="col">Kategori</th>
+                        <th scope="col">Türkçe</th>
+                        <th scope="col">İngilizce</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                  {% for col in data_2 %}
+                    <tr class="tr-first">
+                        <th class="category" scope="row">{{ forloop.counter }}</th>
+                        <td class="category">{{ col.0 }}</td>
+                        <td>{{ col.1 }}</td>
+                        <td><a class="en-search" href="{% url 'dictionary' col.2 %}">{{ col.2 }}</a></td>
+                    </tr>
+                  {% endfor %}
+                  </tbody>
+                </table>
+                {% else %}
+
+                {% endif %}
+                {% endif %}
+            {% elif error %}
+                <div style="padding:15px">
+                <p>"{{word|capfirst}}" hakkında herhangi bir sonuç bulunamadı.</p>
+                    {% if suggestion_exists %}
+                    <p style="border-bottom:thin solid">Şunları demek istemiş olabilir misiniz?</p>
+                    <ul>
+                        {% for word in suggestion_list %}
+                        <li style="list-style:inside">
+                            <a style="color:#00308F" href="{% url 'dictionary' word %}">{{word}}</a>
+                        </li>
+                        {% endfor %}
+                    </ul>
+                    {% endif %}
+                </div>
+            {% endif %}
+        </div>
+</div>
+</div>
+
+{% if user.is_authenticated %}
+<div id="history-big" class="col-lg-2 col-md-3" style="margin-left:-30px;">
+    <div class="history-head text-center">
+        <a href="" id="open_his" style="color:#544f4f;text-decoration:none">Geçmiş</a>
+    </div>
+    <div class="history-body d-none" style="min-height:530px">
+        <ul>
+        {% for history in last_20_history %}
+        <li><a style="color:#00308F" href="{% url 'dictionary' history.english %}">{{ history.english }}</a></li>
+        {% endfor %}
+        </ul>
+    </div>
+</div>
+
+<div id="history-sm" class="col-12 pd-neg mb-5">
+    <div class="history-head text-center">
+        Geçmiş
+    </div>
+    <div class="history-body-sm">
+        <ul class="row">
+        {% for history in last_20_history %}
+        <li class="col-sm-6 example-li"><a style="color:#00308F" href="{% url 'dictionary' history.english %}">{{ history.english }}</a></li>
+        {% endfor %}
+        </ul>
+    </div>
+</div>
+{% endif %}
+
+{% if data %}
+{% if is_english %}
+    <div class="col-sm-12 col-lg-6 pd-neg">
+        {% if examples %}
+        <div class="examples my-4" style="padding-bottom:5px;">
+            <span class="text-center">Örnek Cümleler</span>
+            <ul class="my-2">
+                {% for ex in examples %}
+                <li class="mx-2"><p class="ex">{{forloop.counter}}-) {{ex}}</p></li>
+                {% endfor %}
+            </ul>
+        </div>
+        {% else %}
+        <div class="examples my-4" style="padding-right:20px;padding-bottom:20px;padding-left:20px">
+            <span class="text-center" style="margin-bottom:21px">Örnek Cümleler</span>
+            <ul><li style="border: medium outset darkturquoise !important;
+                           padding:1%; background: aliceblue;"><p>Örnek cümle bulunamadı..</p>
+            </li></ul>
+        </div>
+        {% endif %}
+    </div>
+
+    <div class="container">
+        <div class="anto-syn">
+            <div class="row">
+                <div class="syn col-sm-6 mb-2 pd-neg">
+                    <span class="text-center">Eş Anlamlılar</span>
+                    <ul id="ul-syn">
+                        {% if synonyms %}
+                            {% for synonym in synonyms %}
+                                <li><a style="color:#00308F" href="{% url 'dictionary' synonym %}">{{ synonym }}</a></li>
+                            {% endfor %}
+                        {% else %}
+                            <li>Bu kelimenin eşanlamı bulunamadı.</li>
+                        {% endif %}
+                    </ul>
+                </div>
+                <div class="anto col-sm-6 pd-neg">
+                    <span class="text-center">Zıt Anlamlılar</span>
+                    <ul id="ul-anto">
+                        {% if antonyms %}
+                            {% for antonym in antonyms %}
+                                <li><a style="color:#00308F;" href="{% url 'dictionary' antonym %}">{{ antonym }}</a></li>
+                            {% endfor %}
+                        {% else %}
+                            <li>Bu kelimenin zıt anlamı bulunamadı.</li>
+                        {% endif %}
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endif %}
+{% endif %}
+
+{% if not user.is_authenticated %}
+<div class="modal fade" id="myModal">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+
+        <div class="modal-header">
+          <h6 class="modal-title">Bu özelliğe erişmek için lütfen giriş yapın..</h6>
+          <button style="outline:none" type="button" class="close" data-dismiss="modal">×</button>
+        </div>
+
+        <div class="modal-body">
+            <form class="login" action="/accounts/login/?next{{request.path}}" method="POST" style="display:grid">
+                {% csrf_token %}
+                Email Adresiniz:
+                <input type="email" name="login" required>
+                Kullanıcı Şifreniz:
+                <input type="password" name="password" required>
+                <div>
+                    <label for="id_remember">Beni hatırla: </label>
+                    <input class="cb-dict" type="checkbox" name="remember" id="id_remember">
+                </div>
+                <button id="login" type="submit" class="btn btn-success mt-2 w-50" style="justify-self:center">Giriş Yap</button>
+            </form>
+        </div>
+
+        <div class="modal-footer d-flex justify-content-between">
+            <div class="d-flex flex-column">
+                <a href="/accounts/password/reset">Şifrenizi mi unuttunuz?</a>
+                <a href="{% url 'account_signup' %}">Hesabınız mı yok?</a>
+            </div>
+            <div><button type="button" class="btn btn-danger" data-dismiss="modal">Kapat</button></div>
+        </div>
+      </div>
+    </div>
+</div>
+</div>
+{% endif %}
+</div>
+
+<script>
+$(function(){
+
+    function mediaCategory(x) {
+      if (x.matches) {
+        $(".category").hide()
+      } else {
+        $(".category").show()
+      }
+    }
+    var category = window.matchMedia("(max-width:413px)")
+    mediaCategory(category)
+    category.addListener(mediaCategory)
+
+    $(".srch-i").keypress(function(event){
+        var keycode = (event.keyCode ? event.keyCode : event.which);
+        if(keycode == '13'){
+            $(".srch-btn").click();
+        }
+    });
+
+    function mediaContainer(container) {
+      if (container.matches) {
+        $(".container-media").addClass("container")
+      } else {
+        $(".container-media").removeClass("container")
+      }
+    }
+    var container = window.matchMedia("(min-width:576px)")
+    mediaContainer(container)
+    container.addListener(mediaContainer)
+
+    function mediaSrch(x) {
+      if (x.matches) {
+        $(".srch-i").attr("placeholder", "Ara..");
+        $(".search").css("min-height", "0")
+      } else {
+        $(".srch-i").attr("placeholder", "Kelime ara..");
+      }
+    }
+    var srch = window.matchMedia("(max-width: 391px)")
+    mediaSrch(srch)
+    srch.addListener(mediaSrch)
+
+    $(".srch-i").keypress(function(event){
+        var keycode = (event.keyCode ? event.keyCode : event.which);
+        if(keycode == '13'){
+            $(".srch-btn").click();
+        }
+    });
+
+    $(".srch-i").keypress(function(event){
+        var keycode = (event.keyCode ? event.keyCode : event.which);
+        if(keycode == '13'){
+            $(".srch-btn").click();
+        }
+    });
+
+    $('p:contains("{{word}}")', document.body).each(function(){
+      $(this).html($(this).html().replace(
+            new RegExp("{{word}}", 'g'), '<span style="color:red; font-style:italic">'+ "{{word}}" +'</span>'
+      ));
+    });
+
+    $(".srch-btn").click(function(e) {
+        var input = $(this).prev().val().trim();
+        if (input.length > 0) {
+            window.location.pathname = "/sözlük/q=" + input + "/"
+        } else if (input==="") {
+            e.preventDefault()
+        }
+    })
+
+    $("#open_his").click(function(event) {
+        event.preventDefault(event);
+        $(".history-body").removeClass("d-none", 100);
+        $(".history-body").toggle("slide", { direction: "left" }, 300);
+    })
+
+    $("input:checkbox").click(function() {
+        var limit = $("input:checkbox:checked").length >= 3;
+        $("input:checkbox").not(":checked").attr("disabled",limit);
+    });
+
+    $("#audio").click(function() {
+        $("audio")[0].play()
+    });
+
+    var tr_list = [];
+
+    $(".add-btn").click(function() {
+        var plus = $(".plus");
+        var minus = $(".minus");
+        var word = "{{ word }}";
+        var audio = $("audio").attr("src");
+        var ths = $(this);
+        $(":checked").each(function () {
+            var value = $(this).attr("value").trim();
+            tr_list.push(value);
+        });
+
+        if ( !(ths.hasClass("add-btn-modal")) ) {
+            if (ths.hasClass('change')) {
+                ths.removeClass("change")
+                ths.css("background", "teal")
+            }
+            else {
+                ths.addClass("change")
+                ths.css("background", "brown")
+            }
+
+            if (tr_list.length === 0) {
+                tr_first = [];
+                tr_first.push($("#tr-first").first().text().trim());
+
+                $.ajax({
+                         type:"GET",
+                         url: "/word_cd",
+                         data:{
+                            "word_en": word,
+                            "tr": tr_first,
+                            "audio": audio
+                         }
+                      });
+                tr_list.splice(0,tr_list.length)
+
+            } else {
+                $.ajax({
+                     type:"GET",
+                     url: "/word_cd",
+                     data:{
+                        "word_en": word,
+                        "tr": tr_list,
+                        "audio": audio
+                     }
+                });
+                tr_list.splice(0,tr_list.length)
+            }
+        }
+        else {
+            $("#myModal").modal()
+        }
+    });
+
+});
+</script>
+
+{% endblock %}
+

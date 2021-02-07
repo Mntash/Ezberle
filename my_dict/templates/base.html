@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>{% block title %}{% endblock %}</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css" integrity="sha512-+4zCK9k+qNFUR5X+cKL9EIR+ZOhtIloNl9GIKS57V1MyNsYpYcUrUeQc9vNfzsWfV28IaLL3i96P9sdNyeRssA==" crossorigin="anonymous" />
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans&display=swap" rel="stylesheet">
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/smoothness/jquery-ui.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="//code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
+</head>
+<body>
+<header class="fixed-top">
+  <div class="icon-bar">
+      <a href="{% url 'home' %}" style="text-decoration:none; font-size:24px !important; text-align: center !important;">Ezberle</a>
+      <div id="menu">
+          <input type="checkbox" id="hi">
+          <label class="menu" for="hi">
+              <div class="bar"></div>
+              <div class="bar"></div>
+              <div class="bar"></div>
+          </label>
+      </div>
+    {% if request.path == '/' %}
+      <a class="aktif" href="{% url 'home' %}"><i class="fa fa-home"></i><span class="brand d-none">Ana Sayfa</span></a>
+    {% else %}
+      <a href="{% url 'home' %}"><i class="fa fa-home"></i><span class="brand d-none">Ana Sayfa</span></a>
+    {% endif %}
+    {% if 'sözlük' in request.path %}
+      <a class="aktif" href="{% url 'pre-dictionary' %}"><i class="fa fa-search"></i><span class="brand d-none">Sözlük</span></a>
+    {% else %}
+      <a href="{% url 'pre-dictionary' %}"><i class="fa fa-search"></i><span class="brand d-none">Sözlük</span></a>
+    {% endif %}
+    {% if 'kelime_listesi' in request.path %}
+      <a class="aktif" href="{% url 'word-list' %}"><i class="fas fa-clipboard-list"></i><span class="brand d-none">Liste</span></a>
+    {% else %}
+      <a href="{% url 'word-list' %}"><i class="fas fa-clipboard-list"></i><span class="brand d-none">Liste</span></a>
+    {% endif %}
+  {% if user.is_authenticated %}
+    {% if 'accounts/logout' in request.path %}
+      <a class="aktif" href="{% url 'account_logout' %}"><i class="fas fa-sign-out-alt"></i><span class="brand d-none">Çıkış Yap</span></a>
+    {% else %}
+      <a href="{% url 'account_logout' %}"><i class="fas fa-sign-out-alt"></i><span class="brand d-none">Çıkış Yap</span></a>
+    {% endif %}
+  {% else %}
+    {% if 'accounts/login' in request.path %}
+      <a class="aktif" href="{% url 'account_login' %}"><i class="fas fa-sign-in-alt"></i><span class="brand d-none">Giriş Yap</span></a>
+    {% elif 'accounts/password' in request.path %}
+      <a class="aktif" href="{% url 'account_login' %}"><i class="fas fa-sign-in-alt"></i><span class="brand d-none">Giriş Yap</span></a>
+    {% elif 'accounts/signup/' in request.path %}
+      <a class="aktif" href="{% url 'account_login' %}"><i class="fas fa-sign-in-alt"></i><span class="brand d-none">Giriş Yap</span></a>
+    {% else %}
+      <a href="{% url 'account_login' %}"><i class="fas fa-sign-in-alt"></i><span class="brand d-none">Giriş Yap</span></a>
+    {% endif %}
+  {% endif %}
+  </div>
+</header>
+
+<button onclick="topFunction()" id="scroll2top" title="Yukarıya çık"><i class="fas fa-arrow-circle-up"></i></button>
+
+{% block content %}
+{% endblock %}
+<script>
+
+    mybutton = document.getElementById("scroll2top")
+    window.onscroll = function() {scrollFunction()}
+    function scrollFunction() {
+      if (document.body.scrollTop > 30 || document.documentElement.scrollTop > 30) {
+        mybutton.style.display = "block"
+      } else {
+        mybutton.style.display = "none"
+      }
+    }
+
+    function topFunction() {
+      document.body.scrollTop = 0
+      document.documentElement.scrollTop = 0
+    }
+
+    $(".menu").click(function() {
+        $(".icon-bar").children().slice(2,6).toggleClass("d-none")
+        if ( ($(".brand").hasClass("d-none")) ) {
+            $(".brand").removeClass("d-none")
+        }
+        if ( $(".brand").css("display", "none") ) {
+            $(".brand").css("display", "")
+        }
+    })
+
+    function mediaHeader(x) {
+      if (x.matches) {
+        $(".icon-bar").children().slice(0,2).css("width", "50%")
+        $(".icon-bar").children().slice(2,6).css("width", "100%")
+        $("#menu").removeClass("d-none")
+        $(".icon-bar").children().slice(2,6).addClass("d-none")
+      } else {
+        if ( !($(".brand").hasClass("d-none")) ) {
+            $(".brand").addClass("d-none")
+        }
+        $(".icon-bar").children().css("width", "20%")
+        $("#menu").addClass("d-none")
+        $(".icon-bar").children().slice(2,6).removeClass("d-none")
+        $('#hi').prop('checked', false);
+      }
+    }
+
+    $(".icon-bar a").hover(function() {
+        if ( $(".brand").hasClass("d-none") ) {
+            $(this).children(".brand").fadeToggle().toggleClass("d-none")
+        } else if ( $(this).children(".brand").css("display", "none") ) {
+            $(this).children(".brand").css("display", "")
+        }
+    })
+
+    var header = window.matchMedia("(max-width:576px)")
+    mediaHeader(header)
+    header.addListener(mediaHeader)
+</script>
+</body>
+</html>

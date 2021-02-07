@@ -1,0 +1,1078 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %} Ezberle {% endblock %}
+
+{% block content %}
+<div class="container container-home" style="padding-top:48px">
+    <div style="text-align:center;background:oldlace">
+        <span class="font-weight-bold" style="color:#00308F; font-size:xx-large;">Günün Kelimeleri</span>
+    </div>
+
+<div class="row">
+
+    <div class="col-lg-3 col-sm-6 text-center pd-neg">
+        <div class="card">
+            <div><a href="https://www.merriam-webster.com/"><img class="card-img-top mx-auto" src="{% static 'img/merriam.png' %}" alt="Merriam Webster"></a></div>
+            <div class="card-body position-relative home-card">
+                <a href="{% url 'dictionary' word_1 %}"><h4 id="word_1" class="card-title font-weight-bold" style="color:#00308F">{{ word_1 }}</h4></a>
+                {% if tur_1.0 %}
+                    <h5 class="h5" id="tur_1">({{ tur_1.0 }})</h5>
+                {% else %}
+                    <h5>(...)</h5>
+                {% endif %}
+                <div class="home-card-footer">
+                {% if tur_1.1 %}
+                    <div><span class="audio"><i title="Dinle" data-id="1" style="cursor:pointer" class="material-icons">volume_up</i></span></div>
+                    <audio id="au-1" src="{{tur_1.1}}"></audio>
+                {% else %}
+                    <div><span class="audio"><i title="Ses mevcut değil" style="cursor:pointer" class="material-icons">volume_off</i></span></div>
+                    <audio src=""></audio>
+                {% endif %}
+                {% if tur_1.0 %}
+                    {% if user.is_authenticated %}
+                        {% if mer_exists %}
+                            <div><button data-id="1" class="btn add-btn-home btn-success">Kelime Eklendi</button></div>
+                        {% else %}
+                            <div><button data-id="1" class="btn add-btn-home btn-info">Kelimeyi Ekle</button></div>
+                        {% endif %}
+                    {% else %}
+                        <div><button data-id="modal" class="btn add-btn-home btn-info">Kelimeyi Ekle</button></div>
+                    {% endif %}
+                {% else %}
+                        {% if user.is_authenticated %}
+                        {% if mer_exists %}
+                            <div><button data-id="1" class="btn add-btn-home btn-success disabled not-allowed" disabled>Kelime Eklendi</button></div>
+                        {% else %}
+                            <div><button data-id="1" class="btn add-btn-home btn-info disabled not-allowed" disabled>Kelimeyi Ekle</button></div>
+                        {% endif %}
+                    {% else %}
+                        <div><button data-id="modal" class="btn add-btn-home btn-info disabled not-allowed" disabled>Kelimeyi Ekle</button></div>
+                    {% endif %}
+                {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-3 col-sm-6 text-center pd-neg">
+        <div class="card">
+            <div><a href="https://www.oxfordlearnersdictionaries.com/"><img class="card-img-top mx-auto" src="{% static 'img/oxford.jfif' %}" alt="Oxford Dictionary"></a></div>
+            <div class="card-body home-card">
+                <a href="{% url 'dictionary' word_2 %}"><h4 id="word_2" class="card-title font-weight-bold" style="color:#00308F">{{ word_2 }}</h4></a>
+                {% if tur_2.0 %}
+                    <h5 class="h5" id="tur_2">({{ tur_2.0 }})</h5>
+                {% else %}
+                    <h5>(...)</h5>
+                {% endif %}
+                <div class="home-card-footer">
+                {% if tur_2.1 %}
+                    <div><span class="audio"><i title="Dinle" data-id="2" style="cursor:pointer;" class="material-icons">volume_up</i></span></div>
+                    <audio id="au-2" src="{{tur_2.1}}"></audio>
+                {% else %}
+                    <div><span class="audio"><i title="Ses mevcut değil" style="cursor:pointer;" class="material-icons">volume_up</i></span></div>
+                    <audio src=""></audio>
+                {% endif %}
+                {% if tur_2.0 %}
+                    {% if user.is_authenticated %}
+                        {% if ox_exists %}
+                            <div><button data-id="2" class="btn add-btn-home btn-success">Kelime Eklendi</button></div>
+                        {% else %}
+                            <div><button data-id="2" class="btn add-btn-home btn-info">Kelimeyi Ekle</button></div>
+                        {% endif %}
+                    {% else %}
+                        <div><button data-id="modal" class="btn add-btn-home btn-info">Kelimeyi Ekle</button></div>
+                    {% endif %}
+                {% else %}
+                    {% if user.is_authenticated %}
+                        {% if ox_exists %}
+                            <div><button data-id="2" class="btn add-btn-home btn-success disabled not-allowed" disabled>Kelime Eklendi</button></div>
+                        {% else %}
+                            <div><button data-id="2" class="btn add-btn-home btn-info disabled not-allowed" disabled>Kelimeyi Ekle</button></div>
+                        {% endif %}
+                    {% else %}
+                        <div><button data-id="modal" class="btn add-btn-home btn-info disabled not-allowed" disabled>Kelimeyi Ekle</button></div>
+                    {% endif %}
+                {% endif %}
+                    </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-3 col-sm-6 text-center pd-neg">
+        <div class="card">
+            <div><a href="https://www.collinsdictionary.com/"><img class="card-img-top mx-auto" src="{% static 'img/collins.jpg' %}" alt="Collinsdictionary"></a></div>
+            <div class="card-body home-card">
+                <a href="{% url 'dictionary' word_3 %}"><h4 id="word_3" class="card-title font-weight-bold" style="color:#00308F">{{ word_3 }}</h4></a>
+                {% if tur_3.0 %}
+                <h5 class="h5" id="tur_3">({{ tur_3.0 }})</h5>
+                {% else %}
+                <h5>(...)</h5>
+                {% endif %}
+                <div class="home-card-footer">
+                {% if tur_3.1 %}
+                <div><span class="audio"><i title="Dinle" data-id="3" style="cursor:pointer;" class="material-icons">volume_up</i></span></div>
+                <audio id="au-3" src="{{tur_3.1}}"></audio>
+                {% else %}
+                <div><span class="audio"><i title="Ses mevcut değil" style="cursor:pointer;" class="material-icons">volume_off</i></span></div>
+                <audio src=""></audio>
+                {% endif %}
+                {% if tur_3.0 %}
+                    {% if user.is_authenticated %}
+                        {% if col_exists %}
+                            <div><button data-id="3" class="btn add-btn-home btn-success">Kelime Eklendi</button></div>
+                        {% else %}
+                            <div><button data-id="3" class="btn add-btn-home btn-info">Kelimeyi Ekle</button></div>
+                        {% endif %}
+                    {% else %}
+                        <div><button data-id="modal" class="btn add-btn-home btn-info">Kelimeyi Ekle</button></div>
+                    {% endif %}
+                {% else %}
+                    {% if user.is_authenticated %}
+                        {% if col_exists %}
+                            <div><button data-id="3" class="btn add-btn-home btn-success disabled not-allowed" disabled>Kelime Eklendi</button></div>
+                        {% else %}
+                            <div><button data-id="3" class="btn add-btn-home btn-info disabled not-allowed" disabled>Kelimeyi Ekle</button></div>
+                        {% endif %}
+                    {% else %}
+                        <div><button data-id="modal" class="btn add-btn-home btn-info disabled not-allowed" disabled>Kelimeyi Ekle</button></div>
+                    {% endif %}
+                {% endif %}
+                    </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-3 col-sm-6 text-center pd-neg">
+        <div class="card">
+            <div><a href="https://dictionary.cambridge.org/"><img class="card-img-top mx-auto" src="{% static 'img/cambridge.png' %}" alt="Merriam Webster"></a></div>
+            <div class="card-body position-relative home-card">
+                <a href="{% url 'dictionary' word_4 %}"><h4 id="word_4" class="card-title font-weight-bold" style="color:#00308F">{{ word_4 }}</h4></a>
+                {% if tur_4.0 %}
+                    <h5 class="h5" id="tur_4">({{ tur_4.0 }})</h5>
+                {% else %}
+                    <h5>(...)</h5>
+                {% endif %}
+                <div class="home-card-footer">
+                {% if tur_4.1 %}
+                    <div><span class="audio"><i title="Dinle" data-id="4" style="cursor:pointer" class="material-icons">volume_up</i></span></div>
+                    <audio id="au-4" src="{{tur_4.1}}"></audio>
+                {% else %}
+                    <div><span class="audio"><i title="Ses mevcut değil" style="cursor:pointer" class="material-icons">volume_off</i></span></div>
+                    <audio src=""></audio>
+                {% endif %}
+                {% if tur_4.0 %}
+                    {% if user.is_authenticated %}
+                        {% if camb_exists %}
+                            <div><button data-id="4" class="btn add-btn-home btn-success">Kelime Eklendi</button></div>
+                        {% else %}
+                            <div><button data-id="4" class="btn add-btn-home btn-info">Kelimeyi Ekle</button></div>
+                        {% endif %}
+                    {% else %}
+                        <div><button data-id="modal" class="btn add-btn-home btn-info">Kelimeyi Ekle</button></div>
+                    {% endif %}
+                {% else %}
+                    {% if user.is_authenticated %}
+                        {% if camb_exists %}
+                            <div><button data-id="4" class="btn add-btn-home btn-success disabled not-allowed" disabled>Kelime Eklendi</button></div>
+                        {% else %}
+                            <div><button data-id="4" class="btn add-btn-home btn-info disabled not-allowed" disabled>Kelimeyi Ekle</button></div>
+                        {% endif %}
+                    {% else %}
+                        <div><button data-id="modal" class="btn add-btn-home btn-info disabled not-allowed" disabled>Kelimeyi Ekle</button></div>
+                    {% endif %}
+                {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<div class="row">
+    <div class="col-lg-3 col-md-3 col-sm-6 pd-neg">
+        <div class="card card-note">
+            <div class="text-center"><span class="title-home title-last">Son Eklenenler</span></div>
+            <div class="overflow-auto">
+                <ul class="mt-5 ml-2 title-last-ul">
+                    {% for word in last_words %}
+                    <li><a style="color:#00308F" href="{% url 'dictionary' word.english %}">{{ word.english }}</a></li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-3 col-md-3 col-sm-6 pd-neg">
+        <div class="card card-note position-relative">
+            <div class="text-center"><span class="title-home title-star">Favoriler</span></div>
+            <div class="overflow-auto">
+                <ul class="mt-5 ml-2 ul-starred">
+                    {% for word in rstrwords %}
+                    <li><a style="color:#00308F" href="{% url 'dictionary' word %}">{{ word }}</a></li>
+                    {% endfor %}
+                </ul>
+            </div>
+            {% if starred_words|length > 9 %}
+            <i class="material-icons refresh transform ref-str">refresh</i>
+            {% endif %}
+        </div>
+    </div>
+
+    <div class="col-lg-3 col-md-3 col-sm-6 mb-md-0 mb-xl-0 mb-5 pd-neg">
+        <div class="card card-note card-note-unl position-relative">
+            <div class="text-center"><span class="title-home title-unl">Öğreneceklerim</span></div>
+            <div class="overflow-auto">
+                <ul class="mt-5 ml-2 ul-unlearned">
+                    {% for word in rulwords %}
+                    <li><a style="color:#00308F" href="{% url 'dictionary' word %}">{{ word }}</a></li>
+                    {% endfor %}
+                </ul>
+            </div>
+            {% if rulwords|length > 9 %}
+            <i class="material-icons refresh transform ref-unl">refresh</i>
+            {% endif %}
+            {% if user.is_authenticated %}
+            <button class="quiz quiz-unl" type="button" data-toggle="modal" data-target="#quiz-unl">Quiz</button>
+            {% else %}
+            <button class="quiz quiz-modal" type="button">Quiz</button>
+            {% endif %}
+        </div>
+    </div>
+
+    <div class="col-lg-3 col-md-3 col-sm-6 mb-xl-0 mb-5 pd-neg">
+        <div class="card card-note card-note-l position-relative">
+            <div class="text-center"><span class="title-home title-l">Öğrendiklerim</span></div>
+            <div class="overflow-auto">
+                <ul class="mt-5 ml-2 ul-learned">
+                    {% for word in rlwords %}
+                    <li><a style="color:#00308F" href="{% url 'dictionary' word %}">{{ word }}</a></li>
+                    {% endfor %}
+                </ul>
+            </div>
+            {% if rlwords|length > 9 %}
+            <i class="material-icons refresh transform ref-l">refresh</i>
+            {% endif %}
+            {% if user.is_authenticated %}
+            <button class="quiz quiz-l" type="button" data-toggle="modal" data-target="#quiz-l">Quiz</button>
+            {% else %}
+            <button class="quiz quiz-modal" type="button">Quiz</button>
+            {% endif %}
+        </div>
+    </div>
+
+</div>
+
+</div>
+
+<div class="modal fade" id="quiz-unl" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+      <div class="modal-content modal-content-unl py-4 px-sm-4 px-2" style="height:550px;background:teal !important">
+        <h5 class="title-quiz">Günlük Quiz</h5>
+        <button type="button" class="close close-quiz" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+        <div class="modal-body modal-body-unl" style="background: beige">
+          <div class="modal-body-content modal-body-content-unl">
+            <div>Günlük Quiz'e hoş geldin.</div>
+            <div>Lütfen quiz'e başlamak için aşağıdan sorulmasını istediğin kelime sayısını seç.</div>
+            <div style="font-size:small">
+              Not:
+              <ul style="list-style:initial !important;padding-left:15px !important;">
+                <li>
+                  Sorulacak olan kelimeler "öğreneceğim kelimeler" listesinden rasgele olarak seçilecektir.
+                  Bu yüzden listende gerektiği kadar kelime olduğundan emin ol.
+                  Listende şu an {{count_unl.0}} adet kelime var.
+                </li>
+                <li>
+                  Bu quiz günde 1 defaya mahsustur ve her gün öğlen 12:00'de sıfırlanır.
+                </li>
+              </ul>
+            </div>
+            <div class="mt-4">
+              <label for="quiz-unl">Kelime sayısı:</label>
+              <select id="sel-unl" class="custom-select" name="Kelime sayısı">
+                <option value="3">3</option>
+                <option value="5">5</option>
+                <option value="7">7</option>
+              </select>
+              <button class="btn btn-success start start-unl">Başlat</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+</div>
+
+<div class="modal fade" id="quiz-l" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+      <div class="modal-content modal-content-l py-4 px-sm-4 px-2" style="height:550px;background:teal !important">
+        <h5 class="title-quiz">Günlük Quiz</h5>
+        <button type="button" class="close close-quiz" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+        <div class="modal-body modal-body-l">
+          <div class="modal-body-content modal-body-content-l">
+            <div>Günlük Quiz'e hoş geldin.</div>
+            <div>Lütfen quiz'e başlamak için aşağıdan sorulmasını istediğin kelime sayısını seç.</div>
+            <div style="font-size:small">
+              Not:
+              <ul style="list-style:initial !important;padding-left:15px !important;">
+                <li>
+                  Sorulacak olan kelimeler "öğrendiğim kelimeler" listesinden rasgele olarak seçilecektir.
+                  Bu yüzden listende gerektiği kadar kelime olduğundan emin ol.
+                  Listende şu an {{count_l.0}} adet kelime var.
+                </li>
+                <li>
+                  Vereceğin cevaplar kelimeyi listeye kaydettiğin Türkçe kelimelerden olmak zorundadır. Aksi halde
+                  Türkçesi doğru olsa dahi kabul edilmez.
+                </li>
+                <li>
+                  Her soruyu çözmek için 2 hakkın mevcut.
+                </li>
+                <li>
+                  Bu quiz günde 1 defaya mahsustur ve her gün öğlen 12:00'de sıfırlanır.
+                </li>
+              </ul>
+            </div>
+            <div class="mt-4">
+              <label for="sel-l">Kelime sayısı:</label>
+              <select id="sel-l" class="custom-select" name="Kelime sayısı">
+                <option value="3">3</option>
+                <option value="5">5</option>
+                <option value="7">7</option>
+              </select>
+              <button class="btn btn-success start start-l">Başlat</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+</div>
+
+{% if not user.is_authenticated %}
+<div class="modal fade" id="login-modal">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header" style="background: beige">
+          <h6 class="modal-title">Bu özelliğe erişmek için lütfen giriş yapın..</h6>
+          <button style="outline:none" type="button" class="close" data-dismiss="modal">×</button>
+        </div>
+        <div class="modal-body">
+            <form class="login" action="{% url 'account_login' %}" method="POST" style="display:grid">
+                {% csrf_token %}
+                Email Adresiniz:
+                <input type="email" name="login" required>
+                Kullanıcı Şifreniz:
+                <input type="password" name="password" required>
+                <div>
+                    <label for="id_remember">Beni hatırla: </label>
+                    <input type="checkbox" name="remember" id="id_remember">
+                </div>
+                <button id="login" type="submit" class="btn btn-success mt-2 w-50" style="justify-self:center">Giriş Yap</button>
+            </form>
+        </div>
+        <div class="modal-footer d-flex justify-content-between" style="background: beige">
+            <div class="d-flex flex-column">
+                <a href="/accounts/password/reset">Şifrenizi mi unuttunuz?</a>
+                <a href="{% url 'account_signup' %}">Hesabınız mı yok?</a>
+            </div>
+            <div><button type="button" class="btn btn-danger" data-dismiss="modal">Kapat</button></div>
+        </div>
+      </div>
+    </div>
+</div>
+{% endif %}
+
+
+
+<script>
+$(function(){
+
+    $(".quiz").click(function(){
+        if ($(this).hasClass("quiz-modal")) {
+            $("#login-modal").modal()
+        }
+    })
+
+    $(".start").click(function() {
+        if(!event.detail || event.detail == 1) {
+            var ths = $(this)
+            if (ths.hasClass("start-unl")) {
+                var value = $("#sel-unl").val()
+                var correct_list = []
+                var incorrect_list = []
+                var count = "{{count_unl.0}}"
+                var gap = value - count
+                if ( gap > 0 ) {
+                  if ( !($(".quiz-err-unl").length) ) {
+                    ths.after(`<div class="quiz-err-unl mt-1">* Quiz\'e başlamak için listenizde yeterince kelime bulunmuyor.
+                                En az ${gap} kelime daha ekleyip tekrar deneyin.</div>`)
+                  } else {
+                    $(".quiz-err-unl").remove()
+                    ths.after(`<div class="quiz-err-unl mt-1">* Quiz\'e başlamak için listenizde yeterince kelime bulunmuyor.
+                                En az ${gap} kelime daha ekleyip tekrar deneyin.</div>`)
+                  }
+                } else {
+                  $(".quiz-err-unl").remove()
+                  $(".modal-body-content-unl").fadeOut()
+                  setTimeout(function() {
+                    $(".modal-body-content-unl").empty()
+                    $(".modal-body-unl").append(`<div class="book book-unl">
+                                                <div class="inner">
+                                                  <div class="left"></div>
+                                                  <div class="middle"></div>
+                                                  <div class="right"></div>
+                                                </div>
+                                                <ul>
+                                                  <li></li>
+                                                  <li></li>
+                                                  <li></li>
+                                                  <li></li>
+                                                  <li></li>
+                                                  <li></li>
+                                                  <li></li>
+                                                  <li></li>
+                                                  <li></li>
+                                                  <li></li>
+                                                  <li></li>
+                                                  <li></li>
+                                                  <li></li>
+                                                  <li></li>
+                                                  <li></li>
+                                                  <li></li>
+                                                  <li></li>
+                                                  <li></li>
+                                                </ul>
+                                              </div>`)
+                  }, 500);
+                  setTimeout(function() {
+                    $(".book-unl").remove()
+                    $(".modal-body-content-unl").append(
+                      `<div role="tabpanel">
+                        <ul class="nav nav-tabs nav-tabs-unl" role="tablist"></ul>
+                        <div class="tab-content tab-content-unl"></div>
+                       </div>
+                        <div class="modal fade confirm" id="confirm" tabindex="-1" role="dialog" aria-labelledby="confirm" aria-hidden="true">
+                            <div class="modal-dialog modal-dialog-centered" id="confirm" role="document">
+                                <div class="modal-content quiz-finish-modal">
+                                  <div id="confirm-text" class="modal-body" style="background:aliceblue"></div>
+                                  <div class="modal-footer" style="background:aliceblue;padding:0 !important">
+                                    <button id="confirm-no" type="button" class="btn btn-secondary" data-dismiss="confirm">İptal</button>
+                                    <button id="confirm-ok" type="button" class="btn btn-primary">Onayla</button>
+                                  </div>
+                                </div>
+                            </div>
+                        </div>`)
+                    for (i=1;i<=value;i++) {
+                      $(".nav-tabs-unl").append(`<li role="presentation" class="nav-item">
+                                                <a class="nav-link" href="#unl-${i}" aria-controls="unl-${i}" role="tab" data-toggle="tab">${i}</a>
+                                                </li>`)
+                      $(".tab-content-unl").append(`<div role="tabpanel" class="tab-pane" id="unl-${i}"></div>`)
+                    }
+                    $(".nav-tabs-unl").find("a").first().click()
+                    $.ajax({
+                        type:"GET",
+                        url: "{% url 'random-refresh' %}",
+                        data: {
+                            'random-unlearned': value,
+                        },
+                        dataType: 'json',
+                        success: function(data) {
+                            var tr_list = data.tr_list
+                            if (data.random_unlearned) {
+                                data.random_unlearned.map(function(i) {
+                                    var index = data.random_unlearned.indexOf(i) + 1
+                                    var tr = tr_list[index-1]
+                                    $(`#unl-${index}`).append(`<div class="quiz-question mb-2">
+                                    <button class="chevron-left"><i class="fas fa-chevron-left chevron"></i></button>
+                                    <span class="word-unl">${i}</span>
+                                    <button class="chevron-right"><i class="fas fa-chevron-right chevron"></i></button>
+                                    </div>
+                                    <div class="d-flex justify-content-center hak")>0/2</div>
+                                    <div class="d-flex justify-content-center mb-2 mt-1">
+                                        <input type="text" class="quiz-answer mr-1" placeholder="Min. 2 harf" onClick="this.setSelectionRange(0, this.value.length)">
+                                        <div class="quiz-result"></div>
+                                    </div>
+                                    <div class="d-flex justify-content-center">
+                                        <button class="btn btn-info btn-sm mr-2 quiz-dk-unl">Bilmiyorum</button>
+                                        <button class="btn btn-success btn-sm quiz-answer-btn">Cevapla</button>
+                                    </div>
+                                    <div class="mt-3 quiz-tr">
+                                        <div>Türkçeleri:</div>
+                                        <div><ul style="list-style:initial !important;margin-left:18px"></ul></div>
+                                    </div>
+                                    <button class="btn btn-danger quiz-finish" data-toggle="confirmation">Quiz'i bitir</button>`)
+                                })
+                                $(document).on("click", ".quiz-dk-unl", function() {
+                                    let ths = $(this)
+                                    var no = parseInt($("a.active").text())
+                                    var tr = tr_list[no-1]
+                                    $(this).parent().prev().find(".quiz-answer").addClass("box-dk").prop("placeholder", "")
+                                    .prop("disabled", "true").css("opacity", ".65")
+                                    $(this).prop("disabled", "true").addClass("disabled").addClass("not-allowed")
+                                    $(this).next().prop("disabled", "true").addClass("disabled").addClass("not-allowed")
+                                    var word = $(this).parent().prevAll().eq(2).find("span").text()
+                                    incorrect_list.push(word)
+                                    tr.map(function(i){
+                                        ths.parent().next().find("ul").hide().append(`<li>${i}</li>`).fadeIn()
+                                    })
+                                    $(this).parent().prev().find(".quiz-result").append(`
+                                        <svg version="1.1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 130.2 130.2">
+                                        <line class="path line" fill="none" stroke="#D06079" stroke-width="6"
+                                         stroke-linecap="round" stroke-miterlimit="10" x1="34.4" y1="37.9" x2="87.8" y2="92.3"/>
+                                        <line class="path line" fill="none" stroke="#D06079" stroke-width="6"
+                                         stroke-linecap="round" stroke-miterlimit="10" x1="89.8" y1="38" x2="34.4" y2="92.2"/>
+                                        </svg>`)
+                                    setTimeout(function() {
+                                        ths.parent().prev().find(".quiz-result").find(".path").removeClass("path")
+                                    }, 1000);
+                                })
+                                $(document).on("keypress", ".quiz-answer", function() {
+                                    var keycode = (event.keyCode ? event.keyCode : event.which)
+                                    if(keycode == '13'){
+                                        $(this).parent().next().find(".quiz-answer-btn").click()
+                                    }
+                                })
+                                $(document).on("click", ".quiz-answer-btn", function() {
+                                    var count = parseInt($(this).parent().prev().prev().text().split("/")[0])
+                                    var no = parseInt($("a.active").text())
+                                    let ths = $(this)
+                                    var tr = tr_list[no-1]
+                                    if (ths.parent().prev().find(".quiz-answer").val().length >= 2) {
+                                        if (tr_list[no-1].includes( ths.parent().prev().find(".quiz-answer").val().toLowerCase() )) {
+                                            if ( ths.parent().prev().find(".quiz-answer").hasClass("shake") ) {
+                                                ths.parent().prev().find(".quiz-answer").removeClass("shake")
+                                            }
+                                            ths.parent().prev().find(".quiz-answer").css("border-color", "green")
+                                            .css("box-shadow", "0px 0px 5px green").prop("disabled", "true").css("opacity", ".65")
+                                            ths.prop("disabled", "true").addClass("disabled").addClass("not-allowed")
+                                            ths.prev().prop("disabled", "true").addClass("disabled").addClass("not-allowed")
+                                            var word = ths.parent().prevAll().eq(2).find("span").text()
+                                            correct_list.push(word)
+                                            tr.map(function(i){
+                                                ths.parent().next().find("ul").hide().append(`<li>${i}</li>`).fadeIn()
+                                            })
+                                            ths.parent().prev().find(".quiz-result").append(`
+                                            <svg version="1.1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 130.2 130.2">
+                                            <polyline class="path check" fill="none" stroke="#73AF55" stroke-width="6"
+                                            stroke-linecap="round" stroke-miterlimit="10" points="100.2,40.2 51.5,88.8 29.8,67.5 "/>
+                                            </svg>`)
+                                            setTimeout(function() {
+                                                ths.parent().prev().find(".quiz-result").find(".path").removeClass("path")
+                                            }, 1000);
+                                        } else {
+                                            if (count==0) {
+                                                ths.parent().prev().find(".quiz-answer").addClass("shake box-dk")
+                                                ths.parent().prev().prev().html("1/2")
+                                                setTimeout(function() {
+                                                    ths.parent().prev().find(".quiz-answer").removeClass("shake")
+                                                }, 300);
+                                            } else if (count==1) {
+                                                if ( ths.parent().prev().find(".quiz-answer").hasClass("shake") ) {
+                                                    ths.parent().prev().find(".quiz-answer").removeClass("shake")
+                                                }
+                                                ths.prop("disabled", "true").addClass("disabled").addClass("not-allowed")
+                                                ths.prev().prop("disabled", "true").addClass("disabled").addClass("not-allowed")
+                                                ths.parent().prev().prev().html("2/2")
+                                                ths.parent().prev().find(".quiz-answer").prop("disabled", "true").css("opacity", ".65")
+                                                var word = $(this).parent().prevAll().eq(2).find("span").text()
+                                                incorrect_list.push(word)
+                                                tr.map(function(i){
+                                                    ths.parent().next().find("ul").hide().append(`<li>${i}</li>`).fadeIn()
+                                                })
+                                                ths.parent().prev().find(".quiz-result").append(`
+                                                    <svg version="1.1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 130.2 130.2">
+                                                    <line class="path line" fill="none" stroke="#D06079" stroke-width="6"
+                                                     stroke-linecap="round" stroke-miterlimit="10" x1="34.4" y1="37.9" x2="87.8" y2="92.3"/>
+                                                    <line class="path line" fill="none" stroke="#D06079" stroke-width="6"
+                                                     stroke-linecap="round" stroke-miterlimit="10" x1="89.8" y1="38" x2="34.4" y2="92.2"/>
+                                                    </svg>`)
+                                                setTimeout(function() {
+                                                    ths.parent().prev().find(".quiz-result").find(".path").removeClass("path")
+                                                }, 1000);
+                                            }
+                                        }
+                                    } else {
+                                        ths.parent().prev().find(".quiz-answer").addClass("shake")
+                                        setTimeout(function() {
+                                            ths.parent().prev().find(".quiz-answer").removeClass("shake")
+                                        }, 300);
+                                    }
+                                })
+                                $(document).on("click", ".quiz-finish", function() {
+                                    if ((incorrect_list.length + correct_list.length) < value) {
+                                        $("#confirm-text").html("Cevaplamadığın sorular var.<br> Quiz'i bitirmek istediğine emin misin?")
+                                        $("#confirm").modal()
+                                    } else {
+                                        $("#confirm-text").html("Quiz'i bitirmek istediğine emin misin?")
+                                        $("#confirm").modal()
+                                    }
+                                })
+                                $(document).on("click", "#confirm-ok", function(e) {
+                                    e.preventDefault()
+                                    $(".nav-tabs-unl").append(`<li role="presentation" class="nav-item">
+                                                                <a class="nav-link" href="#unl-res" aria-controls="unl-res" role="tab" data-toggle="tab"><i style="font-size:x-large" class="fas fa-list-ol"></i></a>
+                                                               </li>`)
+                                    $(".tab-content-unl").append(`<div role="tabpanel" class="tab-pane" id="unl-res">
+                                                                    <h3 class="text-center">Sonuçlar</h1>
+                                                                    ${value} adet sorudan ${correct_list.length} tanesini doğru yaptın.
+                                                                    <ol style="padding-inline-start: 5px; margin-top:.5rem" id="res-unl"></ol>
+                                                                  </div>`)
+                                    for (i=0;i<value;i++) {
+                                        word = $(document).find(".word-unl").eq(i).text()
+                                        if (correct_list.includes(word)) {
+                                            $("#res-unl").append(`<li data-id="${i}">
+                                                                  <a href="" data-id="res-word" style="color:green">${word}</a> &mdash;
+                                                                  <a class="a-hover" href="/sözlük/q=${word}/" target="_blank" style="color:black">Sözlükte arat</a> &mdash;
+                                                                  <a class="a-hover" href="/kelime_listesi/q=${word}/" target="_blank" style="color:black">Listende görüntüle</a>
+                                                                  </li>`)
+                                        } else {
+                                            $(".quiz-dk-unl").eq(i).click()
+                                            $("#res-unl").append(`<li data-id="${i}">
+                                                                  <a href="" data-id="res-word" style="color:red">${word}</a> &mdash;
+                                                                  <a class="a-hover" href="/sözlük/q=${word}/" target="_blank" style="color:black">Sözlükte arat</a> &mdash;
+                                                                  <a class="a-hover" href="/kelime_listesi/q=${word}/" target="_blank" style="color:black">Listende görüntüle</a>
+                                                                  </li>`)
+                                        }
+                                    }
+                                    $(".quiz-finish").remove()
+                                    $("a[data-id='res-word']").click(function(e){
+                                        e.preventDefault()
+                                        var target = $(this).parent().attr("data-id")
+                                        $("a.nav-link").eq(target).click()
+                                    })
+                                    $("#confirm").modal("hide")
+                                    setTimeout(function() {
+                                        $("a[aria-controls='unl-res']").click()
+                                    }, 4);
+                                })
+                                $(document).on("click", "#confirm-no", function(e) {
+                                    e.preventDefault()
+                                    $("#confirm").modal("hide")
+                                })
+                                $(".quiz-question:first").find(".chevron-left").remove()
+                                $(".quiz-question:last").find(".chevron-right").remove()
+                            }
+                        }
+                    })
+                    $(".modal-body-content-unl").fadeIn()
+                  }, 4500)
+                }
+            } else if (ths.hasClass("start-l")) {
+                var value = $("#sel-l").val()
+                var correct_list = []
+                var incorrect_list = []
+                var count = "{{count_l.0}}"
+                var gap = value - count
+                if ( gap > 0 ) {
+                  if ( !($(".quiz-err-l").length) ) {
+                    ths.after(`<div class="quiz-err-l mt-1">* Quiz\'e başlamak için listenizde yeterince kelime bulunmuyor.
+                                En az ${gap} kelime daha ekleyip tekrar deneyin.</div>`)
+                  } else {
+                    $(".quiz-err-l").remove()
+                    ths.after(`<div class="quiz-err-l mt-1">* Quiz\'e başlamak için listenizde yeterince kelime bulunmuyor.
+                                En az ${gap} kelime daha ekleyip tekrar deneyin.</div>`)
+                  }
+                } else {
+                  $(".quiz-err-l").remove()
+                  $(".modal-body-content-l").fadeOut()
+                  setTimeout(function() {
+                    $(".modal-body-content-l").empty()
+                    $(".modal-body-l").append(`<div class="book book-l">
+                                                <div class="inner">
+                                                  <div class="left"></div>
+                                                  <div class="middle"></div>
+                                                  <div class="right"></div>
+                                                </div>
+                                                <ul>
+                                                  <li></li>
+                                                  <li></li>
+                                                  <li></li>
+                                                  <li></li>
+                                                  <li></li>
+                                                  <li></li>
+                                                  <li></li>
+                                                  <li></li>
+                                                  <li></li>
+                                                  <li></li>
+                                                  <li></li>
+                                                  <li></li>
+                                                  <li></li>
+                                                  <li></li>
+                                                  <li></li>
+                                                  <li></li>
+                                                  <li></li>
+                                                  <li></li>
+                                                </ul>
+                                              </div>`)
+                  }, 500);
+                  setTimeout(function() {
+                    $(".book-l").remove()
+                    $(".modal-body-content-l").append(
+                      `<div role="tabpanel">
+                        <ul class="nav nav-tabs nav-tabs-l" role="tablist"></ul>
+                        <div class="tab-content tab-content-l"></div>
+                       </div>
+                        <div class="modal fade confirm" id="confirm" tabindex="-1" role="dialog" aria-labelledby="confirm" aria-hidden="true">
+                            <div class="modal-dialog modal-dialog-centered" id="confirm" role="document">
+                                <div class="modal-content quiz-finish-modal">
+                                  <div id="confirm-text" class="modal-body" style="background:aliceblue"></div>
+                                  <div class="modal-footer" style="background:aliceblue;padding:0 !important">
+                                    <button id="confirm-no" type="button" class="btn btn-secondary" data-dismiss="confirm">İptal</button>
+                                    <button id="confirm-ok" type="button" class="btn btn-primary">Onayla</button>
+                                  </div>
+                                </div>
+                            </div>
+                        </div>`)
+                    for (i=1;i<=value;i++) {
+                      $(".nav-tabs-l").append(`<li role="presentation" class="nav-item">
+                                                <a class="nav-link" href="#l-${i}" aria-controls="l-${i}" role="tab" data-toggle="tab">${i}</a>
+                                                </li>`)
+                      $(".tab-content-l").append(`<div role="tabpanel" class="tab-pane" id="l-${i}"></div>`)
+                    }
+                    $(".nav-tabs-l").find("a").first().click()
+                    $.ajax({
+                        type:"GET",
+                        url: "{% url 'random-refresh' %}",
+                        data: {
+                            'random-learned': value,
+                        },
+                        dataType: 'json',
+                        success: function(data) {
+                            var tr_list = data.tr_list
+                            if (data.random_learned) {
+                                data.random_learned.map(function(i) {
+                                    var index = data.random_learned.indexOf(i) + 1
+                                    var tr = tr_list[index-1]
+                                    $(`#l-${index}`).append(`<div class="quiz-question mb-2">
+                                    <button class="chevron-left"><i class="fas fa-chevron-left chevron"></i></button>
+                                    <span class="word-l">${i}</span>
+                                    <button class="chevron-right"><i class="fas fa-chevron-right chevron"></i></button>
+                                    </div>
+                                    <div class="d-flex justify-content-center hak")>0/2</div>
+                                    <div class="d-flex justify-content-center mb-2 mt-1">
+                                        <input type="text" class="quiz-answer mr-1" placeholder="Min. 2 harf" onClick="this.setSelectionRange(0, this.value.length)">
+                                        <div class="quiz-result"></div>
+                                    </div>
+                                    <div class="d-flex justify-content-center">
+                                        <button class="btn btn-info btn-sm mr-2 quiz-dk-l">Bilmiyorum</button>
+                                        <button class="btn btn-success btn-sm quiz-answer-btn">Cevapla</button>
+                                    </div>
+                                    <div class="mt-3 quiz-tr">
+                                        <div>Türkçeleri:</div>
+                                        <div><ul style="list-style:initial !important;margin-left:18px"></ul></div>
+                                    </div>
+                                    <button class="btn btn-danger quiz-finish" data-toggle="confirmation">Quiz'i bitir</button>`)
+                                })
+                                $(document).on("click", ".quiz-dk-l", function() {
+                                    let ths = $(this)
+                                    var no = parseInt($("a.active").text())
+                                    var tr = tr_list[no-1]
+                                    $(this).parent().prev().find(".quiz-answer").addClass("box-dk").prop("placeholder", "")
+                                    .prop("disabled", "true").css("opacity", ".65")
+                                    $(this).prop("disabled", "true").addClass("disabled").addClass("not-allowed")
+                                    $(this).next().prop("disabled", "true").addClass("disabled").addClass("not-allowed")
+                                    var word = $(this).parent().prevAll().eq(2).find("span").text()
+                                    incorrect_list.push(word)
+                                    tr.map(function(i){
+                                        ths.parent().next().find("ul").hide().append(`<li>${i}</li>`).fadeIn()
+                                    })
+                                    $(this).parent().prev().find(".quiz-result").append(`
+                                        <svg version="1.1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 130.2 130.2">
+                                        <line class="path line" fill="none" stroke="#D06079" stroke-width="6"
+                                         stroke-linecap="round" stroke-miterlimit="10" x1="34.4" y1="37.9" x2="87.8" y2="92.3"/>
+                                        <line class="path line" fill="none" stroke="#D06079" stroke-width="6"
+                                         stroke-linecap="round" stroke-miterlimit="10" x1="89.8" y1="38" x2="34.4" y2="92.2"/>
+                                        </svg>`)
+                                    setTimeout(function() {
+                                        ths.parent().prev().find(".quiz-result").find(".path").removeClass("path")
+                                    }, 1000);
+                                })
+                                $(document).on("keypress", ".quiz-answer", function() {
+                                    var keycode = (event.keyCode ? event.keyCode : event.which)
+                                    if(keycode == '13'){
+                                        $(this).parent().next().find(".quiz-answer-btn").click()
+                                    }
+                                })
+                                $(document).on("click", ".quiz-answer-btn", function() {
+                                    var count = parseInt($(this).parent().prev().prev().text().split("/")[0])
+                                    var no = parseInt($("a.active").text())
+                                    let ths = $(this)
+                                    var tr = tr_list[no-1]
+                                    if (ths.parent().prev().find(".quiz-answer").val().length >= 2) {
+                                        if (tr_list[no-1].includes( ths.parent().prev().find(".quiz-answer").val().toLowerCase() )) {
+                                            if ( ths.parent().prev().find(".quiz-answer").hasClass("shake") ) {
+                                                ths.parent().prev().find(".quiz-answer").removeClass("shake")
+                                            }
+                                            ths.parent().prev().find(".quiz-answer").css("border-color", "green")
+                                            .css("box-shadow", "0px 0px 5px green").prop("disabled", "true").css("opacity", ".65")
+                                            ths.prop("disabled", "true").addClass("disabled").addClass("not-allowed")
+                                            ths.prev().prop("disabled", "true").addClass("disabled").addClass("not-allowed")
+                                            var word = ths.parent().prevAll().eq(2).find("span").text()
+                                            correct_list.push(word)
+                                            tr.map(function(i){
+                                                ths.parent().next().find("ul").hide().append(`<li>${i}</li>`).fadeIn()
+                                            })
+                                            ths.parent().prev().find(".quiz-result").append(`
+                                            <svg version="1.1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 130.2 130.2">
+                                            <polyline class="path check" fill="none" stroke="#73AF55" stroke-width="6"
+                                            stroke-linecap="round" stroke-miterlimit="10" points="100.2,40.2 51.5,88.8 29.8,67.5 "/>
+                                            </svg>`)
+                                            setTimeout(function() {
+                                                ths.parent().prev().find(".quiz-result").find(".path").removeClass("path")
+                                            }, 1000);
+                                        } else {
+                                            if (count==0) {
+                                                ths.parent().prev().find(".quiz-answer").addClass("shake box-dk")
+                                                ths.parent().prev().prev().html("1/2")
+                                                setTimeout(function() {
+                                                    ths.parent().prev().find(".quiz-answer").removeClass("shake")
+                                                }, 300);
+                                            } else if (count==1) {
+                                                if ( ths.parent().prev().find(".quiz-answer").hasClass("shake") ) {
+                                                    ths.parent().prev().find(".quiz-answer").removeClass("shake")
+                                                }
+                                                ths.prop("disabled", "true").addClass("disabled").addClass("not-allowed")
+                                                ths.prev().prop("disabled", "true").addClass("disabled").addClass("not-allowed")
+                                                ths.parent().prev().prev().html("2/2")
+                                                ths.parent().prev().find(".quiz-answer").prop("disabled", "true").css("opacity", ".65")
+                                                var word = $(this).parent().prevAll().eq(2).find("span").text()
+                                                incorrect_list.push(word)
+                                                tr.map(function(i){
+                                                    ths.parent().next().find("ul").hide().append(`<li>${i}</li>`).fadeIn()
+                                                })
+                                                ths.parent().prev().find(".quiz-result").append(`
+                                                    <svg version="1.1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 130.2 130.2">
+                                                    <line class="path line" fill="none" stroke="#D06079" stroke-width="6"
+                                                     stroke-linecap="round" stroke-miterlimit="10" x1="34.4" y1="37.9" x2="87.8" y2="92.3"/>
+                                                    <line class="path line" fill="none" stroke="#D06079" stroke-width="6"
+                                                     stroke-linecap="round" stroke-miterlimit="10" x1="89.8" y1="38" x2="34.4" y2="92.2"/>
+                                                    </svg>`)
+                                                setTimeout(function() {
+                                                    ths.parent().prev().find(".quiz-result").find(".path").removeClass("path")
+                                                }, 1000);
+                                            }
+                                        }
+                                    } else {
+                                        ths.parent().prev().find(".quiz-answer").addClass("shake")
+                                        setTimeout(function() {
+                                            ths.parent().prev().find(".quiz-answer").removeClass("shake")
+                                        }, 300);
+                                    }
+                                })
+                                $(document).on("click", ".quiz-finish", function() {
+                                    if ((incorrect_list.length + correct_list.length) < value) {
+                                        $("#confirm-text").html("Cevaplamadığın sorular var.<br> Quiz'i bitirmek istediğine emin misin?")
+                                        $("#confirm").modal()
+                                    } else {
+                                        $("#confirm-text").html("Quiz'i bitirmek istediğine emin misin?")
+                                        $("#confirm").modal()
+                                    }
+                                })
+                                $(document).on("click", "#confirm-ok", function(e) {
+                                    e.preventDefault()
+                                    $(".nav-tabs-l").append(`<li role="presentation" class="nav-item">
+                                                                <a class="nav-link" href="#l-res" aria-controls="l-res" role="tab" data-toggle="tab"><i style="font-size:x-large" class="fas fa-list-ol"></i></a>
+                                                               </li>`)
+                                    $(".tab-content-l").append(`<div role="tabpanel" class="tab-pane" id="l-res">
+                                                                    <h3 class="text-center">Sonuçlar</h1>
+                                                                    ${value} adet sorudan ${correct_list.length} tanesini doğru yaptın.
+                                                                    <ol style="padding-inline-start: 5px; margin-top:.5rem" id="res-l"></ol>
+                                                                  </div>`)
+                                    for (i=0;i<value;i++) {
+                                        word = $(document).find(".word-l").eq(i).text()
+                                        if (correct_list.includes(word)) {
+                                            $("#res-l").append(`<li data-id="${i}">
+                                                                  <a href="" data-id="res-word" style="color:green">${word}</a> &mdash;
+                                                                  <a class="a-hover" href="/sözlük/q=${word}/" target="_blank" style="color:black">Sözlükte arat</a> &mdash;
+                                                                  <a class="a-hover" href="/kelime_listesi/q=${word}/" target="_blank" style="color:black">Listende görüntüle</a>
+                                                                  </li>`)
+                                        } else {
+                                            $(".quiz-dk-l").eq(i).click()
+                                            $("#res-l").append(`<li data-id="${i}">
+                                                                  <a href="" data-id="res-word" style="color:red">${word}</a> &mdash;
+                                                                  <a class="a-hover" href="/sözlük/q=${word}/" target="_blank" style="color:black">Sözlükte arat</a> &mdash;
+                                                                  <a class="a-hover" href="/kelime_listesi/q=${word}/" target="_blank" style="color:black">Listende görüntüle</a>
+                                                                  </li>`)
+                                        }
+                                    }
+                                    $(".quiz-finish").remove()
+                                    $("a[data-id='res-word']").click(function(e){
+                                        e.preventDefault()
+                                        var target = $(this).parent().attr("data-id")
+                                        $("a.nav-link").eq(target).click()
+                                    })
+                                    $("#confirm").modal("hide")
+                                    setTimeout(function() {
+                                        $("a[aria-controls='l-res']").click()
+                                    }, 4);
+                                })
+                                $(document).on("click", "#confirm-no", function(e) {
+                                    e.preventDefault()
+                                    $("#confirm").modal("hide")
+                                })
+                                $(".quiz-question:first").find(".chevron-left").remove()
+                                $(".quiz-question:last").find(".chevron-right").remove()
+                            }
+                        }
+                    })
+                    $(".modal-body-content-l").fadeIn()
+                  }, 4500)
+                }
+            }
+        }
+    })
+
+    $(document).on("click", '.chevron-left', function() {
+        var target = parseInt($(this).parent().parent().attr("id").split("-")[1]) - 2
+        $("a.nav-link").eq(target).click()
+    })
+
+    $(document).on("click", '.chevron-right', function() {
+        var target = parseInt($(this).parent().parent().attr("id").split("-")[1])
+        $("a.nav-link").eq(target).click()
+    })
+
+    $(document).keydown(function(e){
+        if (e.keyCode == 37) {
+            $("div.active").find(".chevron-left").click()
+            setTimeout(function() {
+                $("div.active").find(".quiz-answer").focus()
+            }, 4);
+        } else if (e.keyCode == 39) {
+            $("div.active").find(".chevron-right").click()
+            setTimeout(function() {
+                $("div.active").find(".quiz-answer").focus()
+            }, 4);
+        }
+    });
+
+    function mediaContainer(container) {
+      if (container.matches) {
+        $(".container-media").addClass("container")
+      } else {
+        $(".container-media").removeClass("container")
+      }
+    }
+    var container = window.matchMedia("(min-width:576px)")
+    mediaContainer(container)
+    container.addListener(mediaContainer)
+
+    $(".refresh").click(function() {
+        var ths = $(this);
+        ths.addClass("transform-active");
+        ths.on("animationend", function(){
+          ths.removeClass('transform-active');
+          if (ths.hasClass('ref-l')) {
+            $.ajax({
+                type:"GET",
+                url: "{% url 'random-refresh' %}",
+                async: false,
+                data: {
+                    'random-learned': 10,
+                },
+                dataType: 'json',
+                success: function(data) {
+                    if (data.random_learned) {
+                        $(".ul-learned").empty();
+                        data.random_learned.map(function(i) {
+                            $(".ul-learned").append(`<li><a style="color:#00308F" href="/sözlük/q=${i}/">${i}</a></li>`);
+                        });
+                    }
+                }
+            })
+          } else if (ths.hasClass('ref-unl')) {
+            $.ajax({
+                type:"GET",
+                url: "{% url 'random-refresh' %}",
+                async: false,
+                data: {
+                    'random-unlearned': 10,
+                },
+                dataType: 'json',
+                success: function(data) {
+                    if (data.random_unlearned) {
+                        $(".ul-unlearned").empty();
+                        data.random_unlearned.map(function(i) {
+                            $(".ul-unlearned").append(`<li><a style="color:#00308F" href="/sözlük/q=${i}/">${i}</a></li>`);
+                        });
+                    }
+                }
+            })
+          }
+          else if (ths.hasClass('ref-str')) {
+            $.ajax({
+                type:"GET",
+                url: "{% url 'random-refresh' %}",
+                async: false,
+                data: {
+                    'random-starred': 'random-starred',
+                },
+                dataType: 'json',
+                success: function(data) {
+                    if (data.random_starred) {
+                        $(".ul-starred").empty();
+                        data.random_starred.map(function(i) {
+                            $(".ul-starred").append(`<li><a style="color:#00308F" href="/sözlük/q=${i}/">${i}</a></li>`);
+                        });
+                    }
+                }
+            })
+          }
+        })
+    })
+
+
+    $(".audio").click(function() {
+        $(this).parent().next()[0].play()
+    });
+
+    $(".add-btn-home").on("click", function(){
+        var ths = $(this);
+        var no = ths.attr('data-id');
+        var en = $("#word_" + no).text();
+        tr_list = [];
+        var tr = $("#tur_" + no).text().replace("(", "").replace(")", "").trim();
+        var audio = $("#au-" + no).attr("src");
+        tr_list.push(tr)
+
+        if ( !(isNaN(no)) ) {
+            if (ths.html() == "Kelimeyi Ekle") {
+                $.ajax({
+                    type:"GET",
+                    url: "/word_cd",
+                    data:{
+                       "word_en": en,
+                       "tr": tr_list,
+                       "audio": audio
+                    },
+                    success: function(data) {
+                        ths.toggleClass("btn-info btn-success");
+                        ths.html("Kelime Eklendi");
+                    }
+                });
+
+            } else if (ths.html() == "Kelime Eklendi") {
+                $.ajax({
+                     type:"GET",
+                     url: "/word_cd",
+                     data:{
+                        "word_en": en,
+                        "tr": tr_list,
+                        "audio": audio
+                     },
+                     success: function(data) {
+                        ths.toggleClass("btn-success btn-info");
+                        ths.html("Kelimeyi Ekle");
+                     }
+                }); // end ajax
+            } // end else if
+        }
+        else {
+            $("#login-modal").modal()
+        }
+    });
+}); // end ready
+</script>
+
+{% endblock %}

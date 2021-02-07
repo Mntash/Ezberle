@@ -1,0 +1,768 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %} Kelime Listesi {% endblock %}
+
+{% block content %}
+
+<div class="container-md" style="padding-top:48px">
+<div class="row mt-3">
+
+    <div class="col-lg-5 tbl-first pd-neg">
+        <div class="tbl-words position-relative">
+            <span class="title title-unl">Öğreneceklerim <br> <div>(<span class="count-unl">{{ unlearned_count }}</span>)</div></span>
+            <div class="tt">
+              <i class="fas fa-question-circle" style="color:darkblue"></i>
+              <div class="tooltip-content">
+                <div><i class="material-icons">volume_off</i>Bu kelimenin okunuşu bulunamadı.</div>
+                <div><i class="material-icons">volume_up</i>Bu kelimenin okunuşu.</div>
+                <div><i class="material-icons">done_all</i>Bu kelime ile karşılaştım.</div>
+                <div><i class="material-icons">check_box</i>Bu kelimeyi ezberledim.</div>
+                <div><i class="material-icons">undo</i>Bu kelimeyi unuttum.</div>
+                <div><i class="material-icons">remove_red_eye</i>Bu kelimenin Türkçesini göster.</div>
+                <div><i class="material-icons">star_border</i>Bu kelimeyi favorilerime ekle.</div>
+                <div><i class="material-icons">delete</i>Bu kelimeyi sil.</div>
+              </div>
+            </div>
+            <ul class="unl-word" style="max-height:626px">
+                {% if "kelime_listesi/q=" not in request.path or page_obj_unl|length > 0 %}
+                    {% for word in page_obj_unl %}
+                    <li data-id="{{word.id}}" class="li{{word.id}}">
+                        <div class="en-section">
+                            <div class="align-self-center word">
+                                <a href="{% url 'dictionary' word.english %}" style="color:black">{{ word.english }}</a>
+                            </div>
+                            <div data-id="{{word.id}}" class="btn-grp">
+                                {% if word.audio %}
+                                <i title="Dinle" style="cursor:pointer; right:10px;" class="material-icons audio">volume_up</i>
+                                <audio src="{{word.audio}}"></audio>
+                                {% else %}
+                                <i title="Ses mevcut değil" style="cursor:pointer; right:10px;" class="material-icons audio">volume_off</i>
+                                <audio src="{{word.audio}}"></audio>
+                                {% endif %}
+                                {% if word.is_seen %}
+                                <i title="Görüldü" class="material-icons tick-seen dodger" style="cursor:pointer;">done_all</i>
+                                {% else %}
+                                <i title="Görüldü" class="material-icons tick-seen cadet" style="cursor:pointer;">done_all</i>
+                                {% endif %}
+                                <i title="Ezberledim" class="material-icons tick-learn memorize" style="cursor:pointer;">check_box</i>
+                                <button data-toggle="collapse" data-target=".tr{{word.id}}" class="eye"><i title="Türkçelerini göster" class="material-icons" style="margin-left: -6px;margin-right:-6px">remove_red_eye</i></button>
+                                {% if not word.is_starred %}
+                                <i title="Favorilere ekle" class="material-icons star" style="cursor:pointer;">star_border</i>
+                                {% else %}
+                                <i title="Favorilere eklendi" class="material-icons star pale-yellow" style="cursor:pointer;">star</i>
+                                {% endif %}
+                                <i title="Sil" class="material-icons del del-unl" style="cursor:pointer;">delete</i>
+                            </div>
+                        </div>
+                        <div class="collapse tr{{word.id}}">
+                            <div style="margin-top: 10px; margin-bottom: 5px;">
+                            {% if word.turkish.all %}
+                                {% if word.turkish.all|length == 1 %}
+                                    <span style="margin-left:20px; border-bottom: medium solid brown; padding: 1px;">Türkçesi:</span>
+                                {% elif word.turkish.all|length > 1 %}
+                                    <span style="margin-left:20px; border-bottom: medium solid brown; padding: 1px;">Türkçeleri:</span>
+                                {% endif %}
+                                </div>
+                                <ul class="tr-section">
+                                    {% for word_tr in word.turkish.all %}
+                                    <li>
+                                        {{ word_tr.turkish }}
+                                    </li>
+                                    {% endfor %}
+                                </ul>
+                            {% else %}
+                                <div class="tr-section" style="margin-left:20px;padding: 1px;">
+                                    <span style="color:brown">&#8722;</span><span>Bu kelimeye Türkçe eklenmemiş</span><span style="color:brown">&#8722;</span>
+                                </div>
+                            {% endif %}
+                        </div>
+                    </li>
+                    {% endfor %}
+                {% elif page_obj_unl|length == 0 and '$favorites' not in request.path %}
+                    <li>Bu listeye <u style="color:red">{{word}}</u> için bir kelime kayıt edilmemiş.</li>
+                {% endif %}
+            </ul>
+        </div>
+        {% if 'kelime_listesi/q=' not in request.path or unl_pg_count > 9 %}
+        <nav aria-label="Page navigation example">
+          <ul class="pagination pagination-sm justify-content-center">
+          {% if page_obj_unl.has_previous %}
+              <li class="page-item">
+              <a class="page-link" href="?s={{ page_obj_unl.previous_page_number }}">&laquo</a>
+            </li>
+          {% else %}
+              <li class="page-item disabled">
+              <a class="page-link" href="#" tabindex="-1" aria-disabled="true">&laquo</a>
+            </li>
+          {% endif %}
+
+          {% if page_obj_unl.number|add:'-4' > 1 %}
+              <li class="page-item"><a class="page-link" href="?s={{ page_obj_unl.number|add:'-5' }}">&hellip;</a></li>
+          {% endif %}
+
+          {% for i in page_obj_unl.paginator.page_range %}
+              {% if page_obj_unl.number == i %}
+                  <li class="page-item active" aria-current="page">
+                <span class="page-link">
+                  {{ i }}
+                  <span class="sr-only">(current)</span>
+                </span>
+              </li>
+              {% elif i > page_obj_unl.number|add:'-5' and i < page_obj_unl.number|add:'5' %}
+                   <li class="page-item"><a class="page-link" href="?s={{ i }}">{{ i }}</a></li>
+              {% endif %}
+          {% endfor %}
+
+          {% if page_obj_unl.paginator.num_pages > page_obj_unl.number|add:'4' %}
+             <li class="page-item"><a class="page-link" href="?s={{ page_obj_unl.number|add:'5' }}">&hellip;</a></li>
+          {% endif %}
+
+          {% if page_obj_unl.has_next %}
+              <li class="page-item">
+              <a class="page-link" href="?s={{ page_obj_unl.next_page_number }}">&raquo</a>
+            </li>
+          {% else %}
+              <li class="page-item disabled">
+              <a class="page-link" href="#" tabindex="-1" aria-disabled="true">&raquo</a>
+            </li>
+          {% endif %}
+        </ul>
+      </nav>
+        {% endif %}
+    </div>
+
+    <div class="col-lg-5 mt-md-2 mt-lg-0 pd-neg">
+        <div class="tbl-words position-relative">
+            <span class="title title-l">Öğrendiklerim <br> (<span class="count-l">{{ learned_count }}</span>)</span>
+            <div class="tt">
+              <i class="fas fa-question-circle" style="color:darkblue"></i>
+              <div class="tooltip-content">
+                <div><i class="material-icons">volume_off</i>Bu kelimenin okunuşu bulunamadı.</div>
+                <div><i class="material-icons">volume_up</i>Bu kelimenin okunuşu.</div>
+                <div><i class="material-icons">done_all</i>Bu kelime ile karşılaştım.</div>
+                <div><i class="material-icons">check_box</i>Bu kelimeyi ezberledim.</div>
+                <div><i class="material-icons">undo</i>Bu kelimeyi unuttum.</div>
+                <div><i class="material-icons">remove_red_eye</i>Bu kelimenin Türkçesini göster.</div>
+                <div><i class="material-icons">star_border</i>Bu kelimeyi favorilerime ekle.</div>
+                <div><i class="material-icons">delete</i>Bu kelimeyi sil.</div>
+              </div>
+            </div>
+            <ul class="l-word" style="max-height:626px">
+                {% if "kelime_listesi/q=" not in request.path or page_obj_l|length > 0 %}
+                    {% for word in page_obj_l %}
+                    <li data-id="{{word.id}}" class="li{{word.id}}">
+                        <div class="en-section">
+                            <div class="align-self-center word">
+                                <a href="{% url 'dictionary' word.english %}" style="color:black">{{ word.english }}</a>
+                            </div>
+                            <div data-id="{{word.id}}" class="btn-grp">
+                                {% if word.audio %}
+                                <i title="Dinle" style="cursor:pointer; right:10px;" class="material-icons audio">volume_up</i>
+                                <audio src="{{word.audio}}"></audio>
+                                {% else %}
+                                <i title="Ses mevcut değil" style="cursor:pointer; right:10px;" class="material-icons audio">volume_off</i>
+                                <audio src="{{word.audio}}"></audio>
+                                {% endif %}
+                                {% if word.is_seen %}
+                                <i title="Görüldü" class="material-icons tick-seen dodger" style="cursor:pointer;">done_all</i>
+                                {% else %}
+                                <i title="Görüldü" class="material-icons tick-seen cadet" style="cursor:pointer;">done_all</i>
+                                {% endif %}
+                                <i title="Unuttum" class="material-icons tick-unlearn memorize" style="cursor:pointer;">undo</i>
+                                {% if word.turkish %}
+                                <button data-toggle="collapse" data-target=".tr{{word.id}}" class="eye"><i title="Türkçelerini göster" class="material-icons" style="margin-left: -6px;margin-right:-6px">remove_red_eye</i></button>
+                                {% endif %}
+                                {% if not word.is_starred %}
+                                <i title="Favorilere ekle" class="material-icons star" style="cursor:pointer;">star_border</i>
+                                {% else %}
+                                <i title="Favorilere eklendi" class="material-icons star pale-yellow" style="cursor:pointer;">star</i>
+                                {% endif %}
+                                <i title="Sil" class="material-icons del del-l" style="cursor:pointer;">delete</i>
+                            </div>
+                        </div>
+                        <div class="collapse tr{{word.id}}">
+                            <div style="margin-top: 10px; margin-bottom: 5px;">
+                            {% if word.turkish.all %}
+                                {% if word.turkish.all|length == 1 %}
+                                    <span style="margin-left:20px; border-bottom: medium solid brown; padding: 1px;">Türkçesi:</span>
+                                {% elif word.turkish.all|length > 1 %}
+                                    <span style="margin-left:20px; border-bottom: medium solid brown; padding: 1px;">Türkçeleri:</span>
+                                {% endif %}
+                                </div>
+                                <ul class="tr-section">
+                                    {% for word_tr in word.turkish.all %}
+                                    <li>
+                                        {{ word_tr.turkish }}
+                                    </li>
+                                    {% endfor %}
+                                </ul>
+                            {% else %}
+                                <div class="tr-section" style="margin-left:20px;padding: 1px;">
+                                    <span style="color:brown">&#8722;</span><span>Bu kelimeye Türkçe eklenmemiş</span><span style="color:brown">&#8722;</span>
+                                </div>
+                            {% endif %}
+                        </div>
+                    </li>
+                    {% endfor %}
+                {% elif page_obj_l|length == 0 and '$favorites' not in request.path %}
+                    <li>Bu listeye <u style="color:red">{{word}}</u> için bir kelime kayıt edilmemiş.</li>
+                {% endif %}
+            </ul>
+        </div>
+        {% if 'kelime_listesi/q=' not in request.path or l_pg_count > 9 %}
+        <nav aria-label="Page navigation example">
+          <ul class="pagination pagination-sm justify-content-center">
+          {% if page_obj_l.has_previous %}
+              <li class="page-item">
+              <a class="page-link" href="?p={{ page_obj_l.previous_page_number }}">&laquo</a>
+            </li>
+          {% else %}
+              <li class="page-item disabled">
+              <a class="page-link" href="#" tabindex="-1" aria-disabled="true">&laquo</a>
+            </li>
+          {% endif %}
+
+          {% if page_obj_l.number|add:'-4' > 1 %}
+              <li class="page-item"><a class="page-link" href="?p={{ page_obj_l.number|add:'-5' }}">&hellip;</a></li>
+          {% endif %}
+
+          {% for i in page_obj_l.paginator.page_range %}
+              {% if page_obj_l.number == i %}
+                  <li class="page-item active" aria-current="page">
+                <span class="page-link">
+                  {{ i }}
+                  <span class="sr-only">(current)</span>
+                </span>
+              </li>
+              {% elif i > page_obj_l.number|add:'-5' and i < page_obj_l.number|add:'5' %}
+                   <li class="page-item"><a class="page-link" href="?p={{ i }}">{{ i }}</a></li>
+              {% endif %}
+          {% endfor %}
+
+          {% if page_obj_l.paginator.num_pages > page_obj_l.number|add:'4' %}
+             <li class="page-item"><a class="page-link" href="?p={{ page_obj_l.number|add:'5' }}">&hellip;</a></li>
+          {% endif %}
+
+          {% if page_obj_l.has_next %}
+              <li class="page-item">
+              <a class="page-link" href="?p={{ page_obj_l.next_page_number }}">&raquo</a>
+            </li>
+          {% else %}
+              <li class="page-item disabled">
+              <a class="page-link" href="#" tabindex="-1" aria-disabled="true">&raquo</a>
+            </li>
+          {% endif %}
+          </ul>
+        </nav>
+        {% endif %}
+    </div>
+
+    <div class="col-lg-2 col-sm-8 word-mng mb-md-3 mb-lg-0 pd-neg" style="max-height:670px; background:oldlace">
+        <div style="height:50px">
+            <div class="d-flex justify-content-center" style="margin-top:9px">
+                {% if 'kelime_listesi/q=' in request.path and '$favorites' not in request.path %}
+                    <input class="wl-search w-75" name="q" placeholder="Kelime ara.." type="search" value="{{word}}" onClick="this.setSelectionRange(0, this.value.length)">
+                {% else %}
+                    <input class="wl-search w-75" name="q" placeholder="Kelime ara.." type="search">
+                {% endif %}
+                <button class="wl-search-btn"><i class="fas fa-search"></i></button>
+            </div>
+            {% if '$favorites' in request.path %}
+            <div class="d-flex justify-content-center"><input id="show-fav" type="checkbox" checked style="margin:5px 3px">
+                <label for="show-fav" style="font-size:12px;margin-top:2px">Favorileri Göster</label>
+            </div>
+            {% else %}
+            <div class="d-flex justify-content-center"><input id="show-fav" type="checkbox" style="margin:5px 3px">
+                <label for="show-fav" style="font-size:12px;margin-top:2px">Favorileri Göster</label>
+            </div>
+            {% endif %}
+        </div>
+        <div class="mng-body">
+            <div class="text-center mng-top" style="border-bottom:medium solid gray;border-top:medium solid gray; display:grid">
+                <div><span id="add-title-unl">Öğreneceklerime</span> <br>
+                Kelime Ekle:</div>
+                <div><input type="text" name="english-unl" required aria-autocomplete="none" style="width:75%"></div>
+                <div>Türkçesi:</div>
+                <div><input type="text" name="turkish-unl" class="input-tr-unl mt-1 turkish w-75" aria-autocomplete="none"></div>
+                <div class="d-flex justify-content-center">
+                  <button class="del-tr del-tr-unl d-none"><i class="material-icons">indeterminate_check_box</i></button>
+                  <button class="add-tr add-tr-unl"><i class="material-icons">add_box</i></button>
+                </div>
+                <div class="d-flex justify-content-center mb-1">
+                  <input class="btn btn-danger p-1 reset-unl" type="reset" value="Sıfırla" style="margin-right:5px;">
+                  <input class="btn btn-success p-1 add2unl" type="submit" value="Ekle">
+                </div>
+            </div>
+        </div>
+
+
+        <div class="text-center mng-bottom" style="display:grid">
+            <div><span id="add-title-l">Öğrendiklerime</span> <br>
+            Kelime Ekle:</div>
+            <div><input type="text" name="english-l" required aria-autocomplete="none" style="width:75%"></div>
+            <div>Türkçesi:</div>
+            <div><input type="text" name="turkish-l" class="input-tr-l mt-1 turkish w-75" aria-autocomplete="none"></div>
+            <div class="d-flex justify-content-center">
+              <button class="del-tr del-tr-l d-none"><i class="material-icons">indeterminate_check_box</i></button>
+              <button class="add-tr add-tr-l"><i class="material-icons">add_box</i></button>
+            </div>
+            <div class="d-flex justify-content-center mng-form2 mb-sm-1 mb-lg-0">
+              <input class="btn btn-danger p-1 reset-l" type="reset" value="Sıfırla" style="margin-right:5px">
+              <input class="btn btn-success p-1 add2l" type="submit" value="Ekle">
+            </div>
+        </div>
+    </div>
+
+</div>
+</div>
+
+
+<div id="err-mng" style="text-align:left;width:100%;display:flex;justify-content:center">
+  <div class="rounded position-relative err-mng d-none" style="padding:1px 5px;background:lightblue;color:red;width:75%">
+    <span class="err-msg" style="font-size:x-small"></span>
+    <span class="times-err" style="position:absolute;right:0;top:0;cursor:pointer">&times;</span>
+  </div>
+</div>
+
+
+<script>
+
+$(function(){
+
+    $("#show-fav").click(function(){
+        if ($(this).is(':checked')) {
+            window.location.pathname = "/kelime_listesi/q=$favorites"
+        } else {
+            window.location.pathname = "/kelime_listesi/"
+        }
+    })
+
+    $(".times-err").click(function() {
+        $(".err-mng").addClass("d-none")
+    })
+
+    $("input[type='reset']").click(function(e){
+        e.preventDefault();
+        if ($(this).hasClass("reset-unl")) {
+            $("input[name='english-unl']").val("");
+            $("input[name='turkish-unl']").each(function () {
+                $(this).val("")
+            });
+        } else if ($(this).hasClass("reset-l")) {
+            $("input[name='english-l']").val("");
+            $("input[name='turkish-l']").each(function () {
+                $(this).val("")
+            });
+        }
+    })
+    $("input[type='submit']").click(function(e){
+    e.preventDefault();
+    var tr_list = [];
+        if ($(this).hasClass("add2unl")) {
+            var en = $("input[name='english-unl']").val();
+            $("input[name='turkish-unl']").each(function() {
+                var value = $(this).val().trim();
+                if ( !(value==="") ) {
+                    tr_list.push(value);
+                }
+            });
+            if ( en.length > 1 ) {
+                if (tr_list.length > 0) {
+                   $.ajax({
+                        type:"POST",
+                        url: "{% url 'word-list' %}",
+                        data: {
+                            'english-unl': en,
+                            'turkish-unl': tr_list,
+                            "csrfmiddlewaretoken" : "{{csrf_token}}"
+                        },
+                        dataType: 'json',
+                        success: function(data) {
+                            if (data.is_added) {
+                                window.location.pathname = "/kelime_listesi/"
+                            } else {
+                                $(".err-msg").html("Bu kelime zaten kayıtlı.");
+                                $("#add-title-unl").before($("#err-mng"));
+                                $(".err-mng").removeClass("d-none")
+                            }
+                        }
+                   })
+                } else {
+                    $(".err-msg").html("En az 1 tane Türkçe kelime ekleyin.");
+                    $("#add-title-unl").before($("#err-mng"));
+                    $(".err-mng").removeClass("d-none")
+                }
+            } else {
+                $(".err-msg").html("Minimum 2 harfli bir kelime girin.");
+                $("#add-title-unl").before($("#err-mng"));
+                $(".err-mng").removeClass("d-none")
+            }
+        } else if ($(this).hasClass("add2l")) {
+            var en = $("input[name='english-l']").val();
+            $("input[name='turkish-l']").each(function() {
+                var value = $(this).val().trim();
+                if ( !(value==="") ) {
+                    tr_list.push(value);
+                }
+            });
+            if ( en.length > 1 ) {
+                if (tr_list.length > 0) {
+                    $.ajax({
+                        type:"POST",
+                        url: "{% url 'word-list' %}",
+                        data: {
+                            'english-l': en,
+                            'turkish-l': tr_list,
+                            "csrfmiddlewaretoken" : "{{csrf_token}}"
+                        },
+                        dataType: 'json',
+                        success: function(data) {
+                            if (data.is_added) {
+                                window.location.pathname = "/kelime_listesi/"
+                            } else {
+                                $(".err-msg").html("Bu kelime zaten kayıtlı.");
+                                $("#add-title-l").before($("#err-mng"));
+                                $(".err-mng").removeClass("d-none")
+                            }
+                        }
+                    });
+                } else {
+                    $(".err-msg").html("En az 1 tane Türkçe kelime ekleyin.");
+                    $("#add-title-l").before($("#err-mng"));
+                    $(".err-mng").removeClass("d-none")
+                }
+            } else {
+                $(".err-msg").html("Minimum 2 harfli bir kelime girin.");
+                $("#add-title-l").before($("#err-mng"));
+                $(".err-mng").removeClass("d-none")
+            }
+        }
+    })
+
+    function mediaEnSection(x) {
+      if (x.matches) {
+        $(".en-section").addClass("d-flex justify-content-between")
+        $(".word").css("border-bottom", "none")
+        $(".word").css("margin-bottom", "0")
+        $(".word").css("text-align", "left")
+        $(".btn-grp").removeClass("d-flex justify-content-center")
+      } else {
+        $(".en-section").removeClass("d-flex justify-content-between")
+        $(".word").css("border-bottom", "medium outset black")
+        $(".word").css("margin-bottom", "5px")
+        $(".word").css("text-align", "center")
+        $(".btn-grp").addClass("d-flex justify-content-center")
+      }
+    }
+    var en_sec = window.matchMedia("(min-width:421px)")
+    mediaEnSection(en_sec)
+    en_sec.addListener(mediaEnSection)
+
+    function mediaContainer(x) {
+      if (x.matches) {
+        $(".word-mng").addClass("container")
+      } else {
+        $(".word-mng").removeClass("container")
+      }
+    }
+    var container = window.matchMedia("(min-width:576px) and (max-width:992px)")
+    mediaContainer(container)
+    container.addListener(mediaContainer)
+
+
+    $("input[name='turkish-unl']").keypress(function(event){
+        var keycode = (event.keyCode ? event.keyCode : event.which);
+        if(keycode == '13'){
+            $(".add2unl").click();
+        }
+    });
+
+    $("input[name='turkish-l']").keypress(function(event){
+        var keycode = (event.keyCode ? event.keyCode : event.which);
+        if(keycode == '13'){
+            $(".add2l").click();
+        }
+    });
+
+    $(".wl-search").autocomplete({
+        source: function(request, response) {
+            $.getJSON("{% url 'autocomplete' %}", { q: request.term }, response);
+        },
+        minLength: 2,
+        select: function( event, ui ) {
+             window.location.pathname = "/kelime_listesi/q=" + ui.item.label + "/"
+        }
+    })
+
+    $(".wl-search").keypress(function(event){
+        var keycode = (event.keyCode ? event.keyCode : event.which);
+        if(keycode == '13'){
+            $(".wl-search-btn").click();
+        }
+    });
+
+    $(".wl-search-btn").click(function(e) {
+        e.preventDefault()
+        var value = $(this).prev().val();
+        if (value.length > 0) {
+            window.location.pathname = "/kelime_listesi/q=" + value + "/"
+        } else {
+            window.location.pathname = "/kelime_listesi/"
+        }
+    })
+
+    $(".fas").hover(function() {
+      $(this).next().toggle()
+    })
+
+    var tr_count_unl = 0;
+    var tr_count_l = 0;
+
+    $(".add-tr").click(function() {
+        event.preventDefault();
+        if ($(this).hasClass("add-tr-unl")) {
+          if (tr_count_unl === 0) {
+              $(".input-tr-unl").parent().after('<div><input type="text" name="turkish-unl" class="mt-1 tr-2-unl w-75" aria-autocomplete="none"></div>');
+              $(".tr-2-unl").focus();
+              $(".del-tr-unl").removeClass("d-none");
+              $(this).css("margin-left", "-10px");
+              tr_count_unl++;
+          } else if (tr_count_unl === 1) {
+              $(".tr-2-unl").parent().after('<div><input type="text" name="turkish-unl" class="mt-1 tr-3-unl w-75" aria-autocomplete="none"></div>');
+              $(".tr-3-unl").focus();
+              $(this).prop("disabled", "true");
+              tr_count_unl++
+          };
+        }
+        else if ($(this).hasClass("add-tr-l")) {
+          if (tr_count_l === 0) {
+              $(".input-tr-l").parent().after('<div><input type="text" name="turkish-l" class="mt-1 tr-2-l w-75" aria-autocomplete="none"></div>');
+              $(".tr-2-l").focus();
+              $(".del-tr-l").removeClass("d-none");
+              $(this).css("margin-left", "-10px");
+              tr_count_l++;
+          } else if (tr_count_l === 1) {
+              $(".tr-2-l").parent().after('<div><input type="text" name="turkish-l" class="mt-1 tr-3-l w-75" aria-autocomplete="none"></div>');
+              $(".tr-3-l").focus();
+              $(this).prop("disabled", "true");
+              tr_count_l++
+          };
+        }
+    })
+
+    $(".del-tr").click(function(){
+        event.preventDefault();
+        if ($(this).hasClass("del-tr-unl")) {
+          if (tr_count_unl === 2) {
+              $(".add-tr-unl").removeAttr("disabled");
+              $(this).parent().prev().remove();
+              tr_count_unl -= 1;
+          } else if (tr_count_unl === 1) {
+              $(this).parent().prev().remove();
+              $(this).addClass("d-none");
+              $(".add-tr-unl").css("margin-left", "5px")
+              tr_count_unl -= 1
+          }
+        }
+        else if ($(this).hasClass("del-tr-l")) {
+          if (tr_count_l === 2) {
+              $(".add-tr-l").removeAttr("disabled");
+              $(this).parent().prev().remove();
+              tr_count_l -= 1;
+          } else if (tr_count_l === 1) {
+              $(this).parent().prev().remove();
+              $(this).addClass("d-none");
+              $(".add-tr-l").css("margin-left", "5px")
+              tr_count_l -= 1
+          }
+        }
+    })
+
+    $(".search-words").keyup(function() {
+      var search = $(this).val();
+      $.ajax({
+        type:"GET",
+        url: "{% url 'search' %}",
+        data: {
+            'search': search
+        },
+        dataType: 'json',
+        success: function (data) {
+
+        } // success
+      }) // ajax
+    }); // func
+
+    $(".tick-seen").click(function() {
+        var ths = $(this);
+        var wordId = ths.parent().attr('data-id');
+
+        if (ths.hasClass("cadet")) {
+            $.ajax({
+                type:"GET",
+                url: "{% url 'is-seen' %}",
+                data: {
+                    'id': wordId,
+                    'seen': 'seen'
+                },
+                dataType: 'json',
+                success: function (data) {
+                    if (data.seen) {
+                        ths.removeClass("cadet");
+                        ths.addClass("dodger")
+                    }
+                }
+            })
+        } else if (ths.hasClass("dodger")) {
+            $.ajax({
+                type:"GET",
+                url: "{% url 'is-seen' %}",
+                data: {
+                    'id': wordId,
+                    'seen': 'seen'
+                },
+                dataType: 'json',
+                success: function (data) {
+                    if (!(data.seen)) {
+                        ths.removeClass("dodger");
+                        ths.addClass("cadet")
+                    }
+                }
+            })
+        }
+    })
+
+    var count_unl = parseInt("{{ unlearned_count }}");
+    var count_l = parseInt("{{ learned_count }}");
+
+    $(".memorize").click(function() {
+            var ths = $(this);
+            var wordId = ths.parent().attr("data-id");
+
+            if (ths.hasClass("tick-learn")) {
+                $.ajax({
+                type:"GET",
+                url: "{% url 'is-learned' %}",
+                data: {
+                    'id': wordId,
+                    'learned': 'learned'
+                },
+                dataType: 'json',
+                success: function (data) {
+                    if (data.learned) {
+                        var list = $(".li" + wordId);
+                        var l_word = $(".l-word");
+                        l_word.prepend(list);
+                        ths.html("undo");
+                        ths.toggleClass("tick-learn tick-unlearn");
+                        ths.siblings().last().children().first().toggleClass("del-unl del-l")
+                    } // endif data
+                } // end success
+            }); // end ajax
+            count_unl -= 1;
+            count_l += 1;
+            $(".count-unl").html(count_unl);
+            $(".count-l").html(count_l);
+            } // endif main
+            else if (ths.hasClass("tick-unlearn")) {
+                $.ajax({
+                type:"GET",
+                url: "{% url 'is-learned' %}",
+                data: {
+                    'id': wordId,
+                    'unlearned': 'unlearned'
+                },
+                dataType: 'json',
+                success: function (data) {
+                    if (!(data.unlearned)) {
+                        var list = $(".li" + wordId);
+                        $(".unl-word").prepend(list);
+                        ths.html("check_box");
+                        ths.toggleClass("tick-unlearn tick-learn");
+                        ths.parent().siblings().last().children().first().toggleClass("del-l del-unl")
+                    } // end if data
+                } // end success
+            }); // end ajax
+            count_unl += 1;
+            count_l -= 1;
+            $(".count-unl").html(count_unl);
+            $(".count-l").html(count_l);
+            } // end else if
+        }) // func
+
+    $(".star").click(function() {
+        var ths = $(this);
+        var wordId = ths.parent().attr('data-id');
+
+        if (ths.html() == "star_border") {
+            $.ajax({
+                type:"GET",
+                url: "{% url 'is-starred' %}",
+                data: {
+                    'id': wordId,
+                    'starred': 'starred'
+                },
+                dataType: 'json',
+                success: function (data) {
+                    if (data.starred) {
+                        ths.html("star").addClass("pale-yellow");
+                    }
+                }
+            })
+        } else if (ths.html() == "star") {
+            $.ajax({
+                type:"GET",
+                url: "{% url 'is-starred' %}",
+                data: {
+                    'id': wordId,
+                    'starred': 'starred'
+                },
+                dataType: 'json',
+                success: function (data) {
+                    if (!(data.starred)) {
+                        ths.html("star_border").removeClass("pale-yellow");
+                    }
+                }
+            })
+        }
+    })
+
+    $(".del").click(function() {
+        var wordId = $(this).parent().attr('data-id');
+        $(".li" + wordId).remove();
+        if ($(this).hasClass("del-unl")) {
+            count_unl -= 1;
+            $(".count-unl").html(count_unl);
+        }
+        else if ($(this).hasClass("del-l")) {
+            count_l -= 1;
+            $(".count-l").html(count_l);
+        }
+
+        $.ajax({
+            type:"GET",
+            url: "{% url 'del-word' %}",
+            data: {
+                'id': wordId,
+                'delete': 'delete'
+            },
+            dataType: 'json',
+        });
+    })
+
+    $(".audio").click(function() {
+            $(this).next()[0].play()
+    })
+
+
+
+
+
+
+});
+
+
+
+</script>
+
+{% endblock %}
