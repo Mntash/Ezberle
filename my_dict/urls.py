@@ -1,4 +1,6 @@
+from django.contrib.staticfiles.storage import staticfiles_storage
 from django.urls import path
+from django.views.generic.base import RedirectView
 from .views import *
 
 urlpatterns = [
@@ -15,4 +17,5 @@ urlpatterns = [
     path('word_is_starred/', DelSeenLearned.as_view(), name='is-starred'),
     path('random-refresh/', refresh, name='random-refresh'),
     path('search/', ajax_search, name="search"),
+    path("favicon.ico",RedirectView.as_view(url=staticfiles_storage.url("favicon.ico")),),
 ]
