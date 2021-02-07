@@ -386,7 +386,6 @@ ul {
 
 @media (max-width:312px) {
     h5 {
-        width:65%;
         text-align:center;
     }
     .custom-select {
@@ -1497,7 +1496,7 @@ input[type="search"]::-webkit-search-results-decoration { display: none; }
     margin-bottom:1px;
 }
 
-svg {
+.quiz-result svg {
 	width: 38px;
     position: absolute;
     left: 50%;
