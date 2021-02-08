@@ -41,7 +41,6 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'my_dict',
-    'rest_framework',
     'crispy_forms',
     'django.contrib.sites',
     'allauth',
