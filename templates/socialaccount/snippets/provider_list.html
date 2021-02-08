@@ -14,7 +14,7 @@
 </li>
 {% endfor %}
 {% endif %}
-<li class="social">
+<li class="social" style="cursor:pointer">
     <button style="border:none;background:none">
     <a title="{{provider.name}}" class="socialaccount_provider {{provider.id}} gmail"
     href="{% provider_login_url provider.id process=process scope=scope auth_params=auth_params %}">
@@ -23,4 +23,10 @@
     </a>
     </button>
 </li>
+<script>
+$(function(){
+    $(".social").click(function(){
+        $(".gmail").click()
+    })
+</script>
 {% endfor %}
