@@ -14,8 +14,8 @@
 </li>
 {% endfor %}
 {% endif %}
-<li class="social" style="cursor:pointer">
-    <button style="border:none;background:none">
+<li class="social">
+    <button style="border:none;background:none; width: 100%;height: 100%;">
     <a title="{{provider.name}}" class="socialaccount_provider {{provider.id}} gmail"
     href="{% provider_login_url provider.id process=process scope=scope auth_params=auth_params %}">
         <img src="{% static 'img/google.svg' %}" alt="Google" height=18px" width="18px" style="margin-right:0.25em">
@@ -23,10 +23,4 @@
     </a>
     </button>
 </li>
-<script>
-$(function(){
-    $(".social").click(function(){
-        $(".gmail").click()
-    })
-</script>
 {% endfor %}
