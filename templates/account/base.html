@@ -53,6 +53,8 @@
       <a class="aktif" href="{% url 'account_login' %}"><i class="fas fa-sign-in-alt"></i><span class="brand d-none">Giriş Yap</span></a>
     {% elif 'accounts/signup/' in request.path %}
       <a class="aktif" href="{% url 'account_login' %}"><i class="fas fa-sign-in-alt"></i><span class="brand d-none">Giriş Yap</span></a>
+    {% elif 'accounts/social/signup/' in request.path %}
+      <a class="aktif" href="{% url 'account_login' %}"><i class="fas fa-sign-in-alt"></i><span class="brand d-none">Giriş Yap</span></a>
     {% else %}
       <a href="{% url 'account_login' %}"><i class="fas fa-sign-in-alt"></i><span class="brand d-none">Giriş Yap</span></a>
     {% endif %}

@@ -15,7 +15,7 @@
 {% endfor %}
 {% endif %}
 <li class="social">
-    <button style="border:none;background:none  ">
+    <button style="border:none;background:none">
     <a title="{{provider.name}}" class="socialaccount_provider {{provider.id}} gmail"
     href="{% provider_login_url provider.id process=process scope=scope auth_params=auth_params %}">
         <img src="{% static 'img/google.svg' %}" alt="Google" height=18px" width="18px" style="margin-right:0.25em">
