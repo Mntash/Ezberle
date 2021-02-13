@@ -718,10 +718,6 @@ input:focus::placeholder {
   margin-right: 5px;
 }
 
-
-
-
-
 body {
     background: teal !important;
     font-family: system-ui !important;
@@ -874,7 +870,6 @@ input[type="search"]::-webkit-search-results-decoration { display: none; }
 
 .quiz-word {
     height:200px;
-    background:
 }
 
 .book {
@@ -1483,6 +1478,10 @@ input[type="search"]::-webkit-search-results-decoration { display: none; }
     transition: box-shadow 0.5s;
 }
 
+.quiz-answer:focus {
+    border:medium solid teal !important;
+}
+
 .quiz-answer::-webkit-input-placeholder {
     color:#000;
 }
@@ -1756,4 +1755,32 @@ input[type="text"]:disabled {
      fill: transparent;
     stroke-dashoffset:  -200;
   }
+}
+
+.brand-logo span {
+	margin:-2px;
+	display:inline-block;
+	font-size:24px;
+}
+
+.icon-bar a:first-child:hover span:first-child {
+	animation:ez 1.8s infinite ease-in-out;
+}
+
+.icon-bar a:first-child:hover span:last-child {
+	animation:le 1.8s 1s infinite ease-in-out;
+}
+
+@keyframes ez {
+	0%{transform:rotate(0)}
+	30%{transform:translate(-10px,-10px) rotate(35deg)}
+	60%{transform:rotate(0)}
+	100%{transform:rotate(0)}
+}
+
+@keyframes le {
+	0%{transform:rotate(0)}
+	30%{transform:translate(10px,-10px) rotate(-35deg)}
+	60%{transform:rotate(0)}
+	100%{transform:rotate(0)}
 }

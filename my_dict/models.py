@@ -36,3 +36,9 @@ class Search(models.Model):
     create_time = models.DateTimeField(auto_now=True)
 
 
+class WordOfTheDay(models.Model):
+    english = models.CharField(max_length=100, null=True)
+    turkish = models.CharField(max_length=100, null=True)
+    create_time = models.DateTimeField(auto_now=True)
+
+

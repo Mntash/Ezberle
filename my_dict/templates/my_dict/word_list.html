@@ -29,9 +29,9 @@
                     <li data-id="{{word.id}}" class="li{{word.id}}">
                         <div class="en-section">
                             <div class="align-self-center word">
-                                <a href="{% url 'dictionary' word.english %}" style="color:black">{{ word.english }}</a>
+                                <a href="{% url 'dictionary' word.english %}" style="color:black;padding-left:7px">{{ word.english }}</a>
                             </div>
-                            <div data-id="{{word.id}}" class="btn-grp">
+                            <div data-id="{{word.id}}" class="btn-grp" style="padding-right:3px;">
                                 {% if word.audio %}
                                 <i title="Dinle" style="cursor:pointer; right:10px;" class="material-icons audio">volume_up</i>
                                 <audio src="{{word.audio}}"></audio>
@@ -153,9 +153,9 @@
                     <li data-id="{{word.id}}" class="li{{word.id}}">
                         <div class="en-section">
                             <div class="align-self-center word">
-                                <a href="{% url 'dictionary' word.english %}" style="color:black">{{ word.english }}</a>
+                                <a href="{% url 'dictionary' word.english %}" style="color:black;padding-left:7px">{{ word.english }}</a>
                             </div>
-                            <div data-id="{{word.id}}" class="btn-grp">
+                            <div data-id="{{word.id}}" class="btn-grp" style="padding-right:3px;">
                                 {% if word.audio %}
                                 <i title="Dinle" style="cursor:pointer; right:10px;" class="material-icons audio">volume_up</i>
                                 <audio src="{{word.audio}}"></audio>
