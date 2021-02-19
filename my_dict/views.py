@@ -22,38 +22,38 @@ saurus_url = 'https://www.thesaurus.com/browse/{}'
 def home(request):
     req_mer = requests.get('https://www.merriam-webster.com/', headers={"User-Agent": "Mozilla/5.0"}).content
     req_ox = requests.get('https://www.oxfordlearnersdictionaries.com/', headers={"User-Agent": "Mozilla/5.0"}).content
-    req_col = requests.get('https://www.collinsdictionary.com/', headers={"User-Agent": "Mozilla/5.0"}).content
+    req_lex = requests.get('https://www.lexico.com/', headers={"User-Agent": "Mozilla/5.0"}).content
     req_camb = requests.get('https://dictionary.cambridge.org/', headers={"User-Agent": "Mozilla/5.0"}).content
     soup_mer = BeautifulSoup(req_mer, 'lxml')
     soup_ox = BeautifulSoup(req_ox, 'lxml')
-    soup_col = BeautifulSoup(req_col, 'lxml')
+    soup_lex = BeautifulSoup(req_lex, 'lxml')
     soup_camb = BeautifulSoup(req_camb, 'lxml')
     word_mer = soup_mer.find('a', {'class': 'header-wht'}).get_text().strip()
     word_ox = soup_ox.find('a', {'class': 'headword'}).find_next().get_text().strip()
-    word_col = soup_col.find('div', {'class': 'h1 bold'}).text.strip()
+    word_lex = soup_lex.find('a', {'class': 'linkword'}).text.strip()
     word_camb = soup_camb.find('p', {'class': 'wotd-hw'}).find('a').get_text().strip()
     tur_mer = []
     tur_ox = []
-    tur_col = []
+    tur_lex = []
     tur_camb = []
     if search_word(word_mer) is not None:
         tur_mer = search_word(word_mer)
     if search_word(word_ox) is not None:
         tur_ox = search_word(word_ox)
-    if search_word(word_col) is not None:
-        tur_col = search_word(word_col)
+    if search_word(word_lex) is not None:
+        tur_lex = search_word(word_lex)
     if search_word(word_camb) is not None:
         tur_camb = search_word(word_camb)
 
     mer_exists = False
     ox_exists = False
-    col_exists = False
+    lex_exists = False
     camb_exists = False
 
     if request.user.is_authenticated:
         mer_exists = WordEn.objects.filter(user=request.user, english=word_mer).exists()
         ox_exists = WordEn.objects.filter(user=request.user, english=word_ox).exists()
-        col_exists = WordEn.objects.filter(user=request.user, english=word_col).exists()
+        lex_exists = WordEn.objects.filter(user=request.user, english=word_lex).exists()
         camb_exists = WordEn.objects.filter(user=request.user, english=word_camb).exists()
 
     last_words = []
@@ -93,15 +93,15 @@ def home(request):
     context = {
         'word_1': word_mer,
         'word_2': word_ox,
-        'word_3': word_col,
+        'word_3': word_lex,
         'word_4': word_camb,
         'tur_1': tur_mer,
         'tur_2': tur_ox,
-        'tur_3': tur_col,
+        'tur_3': tur_lex,
         'tur_4': tur_camb,
         'mer_exists': mer_exists,
         'ox_exists': ox_exists,
-        'col_exists': col_exists,
+        'lex_exists': lex_exists,
         'camb_exists': camb_exists,
         'last_words': last_words,
         'rlwords': random_learned,

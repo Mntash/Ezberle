@@ -140,6 +140,12 @@ i {
     background: var(--clr-secondary) !important
 }
 
+.lexico {
+    height: 85px;
+    width: 90px;
+    max-width: 90px
+}
+
 .table td, .table th {
     border-top:none !important;
     border-bottom:none !important

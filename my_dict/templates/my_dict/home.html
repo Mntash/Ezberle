@@ -9,7 +9,7 @@
 
     <div class="col-lg-3 col-sm-6 text-center">
         <div class="card card-shadow">
-            <div><a href="https://www.merriam-webster.com/"><img class="card-img-top mx-auto" src="{% static 'img/merriam.png' %}" alt="Merriam Webster"></a></div>
+            <div><a href="https://www.merriam-webster.com/" target="_blank"><img class="card-img-top mx-auto" src="{% static 'img/merriam.png' %}" alt="Merriam Webster"></a></div>
             <div class="card-body home-card">
                 <a href="{% url 'dictionary' word_1 %}"><h4 id="word_1" class="font-weight-bold">{{ word_1 }}</h4></a>
                 {% if tur_1.0 %}
@@ -53,7 +53,7 @@
 
     <div class="col-lg-3 col-sm-6 text-center">
         <div class="card card-shadow">
-            <div><a href="https://www.oxfordlearnersdictionaries.com/"><img class="card-img-top mx-auto" src="{% static 'img/oxford.jfif' %}" alt="Oxford Dictionary"></a></div>
+            <div><a href="https://www.oxfordlearnersdictionaries.com/" target="_blank"><img class="card-img-top mx-auto" src="{% static 'img/oxford.jfif' %}" alt="Oxford Dictionary"></a></div>
             <div class="card-body home-card">
                 <a href="{% url 'dictionary' word_2 %}"><h4 id="word_2" class="font-weight-bold">{{ word_2 }}</h4></a>
                 {% if tur_2.0 %}
@@ -97,7 +97,7 @@
 
     <div class="col-lg-3 col-sm-6 text-center mb-sm-2">
         <div class="card card-shadow">
-            <div><a href="https://www.collinsdictionary.com/"><img class="card-img-top mx-auto" src="{% static 'img/collins.jpg' %}" alt="Collinsdictionary"></a></div>
+            <div><a href="https://www.lexico.com/" target="_blank"><img class="card-img-top mx-auto lexico" src="{% static 'img/lexico.png' %}" alt="Lexico"></a></div>
             <div class="card-body home-card">
                 <a href="{% url 'dictionary' word_3 %}"><h4 id="word_3" class="font-weight-bold">{{ word_3 }}</h4></a>
                 {% if tur_3.0 %}
@@ -115,7 +115,7 @@
                 {% endif %}
                 {% if tur_3.0 %}
                     {% if user.is_authenticated %}
-                        {% if col_exists %}
+                        {% if lex_exists %}
                             <div><button data-id="3" class="btn add-btn-home btn-success">Kelime Eklendi</button></div>
                         {% else %}
                             <div><button data-id="3" class="btn add-btn-home btn-info">Kelimeyi Ekle</button></div>
@@ -125,7 +125,7 @@
                     {% endif %}
                 {% else %}
                     {% if user.is_authenticated %}
-                        {% if col_exists %}
+                        {% if lex_exists %}
                             <div><button data-id="3" class="btn add-btn-home btn-success disabled not-allowed" disabled>Kelime Eklendi</button></div>
                         {% else %}
                             <div><button data-id="3" class="btn add-btn-home btn-info disabled not-allowed" disabled>Kelimeyi Ekle</button></div>
@@ -141,7 +141,7 @@
 
     <div class="col-lg-3 col-sm-6 text-center mb-sm-2 mb-2">
         <div class="card card-shadow">
-            <div><a href="https://dictionary.cambridge.org/"><img class="card-img-top mx-auto" src="{% static 'img/cambridge.png' %}" alt="Merriam Webster"></a></div>
+            <div><a href="https://dictionary.cambridge.org/" target="_blank"><img class="card-img-top mx-auto" src="{% static 'img/cambridge.png' %}" alt="Merriam Webster"></a></div>
             <div class="card-body home-card">
                 <a href="{% url 'dictionary' word_4 %}">
                     <h4 id="word_4" class="font-weight-bold">{{ word_4 }}</h4>
