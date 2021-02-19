@@ -130,24 +130,44 @@ def refresh(request):
         starred_words = [word["english"] for word in WordEn.objects.filter(user=request.user, is_starred=True).values()]
     if request.method == "GET":
         if request.GET.get('random-unlearned'):
-            number = int(request.GET.get('random-unlearned'))
-            random_ = random.sample(unlearned_words, k=number)
-            random_unlearned = random_
-            for word in random_:
-                obj = WordEn.objects.get(user=request.user, english=word)
-                tr = [word["turkish"] for word in obj.turkish.all().values()]
-                tr_list.append(tr)
+            if request.GET.get('random-unlearned') == "refresh":
+                if len(unlearned_words) < 10:
+                    random_ = random.sample(unlearned_words, k=len(unlearned_words))
+                    random_unlearned = random_
+                else:
+                    random_ = random.sample(unlearned_words, k=10)
+                    random_unlearned = random_
+            else:
+                number = int(request.GET.get('random-unlearned'))
+                random_ = random.sample(unlearned_words, k=number)
+                random_unlearned = random_
+                for word in random_:
+                    obj = WordEn.objects.get(user=request.user, english=word)
+                    tr = [word["turkish"] for word in obj.turkish.all().values()]
+                    tr_list.append(tr)
         elif request.GET.get('random-learned'):
-            number = int(request.GET.get('random-learned'))
-            random_ = random.sample(learned_words, k=number)
-            random_learned = random_
-            for word in random_:
-                obj = WordEn.objects.get(user=request.user, english=word)
-                tr = [word["turkish"] for word in obj.turkish.all().values()]
-                tr_list.append(tr)
+            if request.GET.get('random-learned') == "refresh":
+                if len(learned_words) < 10:
+                    random_ = random.sample(learned_words, k=len(learned_words))
+                    random_learned = random_
+                else:
+                    random_ = random.sample(learned_words, k=10)
+                    random_learned = random_
+            else:
+                number = int(request.GET.get('random-learned'))
+                random_ = random.sample(learned_words, k=number)
+                random_learned = random_
+                for word in random_:
+                    obj = WordEn.objects.get(user=request.user, english=word)
+                    tr = [word["turkish"] for word in obj.turkish.all().values()]
+                    tr_list.append(tr)
         elif request.GET.get('random-starred'):
-            random_ = random.sample(starred_words, k=10)
-            random_starred = random_
+            if len(starred_words) < 10:
+                random_ = random.sample(starred_words, len(starred_words))
+                random_starred = random_
+            else:
+                random_ = random.sample(starred_words, k=10)
+                random_starred = random_
 
     data = {
         'random_unlearned': random_unlearned,

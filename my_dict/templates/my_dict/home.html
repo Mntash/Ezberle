@@ -4,17 +4,14 @@
 
 {% block content %}
 <div class="container container-home" style="padding-top:48px">
-    <div style="text-align:center;background:oldlace">
-        <span class="font-weight-bold" style="color:#00308F; font-size:xx-large;">Günün Kelimeleri</span>
-    </div>
 
 <div class="row">
 
-    <div class="col-lg-3 col-sm-6 text-center pd-neg">
-        <div class="card">
+    <div class="col-lg-3 col-sm-6 text-center">
+        <div class="card card-shadow">
             <div><a href="https://www.merriam-webster.com/"><img class="card-img-top mx-auto" src="{% static 'img/merriam.png' %}" alt="Merriam Webster"></a></div>
-            <div class="card-body position-relative home-card">
-                <a href="{% url 'dictionary' word_1 %}"><h4 id="word_1" class="card-title font-weight-bold" style="color:#00308F">{{ word_1 }}</h4></a>
+            <div class="card-body home-card">
+                <a href="{% url 'dictionary' word_1 %}"><h4 id="word_1" class="font-weight-bold">{{ word_1 }}</h4></a>
                 {% if tur_1.0 %}
                     <h5 class="h5" id="tur_1">({{ tur_1.0 }})</h5>
                 {% else %}
@@ -54,11 +51,11 @@
         </div>
     </div>
 
-    <div class="col-lg-3 col-sm-6 text-center pd-neg">
-        <div class="card">
+    <div class="col-lg-3 col-sm-6 text-center">
+        <div class="card card-shadow">
             <div><a href="https://www.oxfordlearnersdictionaries.com/"><img class="card-img-top mx-auto" src="{% static 'img/oxford.jfif' %}" alt="Oxford Dictionary"></a></div>
             <div class="card-body home-card">
-                <a href="{% url 'dictionary' word_2 %}"><h4 id="word_2" class="card-title font-weight-bold" style="color:#00308F">{{ word_2 }}</h4></a>
+                <a href="{% url 'dictionary' word_2 %}"><h4 id="word_2" class="font-weight-bold">{{ word_2 }}</h4></a>
                 {% if tur_2.0 %}
                     <h5 class="h5" id="tur_2">({{ tur_2.0 }})</h5>
                 {% else %}
@@ -98,11 +95,11 @@
         </div>
     </div>
 
-    <div class="col-lg-3 col-sm-6 text-center pd-neg">
-        <div class="card">
+    <div class="col-lg-3 col-sm-6 text-center mb-sm-2">
+        <div class="card card-shadow">
             <div><a href="https://www.collinsdictionary.com/"><img class="card-img-top mx-auto" src="{% static 'img/collins.jpg' %}" alt="Collinsdictionary"></a></div>
             <div class="card-body home-card">
-                <a href="{% url 'dictionary' word_3 %}"><h4 id="word_3" class="card-title font-weight-bold" style="color:#00308F">{{ word_3 }}</h4></a>
+                <a href="{% url 'dictionary' word_3 %}"><h4 id="word_3" class="font-weight-bold">{{ word_3 }}</h4></a>
                 {% if tur_3.0 %}
                 <h5 class="h5" id="tur_3">({{ tur_3.0 }})</h5>
                 {% else %}
@@ -142,11 +139,13 @@
         </div>
     </div>
 
-    <div class="col-lg-3 col-sm-6 text-center pd-neg">
-        <div class="card">
+    <div class="col-lg-3 col-sm-6 text-center mb-sm-2 mb-2">
+        <div class="card card-shadow">
             <div><a href="https://dictionary.cambridge.org/"><img class="card-img-top mx-auto" src="{% static 'img/cambridge.png' %}" alt="Merriam Webster"></a></div>
-            <div class="card-body position-relative home-card">
-                <a href="{% url 'dictionary' word_4 %}"><h4 id="word_4" class="card-title font-weight-bold" style="color:#00308F">{{ word_4 }}</h4></a>
+            <div class="card-body home-card">
+                <a href="{% url 'dictionary' word_4 %}">
+                    <h4 id="word_4" class="font-weight-bold">{{ word_4 }}</h4>
+                </a>
                 {% if tur_4.0 %}
                     <h5 class="h5" id="tur_4">({{ tur_4.0 }})</h5>
                 {% else %}
@@ -189,8 +188,8 @@
 </div>
 
 <div class="row">
-    <div class="col-lg-3 col-md-3 col-sm-6 pd-neg">
-        <div class="card card-note">
+    <div class="col-lg-3 col-sm-6">
+        <div class="card card-note cn-la">
             <div class="text-center"><span class="title-home title-last">Son Eklenenler</span></div>
             <div class="overflow-auto">
                 <ul class="mt-5 ml-2 title-last-ul">
@@ -202,60 +201,111 @@
         </div>
     </div>
 
-    <div class="col-lg-3 col-md-3 col-sm-6 pd-neg">
-        <div class="card card-note position-relative">
-            <div class="text-center"><span class="title-home title-star">Favoriler</span></div>
-            <div class="overflow-auto">
+    <div class="cn-2p col-lg-3 col-sm-6">
+        <div class="cn-2c card card-note">
+            <span class="title-home title-star">Favoriler</span>
+            <div class="overflow-auto position-relative">
                 <ul class="mt-5 ml-2 ul-starred">
                     {% for word in rstrwords %}
-                    <li><a style="color:#00308F" href="{% url 'dictionary' word %}">{{ word }}</a></li>
+                    <li><a href="{% url 'dictionary' word %}">{{ word }}</a></li>
                     {% endfor %}
                 </ul>
             </div>
-            {% if starred_words|length > 9 %}
-            <i class="material-icons refresh transform ref-str">refresh</i>
+            {% if user.is_authenticated %}
+            <div class="swing refresh">
+                <div class="object-rope"></div>
+                <button class="object-content ref ref-star">
+                    <img class="ref-img ref-img-star" src="{% static 'img/ref-arrow.png' %}" alt="yenile" height="24px" width="24px">
+                </button>
+            </div>
+            {% else %}
+            <div class="swing refresh">
+                <div class="object-rope"></div>
+                <button class="object-content" type="button" data-toggle="modal" data-target="#login-modal">
+                    <img class="ref-img ref-img-star" src="{% static 'img/ref-arrow.png' %}" alt="yenile" height="24px" width="24px">
+                </button>
+            </div>
             {% endif %}
         </div>
     </div>
 
-    <div class="col-lg-3 col-md-3 col-sm-6 mb-md-0 mb-xl-0 mb-5 pd-neg">
-        <div class="card card-note card-note-unl position-relative">
-            <div class="text-center"><span class="title-home title-unl">Öğreneceklerim</span></div>
-            <div class="overflow-auto">
+
+    <div class="cn-3p col-lg-3 col-sm-6">
+        <div class="cn-3c card card-note">
+            <span class="title-home title-unl">Öğreneceklerim</span>
+            <div class="overflow-auto position-relative">
                 <ul class="mt-5 ml-2 ul-unlearned">
                     {% for word in rulwords %}
-                    <li><a style="color:#00308F" href="{% url 'dictionary' word %}">{{ word }}</a></li>
+                    <li><a href="{% url 'dictionary' word %}">{{ word }}</a></li>
                     {% endfor %}
                 </ul>
             </div>
-            {% if rulwords|length > 9 %}
-            <i class="material-icons refresh transform ref-unl">refresh</i>
-            {% endif %}
             {% if user.is_authenticated %}
-            <button class="quiz quiz-unl" type="button" data-toggle="modal" data-target="#quiz-unl">Quiz</button>
+            <div class="swing refresh">
+                <div class="object-rope"></div>
+                <button class="object-content ref ref-unl">
+                    <img class="ref-img ref-img-unl" src="{% static 'img/ref-arrow.png' %}" alt="yenile" height="24px" width="24px">
+                </button>
+            </div>
+            <div class="swing quiz">
+                <div class="object-rope"></div>
+                <button class="object-content" type="button" data-toggle="modal" data-target="#quiz-unl">
+                    Quiz
+                </button>
+            </div>
             {% else %}
-            <button class="quiz quiz-modal" type="button">Quiz</button>
+            <div class="swing refresh">
+                <div class="object-rope"></div>
+                <button class="object-content" type="button" data-toggle="modal" data-target="#login-modal">
+                    <img class="ref-img ref-img-unl" src="{% static 'img/ref-arrow.png' %}" alt="yenile" height="24px" width="24px">
+                </button>
+            </div>
+            <div class="swing quiz">
+                <div class="object-rope"></div>
+                <button class="object-content" type="button" data-toggle="modal" data-target="#login-modal">
+                    Quiz
+                </button>
+            </div>
             {% endif %}
         </div>
     </div>
 
-    <div class="col-lg-3 col-md-3 col-sm-6 mb-xl-0 mb-5 pd-neg">
-        <div class="card card-note card-note-l position-relative">
-            <div class="text-center"><span class="title-home title-l">Öğrendiklerim</span></div>
-            <div class="overflow-auto">
+    <div class="cn-4p col-lg-3 col-sm-6">
+        <div class="cn-4c card card-note">
+            <span class="title-home title-l">Öğrendiklerim</span>
+            <div class="overflow-auto position-relative">
                 <ul class="mt-5 ml-2 ul-learned">
                     {% for word in rlwords %}
-                    <li><a style="color:#00308F" href="{% url 'dictionary' word %}">{{ word }}</a></li>
+                    <li><a href="{% url 'dictionary' word %}">{{ word }}</a></li>
                     {% endfor %}
                 </ul>
             </div>
-            {% if rlwords|length > 9 %}
-            <i class="material-icons refresh transform ref-l">refresh</i>
-            {% endif %}
             {% if user.is_authenticated %}
-            <button class="quiz quiz-l" type="button" data-toggle="modal" data-target="#quiz-l">Quiz</button>
+            <div class="swing refresh">
+                <div class="object-rope"></div>
+                <button class="object-content ref ref-l">
+                    <img class="ref-img ref-img-l" src="{% static 'img/ref-arrow.png' %}" alt="yenile" height="24px" width="24px">
+                </button>
+            </div>
+            <div class="swing quiz">
+                <div class="object-rope"></div>
+                <button class="object-content" type="button" data-toggle="modal" data-target="#quiz-l">
+                    Quiz
+                </button>
+            </div>
             {% else %}
-            <button class="quiz quiz-modal" type="button">Quiz</button>
+            <div class="swing refresh">
+                <div class="object-rope"></div>
+                <button class="object-content" type="button" data-toggle="modal" data-target="#login-modal">
+                    <img class="ref-img ref-img-l" src="{% static 'img/ref-arrow.png' %}" alt="yenile" height="24px" width="24px">
+                </button>
+            </div>
+            <div class="swing quiz">
+                <div class="object-rope"></div>
+                <button class="object-content" type="button" data-toggle="modal" data-target="#login-modal">
+                    Quiz
+                </button>
+            </div>
             {% endif %}
         </div>
     </div>
@@ -267,7 +317,7 @@
 <div class="modal fade" id="quiz-unl" tabindex="-1" role="dialog">
     <div class="modal-dialog modal-dialog-centered" role="document">
       <div class="modal-content modal-content-unl py-4 px-sm-4 px-2" style="height:550px;background:teal !important">
-        <h5 class="title-quiz">Günlük Quiz</h5>
+        <h5 class="title-quiz">Quiz</h5>
         <button type="button" class="close close-quiz" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
@@ -387,12 +437,6 @@
 
 <script>
 $(function(){
-
-    $(".quiz").click(function(){
-        if ($(this).hasClass("quiz-modal")) {
-            $("#login-modal").modal()
-        }
-    })
 
     $(".start").click(function() {
         if(!event.detail || event.detail == 1) {
@@ -958,68 +1002,113 @@ $(function(){
     mediaContainer(container)
     container.addListener(mediaContainer)
 
-    $(".refresh").click(function() {
+    $(".ref").click(function() {
         var ths = $(this);
-        ths.addClass("transform-active");
-        ths.on("animationend", function(){
-          ths.removeClass('transform-active');
-          if (ths.hasClass('ref-l')) {
+        if (ths.hasClass('ref-l')) {
+            if (ths.parent().parent().parent().hasClass("flip-card")) {
+                ths.parent().parent().parent().removeClass("flip-card")
+            } else {
+                ths.parent().parent().parent().addClass("flip-card")
+            }
             $.ajax({
                 type:"GET",
                 url: "{% url 'random-refresh' %}",
                 async: false,
                 data: {
-                    'random-learned': 10,
+                    'random-learned': "refresh",
                 },
                 dataType: 'json',
                 success: function(data) {
                     if (data.random_learned) {
-                        $(".ul-learned").empty();
-                        data.random_learned.map(function(i) {
-                            $(".ul-learned").append(`<li><a style="color:#00308F" href="/sözlük/q=${i}/">${i}</a></li>`);
-                        });
+                        var ref;
+                        var quiz;
+                        setTimeout(function() {
+                            $(".ul-learned").empty();
+                            $(".title-l").css("z-index", "-1").html("")
+                            ref = $(".ref-img-l").detach()
+                            $("button[data-target='#quiz-l']").html("")
+                        },700)
+                        setTimeout(function() {
+                            $(".title-l").css("z-index", "initial").html("Öğrendiklerim")
+                            $(".ref-l").prepend(ref)
+                            $("button[data-target='#quiz-l']").html("Quiz")
+                            data.random_learned.map(function(i) {
+                                $(".ul-learned").append(`<li><a style="color:teal" href="/sözlük/q=${i}/">${i}</a></li>`);
+                            });
+                        },1900)
                     }
                 }
-            })
-          } else if (ths.hasClass('ref-unl')) {
+            }) // ajax
+        } else if (ths.hasClass('ref-unl')) {
+            if (ths.parent().parent().parent().hasClass("flip-card")) {
+                ths.parent().parent().parent().removeClass("flip-card")
+            } else {
+                ths.parent().parent().parent().addClass("flip-card")
+            }
             $.ajax({
                 type:"GET",
                 url: "{% url 'random-refresh' %}",
                 async: false,
                 data: {
-                    'random-unlearned': 10,
+                    'random-unlearned': "refresh",
                 },
                 dataType: 'json',
                 success: function(data) {
                     if (data.random_unlearned) {
-                        $(".ul-unlearned").empty();
-                        data.random_unlearned.map(function(i) {
-                            $(".ul-unlearned").append(`<li><a style="color:#00308F" href="/sözlük/q=${i}/">${i}</a></li>`);
-                        });
+                        var ref;
+                        var quiz;
+                        setTimeout(function() {
+                            $(".ul-unlearned").empty();
+                            $(".title-unl").css("z-index", "-1").html("")
+                            ref = $(".ref-img-unl").detach()
+                            $("button[data-target='#quiz-unl']").html("")
+                        },700)
+                        setTimeout(function() {
+                            $(".title-unl").css("z-index", "initial").html("Öğreneceklerim")
+                            $(".ref-unl").prepend(ref)
+                            $("button[data-target='#quiz-unl']").html("Quiz")
+                            data.random_unlearned.map(function(i) {
+                                $(".ul-unlearned").append(`<li><a style="color:teal" href="/sözlük/q=${i}/">${i}</a></li>`);
+                            });
+                        },1900)
                     }
                 }
             })
-          }
-          else if (ths.hasClass('ref-str')) {
+        }
+        else if (ths.hasClass('ref-star')) {
+            if (ths.parent().parent().parent().hasClass("flip-card")) {
+                ths.parent().parent().parent().removeClass("flip-card")
+            } else {
+                ths.parent().parent().parent().addClass("flip-card")
+            }
             $.ajax({
                 type:"GET",
                 url: "{% url 'random-refresh' %}",
                 async: false,
                 data: {
-                    'random-starred': 'random-starred',
+                    'random-starred': 'refresh',
                 },
                 dataType: 'json',
                 success: function(data) {
                     if (data.random_starred) {
-                        $(".ul-starred").empty();
-                        data.random_starred.map(function(i) {
-                            $(".ul-starred").append(`<li><a style="color:#00308F" href="/sözlük/q=${i}/">${i}</a></li>`);
-                        });
+                        var ref;
+                        var quiz;
+                        setTimeout(function() {
+                            $(".ul-starred").empty();
+                            $(".title-star").css("z-index", "-1").html("")
+                            ref = $(".ref-img-star").detach()
+                        },700)
+                        setTimeout(function() {
+                            $(".title-star").css("z-index", "initial").html("Favoriler")
+                            $(".ref-star").prepend(ref)
+                            data.random_starred.map(function(i) {
+                                $(".ul-starred").append(`<li><a style="color:teal" href="/sözlük/q=${i}/">${i}</a></li>`);
+                            });
+                        },1900)
                     }
                 }
             })
-          }
-        })
+        }
     })
 
 

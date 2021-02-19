@@ -8,7 +8,7 @@
 
 <div class="row">
 <div class="col-md-9 pd-neg">
-    <div class="search">
+    <div class="search mb-4">
         <div class="search-top d-flex justify-content-between">
             <div class="d-flex">
                 <input title="Bir kelime arayın" class="srch-i" type="search" placeholder="Kelime ara.." onClick="this.setSelectionRange(0, this.value.length)" aria-autocomplete="none" autofocus>
@@ -176,25 +176,25 @@
 {% if user.is_authenticated %}
 <div id="history-big" class="col-lg-2 col-md-3" style="margin-left:-30px;">
     <div class="history-head text-center">
-        <a href="" id="open_his" style="color:#544f4f;text-decoration:none">Geçmiş</a>
+        <a href="" id="open_his" style="color:black;text-decoration:none">Geçmiş</a>
     </div>
     <div class="history-body d-none" style="min-height:530px">
         <ul>
         {% for history in last_20_history %}
-        <li><a style="color:#00308F" href="{% url 'dictionary' history.english %}">{{ history.english }}</a></li>
+        <li><a style="color:teal" href="{% url 'dictionary' history.english %}">{{ history.english }}</a></li>
         {% endfor %}
         </ul>
     </div>
 </div>
 
-<div id="history-sm" class="col-12 pd-neg mb-5">
+<div id="history-sm" class="col-12 pd-neg mb-4">
     <div class="history-head text-center">
         Geçmiş
     </div>
     <div class="history-body-sm">
         <ul class="row">
         {% for history in last_20_history %}
-        <li class="col-sm-6 example-li"><a style="color:#00308F" href="{% url 'dictionary' history.english %}">{{ history.english }}</a></li>
+        <li class="col-sm-6 example-li"><a style="color:teal" href="{% url 'dictionary' history.english %}">{{ history.english }}</a></li>
         {% endfor %}
         </ul>
     </div>
@@ -205,7 +205,7 @@
 {% if is_english %}
     <div class="col-sm-12 col-lg-6 pd-neg">
         {% if examples %}
-        <div class="examples my-4" style="padding-bottom:5px;">
+        <div class="examples mb-4" style="padding-bottom:5px;">
             <span class="text-center">Örnek Cümleler</span>
             <ul class="my-2">
                 {% for ex in examples %}
@@ -214,7 +214,7 @@
             </ul>
         </div>
         {% else %}
-        <div class="examples my-4" style="padding-right:20px;padding-bottom:20px;padding-left:20px">
+        <div class="examples mb-4" style="padding-right:20px;padding-bottom:20px;padding-left:20px">
             <span class="text-center" style="margin-bottom:21px">Örnek Cümleler</span>
             <ul><li style="border: medium outset darkturquoise !important;
                            padding:1%; background: aliceblue;"><p>Örnek cümle bulunamadı..</p>
@@ -226,7 +226,7 @@
     <div class="container">
         <div class="anto-syn">
             <div class="row">
-                <div class="syn col-sm-6 mb-2 pd-neg">
+                <div class="syn col-sm-6 mb-4 pd-neg">
                     <span class="text-center">Eş Anlamlılar</span>
                     <ul id="ul-syn">
                         {% if synonyms %}
