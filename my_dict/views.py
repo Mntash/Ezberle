@@ -664,20 +664,25 @@ def search_word(word):
     try:
         rows = table.find_all('tr')[1:]
         audio_and_tr = []
+        tr_list = []
 
         for row in rows:
             if not row.attrs:
                 tds = row.find_all('td')
                 tr = tds[3].text.strip()
-                audio_and_tr.append(tr)
+                tr_list.append(tr)
+
+        audio_and_tr.append(tr_list[:3])
 
         if soup.find('audio', {'id': 'turengVoiceENTRENus'}):
             if soup.find('audio', {'id': 'turengVoiceENTRENus'}).find('source'):
                 audio = soup.find('audio', {'id': 'turengVoiceENTRENus'}).find('source')['src']
                 audio_and_tr.append(audio)
+        else:
+            audio_and_tr.append(None)
 
-        if audio_and_tr:
-            return audio_and_tr[0], audio_and_tr[-1]
+        return audio_and_tr[0], audio_and_tr[1]
+
     except AttributeError:
         return None
 

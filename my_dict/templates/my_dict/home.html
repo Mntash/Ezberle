@@ -13,12 +13,18 @@
             <div class="card-body home-card">
                 <a href="{% url 'dictionary' word_1 %}"><h4 id="word_1" class="font-weight-bold">{{ word_1 }}</h4></a>
                 {% if tur_1.0 %}
-                    <h5 class="h5" id="tur_1">({{ tur_1.0 }})</h5>
+                    <ul class="wotd-tr-list">
+                    {% for tr in tur_1.0 %}
+                        <li>
+                            {{ tr }}
+                        </li>
+                    {% endfor %}
+                    </ul>
                 {% else %}
-                    <h5>(...)</h5>
+                    (...)
                 {% endif %}
                 <div class="home-card-footer">
-                {% if tur_1.1 %}
+                {% if tur_1.1 is not None %}
                     <div><span class="audio"><i title="Dinle" data-id="1" style="cursor:pointer" class="material-icons">volume_up</i></span></div>
                     <audio id="au-1" src="{{tur_1.1}}"></audio>
                 {% else %}
@@ -28,22 +34,22 @@
                 {% if tur_1.0 %}
                     {% if user.is_authenticated %}
                         {% if mer_exists %}
-                            <div><button data-id="1" class="btn add-btn-home btn-success">Kelime Eklendi</button></div>
+                            <div><button data-id="1" class="btn add-btn-home btn-after">Kelime Eklendi</button></div>
                         {% else %}
-                            <div><button data-id="1" class="btn add-btn-home btn-info">Kelimeyi Ekle</button></div>
+                            <div><button data-id="1" class="btn add-btn-home btn-before">Kelimeyi Ekle</button></div>
                         {% endif %}
                     {% else %}
-                        <div><button data-id="modal" class="btn add-btn-home btn-info">Kelimeyi Ekle</button></div>
+                        <div><button data-id="modal" class="btn add-btn-home btn-before">Kelimeyi Ekle</button></div>
                     {% endif %}
                 {% else %}
                         {% if user.is_authenticated %}
                         {% if mer_exists %}
-                            <div><button data-id="1" class="btn add-btn-home btn-success disabled not-allowed" disabled>Kelime Eklendi</button></div>
+                            <div><button data-id="1" class="btn add-btn-home btn-after disabled not-allowed" disabled>Kelime Eklendi</button></div>
                         {% else %}
-                            <div><button data-id="1" class="btn add-btn-home btn-info disabled not-allowed" disabled>Kelimeyi Ekle</button></div>
+                            <div><button data-id="1" class="btn add-btn-home btn-before disabled not-allowed" disabled>Kelimeyi Ekle</button></div>
                         {% endif %}
                     {% else %}
-                        <div><button data-id="modal" class="btn add-btn-home btn-info disabled not-allowed" disabled>Kelimeyi Ekle</button></div>
+                        <div><button data-id="modal" class="btn add-btn-home btn-before disabled not-allowed" disabled>Kelimeyi Ekle</button></div>
                     {% endif %}
                 {% endif %}
                 </div>
@@ -57,12 +63,18 @@
             <div class="card-body home-card">
                 <a href="{% url 'dictionary' word_2 %}"><h4 id="word_2" class="font-weight-bold">{{ word_2 }}</h4></a>
                 {% if tur_2.0 %}
-                    <h5 class="h5" id="tur_2">({{ tur_2.0 }})</h5>
+                    <ul class="wotd-tr-list">
+                    {% for tr in tur_2.0 %}
+                        <li>
+                            {{ tr }}
+                        </li>
+                    {% endfor %}
+                    </ul>
                 {% else %}
-                    <h5>(...)</h5>
+                    (...)
                 {% endif %}
                 <div class="home-card-footer">
-                {% if tur_2.1 %}
+                {% if tur_2.1 is not None %}
                     <div><span class="audio"><i title="Dinle" data-id="2" style="cursor:pointer;" class="material-icons">volume_up</i></span></div>
                     <audio id="au-2" src="{{tur_2.1}}"></audio>
                 {% else %}
@@ -72,22 +84,22 @@
                 {% if tur_2.0 %}
                     {% if user.is_authenticated %}
                         {% if ox_exists %}
-                            <div><button data-id="2" class="btn add-btn-home btn-success">Kelime Eklendi</button></div>
+                            <div><button data-id="2" class="btn add-btn-home btn-after">Kelime Eklendi</button></div>
                         {% else %}
-                            <div><button data-id="2" class="btn add-btn-home btn-info">Kelimeyi Ekle</button></div>
+                            <div><button data-id="2" class="btn add-btn-home btn-before">Kelimeyi Ekle</button></div>
                         {% endif %}
                     {% else %}
-                        <div><button data-id="modal" class="btn add-btn-home btn-info">Kelimeyi Ekle</button></div>
+                        <div><button data-id="modal" class="btn add-btn-home btn-before">Kelimeyi Ekle</button></div>
                     {% endif %}
                 {% else %}
                     {% if user.is_authenticated %}
                         {% if ox_exists %}
-                            <div><button data-id="2" class="btn add-btn-home btn-success disabled not-allowed" disabled>Kelime Eklendi</button></div>
+                            <div><button data-id="2" class="btn add-btn-home btn-after disabled not-allowed" disabled>Kelime Eklendi</button></div>
                         {% else %}
-                            <div><button data-id="2" class="btn add-btn-home btn-info disabled not-allowed" disabled>Kelimeyi Ekle</button></div>
+                            <div><button data-id="2" class="btn add-btn-home btn-before disabled not-allowed" disabled>Kelimeyi Ekle</button></div>
                         {% endif %}
                     {% else %}
-                        <div><button data-id="modal" class="btn add-btn-home btn-info disabled not-allowed" disabled>Kelimeyi Ekle</button></div>
+                        <div><button data-id="modal" class="btn add-btn-home btn-before disabled not-allowed" disabled>Kelimeyi Ekle</button></div>
                     {% endif %}
                 {% endif %}
                     </div>
@@ -101,12 +113,18 @@
             <div class="card-body home-card">
                 <a href="{% url 'dictionary' word_3 %}"><h4 id="word_3" class="font-weight-bold">{{ word_3 }}</h4></a>
                 {% if tur_3.0 %}
-                <h5 class="h5" id="tur_3">({{ tur_3.0 }})</h5>
+                    <ul class="wotd-tr-list">
+                    {% for tr in tur_3.0 %}
+                        <li>
+                            {{ tr }}
+                        </li>
+                    {% endfor %}
+                    </ul>
                 {% else %}
-                <h5>(...)</h5>
+                (...)
                 {% endif %}
                 <div class="home-card-footer">
-                {% if tur_3.1 %}
+                {% if tur_3.1 is not None %}
                 <div><span class="audio"><i title="Dinle" data-id="3" style="cursor:pointer;" class="material-icons">volume_up</i></span></div>
                 <audio id="au-3" src="{{tur_3.1}}"></audio>
                 {% else %}
@@ -116,22 +134,22 @@
                 {% if tur_3.0 %}
                     {% if user.is_authenticated %}
                         {% if lex_exists %}
-                            <div><button data-id="3" class="btn add-btn-home btn-success">Kelime Eklendi</button></div>
+                            <div><button data-id="3" class="btn add-btn-home btn-after">Kelime Eklendi</button></div>
                         {% else %}
-                            <div><button data-id="3" class="btn add-btn-home btn-info">Kelimeyi Ekle</button></div>
+                            <div><button data-id="3" class="btn add-btn-home btn-before">Kelimeyi Ekle</button></div>
                         {% endif %}
                     {% else %}
-                        <div><button data-id="modal" class="btn add-btn-home btn-info">Kelimeyi Ekle</button></div>
+                        <div><button data-id="modal" class="btn add-btn-home btn-before">Kelimeyi Ekle</button></div>
                     {% endif %}
                 {% else %}
                     {% if user.is_authenticated %}
                         {% if lex_exists %}
-                            <div><button data-id="3" class="btn add-btn-home btn-success disabled not-allowed" disabled>Kelime Eklendi</button></div>
+                            <div><button data-id="3" class="btn add-btn-home btn-after disabled not-allowed" disabled>Kelime Eklendi</button></div>
                         {% else %}
-                            <div><button data-id="3" class="btn add-btn-home btn-info disabled not-allowed" disabled>Kelimeyi Ekle</button></div>
+                            <div><button data-id="3" class="btn add-btn-home btn-before disabled not-allowed" disabled>Kelimeyi Ekle</button></div>
                         {% endif %}
                     {% else %}
-                        <div><button data-id="modal" class="btn add-btn-home btn-info disabled not-allowed" disabled>Kelimeyi Ekle</button></div>
+                        <div><button data-id="modal" class="btn add-btn-home btn-before disabled not-allowed" disabled>Kelimeyi Ekle</button></div>
                     {% endif %}
                 {% endif %}
                     </div>
@@ -147,12 +165,18 @@
                     <h4 id="word_4" class="font-weight-bold">{{ word_4 }}</h4>
                 </a>
                 {% if tur_4.0 %}
-                    <h5 class="h5" id="tur_4">({{ tur_4.0 }})</h5>
+                    <ul class="wotd-tr-list">
+                    {% for tr in tur_4.0 %}
+                        <li>
+                            {{ tr }}
+                        </li>
+                    {% endfor %}
+                    </ul>
                 {% else %}
-                    <h5>(...)</h5>
+                   (...)
                 {% endif %}
                 <div class="home-card-footer">
-                {% if tur_4.1 %}
+                {% if tur_4.1 is not None %}
                     <div><span class="audio"><i title="Dinle" data-id="4" style="cursor:pointer" class="material-icons">volume_up</i></span></div>
                     <audio id="au-4" src="{{tur_4.1}}"></audio>
                 {% else %}
@@ -162,22 +186,22 @@
                 {% if tur_4.0 %}
                     {% if user.is_authenticated %}
                         {% if camb_exists %}
-                            <div><button data-id="4" class="btn add-btn-home btn-success">Kelime Eklendi</button></div>
+                            <div><button data-id="4" class="btn add-btn-home btn-after">Kelime Eklendi</button></div>
                         {% else %}
-                            <div><button data-id="4" class="btn add-btn-home btn-info">Kelimeyi Ekle</button></div>
+                            <div><button data-id="4" class="btn add-btn-home btn-before">Kelimeyi Ekle</button></div>
                         {% endif %}
                     {% else %}
-                        <div><button data-id="modal" class="btn add-btn-home btn-info">Kelimeyi Ekle</button></div>
+                        <div><button data-id="modal" class="btn add-btn-home btn-before">Kelimeyi Ekle</button></div>
                     {% endif %}
                 {% else %}
                     {% if user.is_authenticated %}
                         {% if camb_exists %}
-                            <div><button data-id="4" class="btn add-btn-home btn-success disabled not-allowed" disabled>Kelime Eklendi</button></div>
+                            <div><button data-id="4" class="btn add-btn-home btn-after disabled not-allowed" disabled>Kelime Eklendi</button></div>
                         {% else %}
-                            <div><button data-id="4" class="btn add-btn-home btn-info disabled not-allowed" disabled>Kelimeyi Ekle</button></div>
+                            <div><button data-id="4" class="btn add-btn-home btn-before disabled not-allowed" disabled>Kelimeyi Ekle</button></div>
                         {% endif %}
                     {% else %}
-                        <div><button data-id="modal" class="btn add-btn-home btn-info disabled not-allowed" disabled>Kelimeyi Ekle</button></div>
+                        <div><button data-id="modal" class="btn add-btn-home btn-before disabled not-allowed" disabled>Kelimeyi Ekle</button></div>
                     {% endif %}
                 {% endif %}
                 </div>
@@ -189,10 +213,10 @@
 
 <div class="row">
     <div class="col-lg-3 col-sm-6">
-        <div class="card card-note cn-la">
+        <div class="card card-note cn-1c">
             <div class="text-center"><span class="title-home title-last">Son Eklenenler</span></div>
             <div class="overflow-auto">
-                <ul class="mt-5 ml-2 title-last-ul">
+                <ul class="ul-last-added">
                     {% for word in last_words %}
                     <li><a style="color:#00308F" href="{% url 'dictionary' word.english %}">{{ word.english }}</a></li>
                     {% endfor %}
@@ -205,7 +229,7 @@
         <div class="cn-2c card card-note">
             <span class="title-home title-star">Favoriler</span>
             <div class="overflow-auto position-relative">
-                <ul class="mt-5 ml-2 ul-starred">
+                <ul class="ul-starred">
                     {% for word in rstrwords %}
                     <li><a href="{% url 'dictionary' word %}">{{ word }}</a></li>
                     {% endfor %}
@@ -234,7 +258,7 @@
         <div class="cn-3c card card-note">
             <span class="title-home title-unl">Öğreneceklerim</span>
             <div class="overflow-auto position-relative">
-                <ul class="mt-5 ml-2 ul-unlearned">
+                <ul class="ul-unlearned">
                     {% for word in rulwords %}
                     <li><a href="{% url 'dictionary' word %}">{{ word }}</a></li>
                     {% endfor %}
@@ -274,7 +298,7 @@
         <div class="cn-4c card card-note">
             <span class="title-home title-l">Öğrendiklerim</span>
             <div class="overflow-auto position-relative">
-                <ul class="mt-5 ml-2 ul-learned">
+                <ul class="ul-learned">
                     {% for word in rlwords %}
                     <li><a href="{% url 'dictionary' word %}">{{ word }}</a></li>
                     {% endfor %}
@@ -345,7 +369,7 @@
                 <option value="5">5</option>
                 <option value="7">7</option>
               </select>
-              <button class="btn btn-success start start-unl">Başlat</button>
+              <button class="btn btn-after start start-unl">Başlat</button>
             </div>
           </div>
         </div>
@@ -391,7 +415,7 @@
                 <option value="5">5</option>
                 <option value="7">7</option>
               </select>
-              <button class="btn btn-success start start-l">Başlat</button>
+              <button class="btn btn-after start start-l">Başlat</button>
             </div>
           </div>
         </div>
@@ -418,7 +442,7 @@
                     <label for="id_remember">Beni hatırla: </label>
                     <input type="checkbox" name="remember" id="id_remember">
                 </div>
-                <button id="login" type="submit" class="btn btn-success mt-2 w-50" style="justify-self:center">Giriş Yap</button>
+                <button id="login" type="submit" class="btn btn-after mt-2 w-50" style="justify-self:center">Giriş Yap</button>
             </form>
         </div>
         <div class="modal-footer d-flex justify-content-between" style="background: beige">
@@ -1136,7 +1160,7 @@ $(function(){
                        "audio": audio
                     },
                     success: function(data) {
-                        ths.toggleClass("btn-info btn-success");
+                        ths.toggleClass("btn-before btn-after");
                         ths.html("Kelime Eklendi");
                     }
                 });
@@ -1151,7 +1175,7 @@ $(function(){
                         "audio": audio
                      },
                      success: function(data) {
-                        ths.toggleClass("btn-success btn-info");
+                        ths.toggleClass("btn-after btn-before");
                         ths.html("Kelimeyi Ekle");
                      }
                 }); // end ajax

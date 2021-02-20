@@ -40,7 +40,7 @@ i {
     text-align:center;
     padding: 6px 0;
     transition: all 0.3s ease;
-    color: #fff;
+    color: var(--clr-secondary);
     width:20%;
 }
 
@@ -51,7 +51,7 @@ i {
 .icon-bar a:hover {
     background-color:rgba(222,84,53,1);
     text-decoration: none !important;
-    color:white;
+    color:var(--clr-secondary);
 }
 
 .icon-bar a:hover .span-ber {
@@ -59,9 +59,20 @@ i {
 }
 
 .span-ber {
-    background:white;
+    background:var(--clr-secondary);
     color:var(--clr-primary);
     transition: all .3s
+}
+
+.wotd-tr-list {
+    list-style:inside !important;
+    height:90px;
+    overflow:auto;
+    text-align: start !important;
+}
+
+.wotd-tr-list li::marker {
+    color:var(--clr-primary) !important;
 }
 
 .aktif {
@@ -73,8 +84,29 @@ i {
 }
 
 .home-card button {
-    width: 75%;
+    width: 60%;
     align-self: center;
+    padding: .375rem !important;
+    box-shadow:none !important
+}
+
+.btn-before {
+    background-color:var(--clr-primary) !important;
+    color:#fff !important;
+    opacity:0.8;
+}
+
+.btn-before:hover {
+    background-color:#218838 !important;
+}
+
+.btn-after {
+    background-color:#2cb74c !important;
+    color:#fff !important;
+}
+
+.btn-after:hover {
+    background-color:#218838 !important;
 }
 
 .home-card-footer {
@@ -86,18 +118,23 @@ i {
 }
 
 .card {
-    min-height: 265px !important;
     margin: 10px 0 10px 0 !important;
     padding-bottom:10px;
     background: var(--clr-secondary) !important
 }
 
 .card-shadow {
-    box-shadow: 3px 3px 5px 1px black
+    box-shadow: 3px 3px 5px 1px black;
+    min-height:290px;
+}
+
+.card-shadow > div:first-child {
+    padding: 7px 0;
+    border-bottom: 1px solid rgba(0,0,0,0.2)
 }
 
 .card-note {
-    height: 316px !important;
+    height: 308px !important;
 }
 
 .card a {
@@ -116,6 +153,31 @@ i {
 .cn-4c {
     outline: 3px solid;
     outline-offset: -5px;
+}
+
+.ul-last-added,
+.ul-starred,
+.ul-unlearned,
+.ul-learned {
+    list-style: revert !important;
+    padding-left: revert !important;
+    margin-top:2.5rem
+}
+
+.ul-last-added li::marker {
+    color:#DB7093 !important
+}
+
+.ul-starred li::marker {
+    color:#B89362 !important
+}
+
+.ul-unlearned li::marker {
+    color:#006159 !important
+}
+
+.ul-learned li::marker {
+    color:#009A00 !important
 }
 
 .cn-1c {
@@ -143,7 +205,7 @@ i {
 .lexico {
     height: 85px;
     width: 90px;
-    max-width: 90px
+    max-width: 95px
 }
 
 .table td, .table th {
@@ -546,6 +608,8 @@ ul {
 
 .title-last {
     background: #FFE3F1;
+    width:122px;
+    height:38px;
 }
 
 .star:hover {
@@ -917,7 +981,7 @@ input[type="search"]::-webkit-search-results-decoration { display: none; }
 
 .object-rope {
     height: 20px;
-    width: 1px;
+    width: 2px;
     background-color: #eb3b2e;
     content:"";
     display: block;
@@ -937,7 +1001,7 @@ input[type="search"]::-webkit-search-results-decoration { display: none; }
 }
 
 .object-content:hover {
-    background:#78E098;
+    background:#97E5FC;
     transform:scale(1.1);
     font-size:1.1em
 }
