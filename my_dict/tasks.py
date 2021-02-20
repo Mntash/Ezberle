@@ -7,7 +7,7 @@ import cchardet
 
 
 def delete_wotd():
-    print("olduuuuuuuuuu")
+    return 5 + 3
     # one_day = timezone.now() - timezone.timedelta(days=1)
     # expired_words = WordOfTheDay.objects.filter(
     #     create_time__lte=one_day
