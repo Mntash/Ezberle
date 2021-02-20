@@ -178,6 +178,6 @@ EMAIL_HOST_PASSWORD = "mtas3469"
 django_heroku.settings(locals())
 
 Q_CLUSTER = {
-    "name": "ezberle",
+    "name": "my_dict",
     "orm": "default",
 }
