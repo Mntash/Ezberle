@@ -1,6 +1,6 @@
 from rq import Queue
-from .worker import conn
-from .utils import count_words_at_url
+from dictionary.worker import conn
+from dictionary.my_dict.utils import count_words_at_url
 
 
 q = Queue(connection=conn)
