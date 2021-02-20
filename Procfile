@@ -1,2 +1,2 @@
 web: gunicorn dictionary.wsgi
-worker: python worker.py
+worker: python manage.py qcluster
