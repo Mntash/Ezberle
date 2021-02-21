@@ -178,6 +178,15 @@ EMAIL_HOST_PASSWORD = "mtas3469"
 django_heroku.settings(locals())
 
 Q_CLUSTER = {
-    "name": "my_dict",
-    "orm": "default",
+    'name': 'my_dict',
+    'workers': 8,
+    'timeout': 60,
+    'compress': True,
+    'queue_limit': 500,
+    'cpu_affinity': 1,
+    'redis': {
+        'host': 'spinyfin.redistogo.com',
+        'password': '3655feb8e93d20133c6734084d1b7100',
+        'port': 9178,
+        'db': 0, }
 }
