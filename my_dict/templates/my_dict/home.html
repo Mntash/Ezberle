@@ -11,7 +11,9 @@
         <div class="card card-shadow">
             <div><a href="https://www.merriam-webster.com/" target="_blank"><img class="card-img-top mx-auto" src="{% static 'img/merriam.png' %}" alt="Merriam Webster"></a></div>
             <div class="card-body home-card">
-                <a href="{% url 'dictionary' word_1 %}"><h4 id="word_1" class="font-weight-bold">{{ word_1 }}</h4></a>
+                <a href="{% url 'dictionary' word_1 %}" target="_blank">
+                    <h4 id="word_1" class="font-weight-bold">{{ word_1 }}</h4>
+                </a>
                 {% if tur_1.0 %}
                     <ul class="wotd-tr-list">
                     {% for tr in tur_1.0 %}
@@ -21,7 +23,9 @@
                     {% endfor %}
                     </ul>
                 {% else %}
-                    (...)
+                    <ul class="wotd-tr-list no-tr" >
+                        (...)
+                    </ul>
                 {% endif %}
                 <div class="home-card-footer">
                 {% if tur_1.1 is not None %}
@@ -34,22 +38,22 @@
                 {% if tur_1.0 %}
                     {% if user.is_authenticated %}
                         {% if mer_exists %}
-                            <div><button data-id="1" class="btn add-btn-home btn-after">Kelime Eklendi</button></div>
+                            <div><button data-id="1" class="btn add-btn-home btn-after"><span>Kelime Eklendi</span></button></div>
                         {% else %}
-                            <div><button data-id="1" class="btn add-btn-home btn-before">Kelimeyi Ekle</button></div>
+                            <div><button data-id="1" class="btn add-btn-home btn-before"><span>Kelimeyi Ekle</span></button></div>
                         {% endif %}
                     {% else %}
-                        <div><button data-id="modal" class="btn add-btn-home btn-before">Kelimeyi Ekle</button></div>
+                        <div><button data-id="modal" class="btn add-btn-home btn-before"><span>Kelimeyi Ekle</span></button></div>
                     {% endif %}
                 {% else %}
                         {% if user.is_authenticated %}
                         {% if mer_exists %}
-                            <div><button data-id="1" class="btn add-btn-home btn-after disabled not-allowed" disabled>Kelime Eklendi</button></div>
+                            <div><button data-id="1" class="btn add-btn-home btn-after disabled not-allowed" disabled><span>Kelime Eklendi</span></button></div>
                         {% else %}
-                            <div><button data-id="1" class="btn add-btn-home btn-before disabled not-allowed" disabled>Kelimeyi Ekle</button></div>
+                            <div><button data-id="1" class="btn add-btn-home btn-before disabled not-allowed" disabled><span>Kelimeyi Ekle</span></button></div>
                         {% endif %}
                     {% else %}
-                        <div><button data-id="modal" class="btn add-btn-home btn-before disabled not-allowed" disabled>Kelimeyi Ekle</button></div>
+                        <div><button data-id="modal" class="btn add-btn-home btn-before disabled not-allowed" disabled><span>Kelimeyi Ekle</span></button></div>
                     {% endif %}
                 {% endif %}
                 </div>
@@ -61,7 +65,9 @@
         <div class="card card-shadow">
             <div><a href="https://www.oxfordlearnersdictionaries.com/" target="_blank"><img class="card-img-top mx-auto" src="{% static 'img/oxford.jfif' %}" alt="Oxford Dictionary"></a></div>
             <div class="card-body home-card">
-                <a href="{% url 'dictionary' word_2 %}"><h4 id="word_2" class="font-weight-bold">{{ word_2 }}</h4></a>
+                <a href="{% url 'dictionary' word_2 %}" target="_blank">
+                    <h4 id="word_2" class="font-weight-bold">{{ word_2 }}</h4>
+                </a>
                 {% if tur_2.0 %}
                     <ul class="wotd-tr-list">
                     {% for tr in tur_2.0 %}
@@ -71,7 +77,9 @@
                     {% endfor %}
                     </ul>
                 {% else %}
-                    (...)
+                    <ul class="wotd-tr-list no-tr" >
+                        (...)
+                    </ul>
                 {% endif %}
                 <div class="home-card-footer">
                 {% if tur_2.1 is not None %}
@@ -84,22 +92,22 @@
                 {% if tur_2.0 %}
                     {% if user.is_authenticated %}
                         {% if ox_exists %}
-                            <div><button data-id="2" class="btn add-btn-home btn-after">Kelime Eklendi</button></div>
+                            <div><button data-id="2" class="btn add-btn-home btn-after"><span>Kelime Eklendi</span></button></div>
                         {% else %}
-                            <div><button data-id="2" class="btn add-btn-home btn-before">Kelimeyi Ekle</button></div>
+                            <div><button data-id="2" class="btn add-btn-home btn-before"><span>Kelimeyi Ekle</span></button></div>
                         {% endif %}
                     {% else %}
-                        <div><button data-id="modal" class="btn add-btn-home btn-before">Kelimeyi Ekle</button></div>
+                        <div><button data-id="modal" class="btn add-btn-home btn-before"><span>Kelimeyi Ekle</span></button></div>
                     {% endif %}
                 {% else %}
                     {% if user.is_authenticated %}
                         {% if ox_exists %}
-                            <div><button data-id="2" class="btn add-btn-home btn-after disabled not-allowed" disabled>Kelime Eklendi</button></div>
+                            <div><button data-id="2" class="btn add-btn-home btn-after disabled not-allowed" disabled><span>Kelime Eklendi</span></button></div>
                         {% else %}
-                            <div><button data-id="2" class="btn add-btn-home btn-before disabled not-allowed" disabled>Kelimeyi Ekle</button></div>
+                            <div><button data-id="2" class="btn add-btn-home btn-before disabled not-allowed" disabled><span>Kelimeyi Ekle</span></button></div>
                         {% endif %}
                     {% else %}
-                        <div><button data-id="modal" class="btn add-btn-home btn-before disabled not-allowed" disabled>Kelimeyi Ekle</button></div>
+                        <div><button data-id="modal" class="btn add-btn-home btn-before disabled not-allowed" disabled><span>Kelimeyi Ekle</span></button></div>
                     {% endif %}
                 {% endif %}
                     </div>
@@ -111,7 +119,9 @@
         <div class="card card-shadow">
             <div><a href="https://www.lexico.com/" target="_blank"><img class="card-img-top mx-auto lexico" src="{% static 'img/lexico.png' %}" alt="Lexico"></a></div>
             <div class="card-body home-card">
-                <a href="{% url 'dictionary' word_3 %}"><h4 id="word_3" class="font-weight-bold">{{ word_3 }}</h4></a>
+                <a href="{% url 'dictionary' word_3 %}" target="_blank">
+                    <h4 id="word_3" class="font-weight-bold">{{ word_3 }}</h4>
+                </a>
                 {% if tur_3.0 %}
                     <ul class="wotd-tr-list">
                     {% for tr in tur_3.0 %}
@@ -121,7 +131,9 @@
                     {% endfor %}
                     </ul>
                 {% else %}
-                (...)
+                    <ul class="wotd-tr-list no-tr" >
+                        (...)
+                    </ul>
                 {% endif %}
                 <div class="home-card-footer">
                 {% if tur_3.1 is not None %}
@@ -134,22 +146,22 @@
                 {% if tur_3.0 %}
                     {% if user.is_authenticated %}
                         {% if lex_exists %}
-                            <div><button data-id="3" class="btn add-btn-home btn-after">Kelime Eklendi</button></div>
+                            <div><button data-id="3" class="btn add-btn-home btn-after"><span>Kelime Eklendi</span></button></div>
                         {% else %}
-                            <div><button data-id="3" class="btn add-btn-home btn-before">Kelimeyi Ekle</button></div>
+                            <div><button data-id="3" class="btn add-btn-home btn-before"><span>Kelimeyi Ekle</span></button></div>
                         {% endif %}
                     {% else %}
-                        <div><button data-id="modal" class="btn add-btn-home btn-before">Kelimeyi Ekle</button></div>
+                        <div><button data-id="modal" class="btn add-btn-home btn-before"><span>Kelimeyi Ekle</span></button></div>
                     {% endif %}
                 {% else %}
                     {% if user.is_authenticated %}
                         {% if lex_exists %}
-                            <div><button data-id="3" class="btn add-btn-home btn-after disabled not-allowed" disabled>Kelime Eklendi</button></div>
+                            <div><button data-id="3" class="btn add-btn-home btn-after disabled not-allowed" disabled><span>Kelime Eklendi</span></button></div>
                         {% else %}
-                            <div><button data-id="3" class="btn add-btn-home btn-before disabled not-allowed" disabled>Kelimeyi Ekle</button></div>
+                            <div><button data-id="3" class="btn add-btn-home btn-before disabled not-allowed" disabled><span>Kelimeyi Ekle</span></button></div>
                         {% endif %}
                     {% else %}
-                        <div><button data-id="modal" class="btn add-btn-home btn-before disabled not-allowed" disabled>Kelimeyi Ekle</button></div>
+                        <div><button data-id="modal" class="btn add-btn-home btn-before disabled not-allowed" disabled><span>Kelimeyi Ekle</span></button></div>
                     {% endif %}
                 {% endif %}
                     </div>
@@ -161,7 +173,7 @@
         <div class="card card-shadow">
             <div><a href="https://dictionary.cambridge.org/" target="_blank"><img class="card-img-top mx-auto" src="{% static 'img/cambridge.png' %}" alt="Merriam Webster"></a></div>
             <div class="card-body home-card">
-                <a href="{% url 'dictionary' word_4 %}">
+                <a href="{% url 'dictionary' word_4 %}" target="_blank">
                     <h4 id="word_4" class="font-weight-bold">{{ word_4 }}</h4>
                 </a>
                 {% if tur_4.0 %}
@@ -173,7 +185,9 @@
                     {% endfor %}
                     </ul>
                 {% else %}
-                   (...)
+                    <ul class="wotd-tr-list no-tr" >
+                        (...)
+                    </ul>
                 {% endif %}
                 <div class="home-card-footer">
                 {% if tur_4.1 is not None %}
@@ -186,22 +200,22 @@
                 {% if tur_4.0 %}
                     {% if user.is_authenticated %}
                         {% if camb_exists %}
-                            <div><button data-id="4" class="btn add-btn-home btn-after">Kelime Eklendi</button></div>
+                            <div><button data-id="4" class="btn add-btn-home btn-after"><span>Kelime Eklendi</span></button></div>
                         {% else %}
-                            <div><button data-id="4" class="btn add-btn-home btn-before">Kelimeyi Ekle</button></div>
+                            <div><button data-id="4" class="btn add-btn-home btn-before"><span>Kelimeyi Ekle</span></button></div>
                         {% endif %}
                     {% else %}
-                        <div><button data-id="modal" class="btn add-btn-home btn-before">Kelimeyi Ekle</button></div>
+                        <div><button data-id="modal" class="btn add-btn-home btn-before"><span>Kelimeyi Ekle</span></button></div>
                     {% endif %}
                 {% else %}
                     {% if user.is_authenticated %}
                         {% if camb_exists %}
-                            <div><button data-id="4" class="btn add-btn-home btn-after disabled not-allowed" disabled>Kelime Eklendi</button></div>
+                            <div><button data-id="4" class="btn add-btn-home btn-after disabled not-allowed" disabled><span>Kelime Eklendi</span></button></div>
                         {% else %}
-                            <div><button data-id="4" class="btn add-btn-home btn-before disabled not-allowed" disabled>Kelimeyi Ekle</button></div>
+                            <div><button data-id="4" class="btn add-btn-home btn-before disabled not-allowed" disabled><span>Kelimeyi Ekle</span></button></div>
                         {% endif %}
                     {% else %}
-                        <div><button data-id="modal" class="btn add-btn-home btn-before disabled not-allowed" disabled>Kelimeyi Ekle</button></div>
+                        <div><button data-id="modal" class="btn add-btn-home btn-before disabled not-allowed" disabled><span>Kelimeyi Ekle</span></button></div>
                     {% endif %}
                 {% endif %}
                 </div>
@@ -218,117 +232,145 @@
             <div class="overflow-auto">
                 <ul class="ul-last-added">
                     {% for word in last_words %}
-                    <li><a style="color:#00308F" href="{% url 'dictionary' word.english %}">{{ word.english }}</a></li>
+                    <li>
+                        <a href="{% url 'dictionary' word.english %}" target="_blank">{{ word.english }}</a>
+                    </li>
                     {% endfor %}
                 </ul>
             </div>
         </div>
     </div>
 
-    <div class="cn-2p col-lg-3 col-sm-6">
+    <div class="cn-2p col-lg-3 col-sm-6 mb-6">
         <div class="cn-2c card card-note">
             <span class="title-home title-star">Favoriler</span>
             <div class="overflow-auto position-relative">
                 <ul class="ul-starred">
                     {% for word in rstrwords %}
-                    <li><a href="{% url 'dictionary' word %}">{{ word }}</a></li>
+                    <li>
+                        <a href="{% url 'dictionary' word %}" target="_blank">{{ word }}</a>
+                    </li>
                     {% endfor %}
                 </ul>
             </div>
             {% if user.is_authenticated %}
-            <div class="swing refresh">
-                <div class="object-rope"></div>
-                <button class="object-content ref ref-star">
-                    <img class="ref-img ref-img-star" src="{% static 'img/ref-arrow.png' %}" alt="yenile" height="24px" width="24px">
-                </button>
+            <div class="ref-fav">
+                <div class="swing refresh">
+                    <div class="object-rope"></div>
+                    <button class="object-content ref ref-star">
+                        <img class="ref-img ref-img-star" src="{% static 'img/ref-arrow-teal.png' %}" alt="yenile" height="24px" width="24px">
+                    </button>
+                </div>
             </div>
             {% else %}
-            <div class="swing refresh">
-                <div class="object-rope"></div>
-                <button class="object-content" type="button" data-toggle="modal" data-target="#login-modal">
-                    <img class="ref-img ref-img-star" src="{% static 'img/ref-arrow.png' %}" alt="yenile" height="24px" width="24px">
-                </button>
+            <div class="ref-fav">
+                <div class="swing refresh">
+                    <div class="object-rope"></div>
+                    <button class="object-content" type="button" data-toggle="modal" data-target="#login-modal">
+                        <img class="ref-img ref-img-star" src="{% static 'img/ref-arrow-teal.png' %}" alt="yenile" height="24px" width="24px">
+                    </button>
+                </div>
             </div>
             {% endif %}
         </div>
     </div>
 
 
-    <div class="cn-3p col-lg-3 col-sm-6">
+    <div class="cn-3p col-lg-3 col-sm-6 mb-6">
         <div class="cn-3c card card-note">
             <span class="title-home title-unl">Öğreneceklerim</span>
             <div class="overflow-auto position-relative">
                 <ul class="ul-unlearned">
                     {% for word in rulwords %}
-                    <li><a href="{% url 'dictionary' word %}">{{ word }}</a></li>
+                    <li>
+                        <a href="{% url 'dictionary' word %}" target="_blank">{{ word }}</a>
+                    </li>
                     {% endfor %}
                 </ul>
             </div>
             {% if user.is_authenticated %}
-            <div class="swing refresh">
-                <div class="object-rope"></div>
-                <button class="object-content ref ref-unl">
-                    <img class="ref-img ref-img-unl" src="{% static 'img/ref-arrow.png' %}" alt="yenile" height="24px" width="24px">
-                </button>
+            <div class="ref-resp">
+                <div class="swing refresh">
+                    <div class="object-rope"></div>
+                    <button class="object-content ref ref-unl">
+                        <img class="ref-img ref-img-unl" src="{% static 'img/ref-arrow-teal.png' %}" alt="yenile" height="24px" width="24px">
+                    </button>
+                </div>
             </div>
-            <div class="swing quiz">
-                <div class="object-rope"></div>
-                <button class="object-content" type="button" data-toggle="modal" data-target="#quiz-unl">
-                    Quiz
-                </button>
+            <div class="quiz-resp">
+                <div class="swing quiz">
+                    <div class="object-rope"></div>
+                    <button class="object-content" type="button" data-toggle="modal" data-target="#quiz-unl">
+                        Quiz
+                    </button>
+                </div>
             </div>
             {% else %}
-            <div class="swing refresh">
-                <div class="object-rope"></div>
-                <button class="object-content" type="button" data-toggle="modal" data-target="#login-modal">
-                    <img class="ref-img ref-img-unl" src="{% static 'img/ref-arrow.png' %}" alt="yenile" height="24px" width="24px">
-                </button>
+            <div class="ref-resp">
+                <div class="swing refresh">
+                    <div class="object-rope"></div>
+                    <button class="object-content" type="button" data-toggle="modal" data-target="#login-modal">
+                        <img class="ref-img ref-img-unl" src="{% static 'img/ref-arrow-teal.png' %}" alt="yenile" height="24px" width="24px">
+                    </button>
+                </div>
             </div>
-            <div class="swing quiz">
-                <div class="object-rope"></div>
-                <button class="object-content" type="button" data-toggle="modal" data-target="#login-modal">
-                    Quiz
-                </button>
+            <div class="quiz-resp">
+                <div class="swing quiz">
+                    <div class="object-rope"></div>
+                    <button class="object-content" type="button" data-toggle="modal" data-target="#login-modal">
+                        Quiz
+                    </button>
+                </div>
             </div>
             {% endif %}
         </div>
     </div>
 
-    <div class="cn-4p col-lg-3 col-sm-6">
+    <div class="cn-4p col-lg-3 col-sm-6 mb-7">
         <div class="cn-4c card card-note">
             <span class="title-home title-l">Öğrendiklerim</span>
             <div class="overflow-auto position-relative">
                 <ul class="ul-learned">
                     {% for word in rlwords %}
-                    <li><a href="{% url 'dictionary' word %}">{{ word }}</a></li>
+                    <li>
+                        <a href="{% url 'dictionary' word %}" target="_blank">{{ word }}</a>
+                    </li>
                     {% endfor %}
                 </ul>
             </div>
             {% if user.is_authenticated %}
-            <div class="swing refresh">
-                <div class="object-rope"></div>
-                <button class="object-content ref ref-l">
-                    <img class="ref-img ref-img-l" src="{% static 'img/ref-arrow.png' %}" alt="yenile" height="24px" width="24px">
-                </button>
+            <div class="ref-resp">
+                <div class="swing refresh">
+                    <div class="object-rope"></div>
+                    <button class="object-content ref ref-l">
+                        <img class="ref-img ref-img-l" src="{% static 'img/ref-arrow-teal.png' %}" alt="yenile" height="24px" width="24px">
+                    </button>
+                </div>
             </div>
-            <div class="swing quiz">
-                <div class="object-rope"></div>
-                <button class="object-content" type="button" data-toggle="modal" data-target="#quiz-l">
-                    Quiz
-                </button>
+            <div class="quiz-resp">
+                <div class="swing quiz">
+                    <div class="object-rope"></div>
+                    <button class="object-content" type="button" data-toggle="modal" data-target="#quiz-l">
+                        Quiz
+                    </button>
+                </div>
             </div>
             {% else %}
-            <div class="swing refresh">
-                <div class="object-rope"></div>
-                <button class="object-content" type="button" data-toggle="modal" data-target="#login-modal">
-                    <img class="ref-img ref-img-l" src="{% static 'img/ref-arrow.png' %}" alt="yenile" height="24px" width="24px">
-                </button>
+            <div class="ref-resp">
+                <div class="swing refresh">
+                    <div class="object-rope"></div>
+                    <button class="object-content" type="button" data-toggle="modal" data-target="#login-modal">
+                        <img class="ref-img ref-img-l" src="{% static 'img/ref-arrow-teal.png' %}" alt="yenile" height="24px" width="24px">
+                    </button>
+                </div>
             </div>
-            <div class="swing quiz">
-                <div class="object-rope"></div>
-                <button class="object-content" type="button" data-toggle="modal" data-target="#login-modal">
-                    Quiz
-                </button>
+            <div class="quiz-resp">
+                <div class="swing quiz">
+                    <div class="object-rope"></div>
+                    <button class="object-content" type="button" data-toggle="modal" data-target="#login-modal">
+                        Quiz
+                    </button>
+                </div>
             </div>
             {% endif %}
         </div>
@@ -369,7 +411,7 @@
                 <option value="5">5</option>
                 <option value="7">7</option>
               </select>
-              <button class="btn btn-after start start-unl">Başlat</button>
+              <button class="btn btn-before start start-unl">Başlat</button>
             </div>
           </div>
         </div>
@@ -415,7 +457,7 @@
                 <option value="5">5</option>
                 <option value="7">7</option>
               </select>
-              <button class="btn btn-after start start-l">Başlat</button>
+              <button class="btn btn-before start start-l">Başlat</button>
             </div>
           </div>
         </div>
@@ -442,7 +484,7 @@
                     <label for="id_remember">Beni hatırla: </label>
                     <input type="checkbox" name="remember" id="id_remember">
                 </div>
-                <button id="login" type="submit" class="btn btn-after mt-2 w-50" style="justify-self:center">Giriş Yap</button>
+                <button id="login" type="submit" class="btn btn-before mt-2 w-50" style="justify-self:center">Giriş Yap</button>
             </form>
         </div>
         <div class="modal-footer d-flex justify-content-between" style="background: beige">
@@ -461,6 +503,15 @@
 
 <script>
 $(function(){
+
+    $(".object-content").hover(
+        function(){
+            $(this).find("img").attr("src", "/static/img/ref-arrow-white.png")
+        },
+        function(){
+            $(this).find("img").attr("src", "/static/img/ref-arrow-teal.png")
+        },
+    )
 
     $(".start").click(function() {
         if(!event.detail || event.detail == 1) {
@@ -526,7 +577,7 @@ $(function(){
                                   <div id="confirm-text" class="modal-body" style="background:aliceblue"></div>
                                   <div class="modal-footer" style="background:aliceblue;padding:0 !important">
                                     <button id="confirm-no" type="button" class="btn btn-secondary" data-dismiss="confirm">İptal</button>
-                                    <button id="confirm-ok" type="button" class="btn btn-primary">Onayla</button>
+                                    <button id="confirm-ok" type="button" class="btn btn-before">Onayla</button>
                                   </div>
                                 </div>
                             </div>
@@ -787,7 +838,7 @@ $(function(){
                                   <div id="confirm-text" class="modal-body" style="background:aliceblue"></div>
                                   <div class="modal-footer" style="background:aliceblue;padding:0 !important">
                                     <button id="confirm-no" type="button" class="btn btn-secondary" data-dismiss="confirm">İptal</button>
-                                    <button id="confirm-ok" type="button" class="btn btn-primary">Onayla</button>
+                                    <button id="confirm-ok" type="button" class="btn btn-before">Onayla</button>
                                   </div>
                                 </div>
                             </div>
@@ -1029,10 +1080,10 @@ $(function(){
     $(".ref").click(function() {
         var ths = $(this);
         if (ths.hasClass('ref-l')) {
-            if (ths.parent().parent().parent().hasClass("flip-card")) {
-                ths.parent().parent().parent().removeClass("flip-card")
+            if (ths.parents().eq(3).hasClass("flip-card")) {
+                ths.parents().eq(3).removeClass("flip-card")
             } else {
-                ths.parent().parent().parent().addClass("flip-card")
+                ths.parents().eq(3).addClass("flip-card")
             }
             $.ajax({
                 type:"GET",
@@ -1064,10 +1115,10 @@ $(function(){
                 }
             }) // ajax
         } else if (ths.hasClass('ref-unl')) {
-            if (ths.parent().parent().parent().hasClass("flip-card")) {
-                ths.parent().parent().parent().removeClass("flip-card")
+            if (ths.parents().eq(3).hasClass("flip-card")) {
+                ths.parents().eq(3).removeClass("flip-card")
             } else {
-                ths.parent().parent().parent().addClass("flip-card")
+                ths.parents().eq(3).addClass("flip-card")
             }
             $.ajax({
                 type:"GET",
@@ -1100,10 +1151,10 @@ $(function(){
             })
         }
         else if (ths.hasClass('ref-star')) {
-            if (ths.parent().parent().parent().hasClass("flip-card")) {
-                ths.parent().parent().parent().removeClass("flip-card")
+            if (ths.parents().eq(3).hasClass("flip-card")) {
+                ths.parents().eq(3).removeClass("flip-card")
             } else {
-                ths.parent().parent().parent().addClass("flip-card")
+                ths.parents().eq(3).addClass("flip-card")
             }
             $.ajax({
                 type:"GET",
@@ -1135,22 +1186,22 @@ $(function(){
         }
     })
 
-
     $(".audio").click(function() {
         $(this).parent().next()[0].play()
     });
 
     $(".add-btn-home").on("click", function(){
-        var ths = $(this);
-        var no = ths.attr('data-id');
-        var en = $("#word_" + no).text();
-        tr_list = [];
-        var tr = $("#tur_" + no).text().replace("(", "").replace(")", "").trim();
-        var audio = $("#au-" + no).attr("src");
-        tr_list.push(tr)
+        var ths = $(this)
+        var no = ths.attr('data-id')
+        var en = $("#word_" + no).text()
+        var tr_list = []
+        ths.parent().parent().prev().children().map(function(){
+            tr_list.push($(this).text().toLowerCase().trim())
+        })
+        var audio = $("#au-" + no).attr("src")
 
         if ( !(isNaN(no)) ) {
-            if (ths.html() == "Kelimeyi Ekle") {
+            if (ths.find("span").html() == "Kelimeyi Ekle") {
                 $.ajax({
                     type:"GET",
                     url: "/word_cd",
@@ -1161,11 +1212,11 @@ $(function(){
                     },
                     success: function(data) {
                         ths.toggleClass("btn-before btn-after");
-                        ths.html("Kelime Eklendi");
+                        ths.find("span").html("Kelime Eklendi");
                     }
                 });
 
-            } else if (ths.html() == "Kelime Eklendi") {
+            } else if (ths.find("span").html() == "Kelime Eklendi") {
                 $.ajax({
                      type:"GET",
                      url: "/word_cd",
@@ -1176,7 +1227,7 @@ $(function(){
                      },
                      success: function(data) {
                         ths.toggleClass("btn-after btn-before");
-                        ths.html("Kelimeyi Ekle");
+                        ths.find("span").html("Kelimeyi Ekle");
                      }
                 }); // end ajax
             } // end else if
@@ -1185,6 +1236,8 @@ $(function(){
             $("#login-modal").modal()
         }
     });
+
+
 }); // end ready
 </script>
 

@@ -199,7 +199,7 @@ def dictionary(request, word):
     data_2 = []
     synonym_list = []
     antonym_list = []
-    examples = []
+    example_list = []
     audio = ""
     history = []
     word_exists = False
@@ -288,20 +288,22 @@ def dictionary(request, word):
                             h2_list = soup_saur.find_all('h2')
                             for h2 in h2_list:
                                 if "other words" in h2.text:
-                                    synonyms = h2.parent.find_all('li')
+                                    synonyms = h2.parent.find_next_sibling().find_all('li')
                                     for synonym in synonyms:
                                         if synonym.find('a'):
                                             text = synonym.find('a').text
                                             synonym_list.append(text)
                                 elif "opposites" in h2.text:
-                                    antonyms = h2.parent.find_all('li')
+                                    antonyms = h2.parent.find_next_sibling().find_all('li')
                                     for antonym in antonyms:
                                         if antonym.find('a'):
                                             text = antonym.find('a').text
                                             antonym_list.append(text)
-                            example_list = soup_saur.find('div', {'id': 'example-sentences'}).find_all('p')
-                            for ex in example_list:
-                                examples.append(ex.text)
+                                elif "EXAMPLE SENTENCES" in h2.text:
+                                    examples = h2.next_siblings
+                                    for example in examples:
+                                        text = example.find('span').text
+                                        example_list.append(text)
                         except:
                             pass
                 else:
@@ -343,20 +345,22 @@ def dictionary(request, word):
                         h2_list = soup_saur.find_all('h2')
                         for h2 in h2_list:
                             if "other words" in h2.text:
-                                synonyms = h2.parent.find_all('li')
+                                synonyms = h2.parent.find_next_sibling().find_all('li')
                                 for synonym in synonyms:
                                     if synonym.find('a'):
                                         text = synonym.find('a').text
                                         synonym_list.append(text)
                             elif "opposites" in h2.text:
-                                antonyms = h2.parent.find_all('li')
+                                antonyms = h2.parent.find_next_sibling().find_all('li')
                                 for antonym in antonyms:
                                     if antonym.find('a'):
                                         text = antonym.find('a').text
                                         antonym_list.append(text)
-                        example_list = soup_saur.find('div', {'id': 'example-sentences'}).find_all('p')
-                        for ex in example_list:
-                            examples.append(ex.text)
+                            elif "EXAMPLE SENTENCES" in h2.text:
+                                examples = h2.next_siblings
+                                for example in examples:
+                                    text = example.find('span').text
+                                    example_list.append(text)
                     except:
                         pass
             else:
@@ -387,20 +391,22 @@ def dictionary(request, word):
                     h2_list = soup_saur.find_all('h2')
                     for h2 in h2_list:
                         if "other words" in h2.text:
-                            synonyms = h2.parent.find_all('li')
+                            synonyms = h2.parent.find_next_sibling().find_all('li')
                             for synonym in synonyms:
                                 if synonym.find('a'):
                                     text = synonym.find('a').text
                                     synonym_list.append(text)
                         elif "opposites" in h2.text:
-                            antonyms = h2.parent.find_all('li')
+                            antonyms = h2.parent.find_next_sibling().find_all('li')
                             for antonym in antonyms:
                                 if antonym.find('a'):
                                     text = antonym.find('a').text
                                     antonym_list.append(text)
-                    example_list = soup_saur.find('div', {'id': 'example-sentences'}).find_all('p')
-                    for ex in example_list:
-                        examples.append(ex.text)
+                        elif "EXAMPLE SENTENCES" in h2.text:
+                            examples = h2.next_siblings
+                            for example in examples:
+                                text = example.find('span').text
+                                example_list.append(text)
                 except:
                     pass
         elif table.find("th", class_="c2").text == "Türkçe":
@@ -439,20 +445,22 @@ def dictionary(request, word):
                             h2_list = soup_saur.find_all('h2')
                             for h2 in h2_list:
                                 if "other words" in h2.text:
-                                    synonyms = h2.parent.find_all('li')
+                                    synonyms = h2.parent.find_next_sibling().find_all('li')
                                     for synonym in synonyms:
                                         if synonym.find('a'):
                                             text = synonym.find('a').text
                                             synonym_list.append(text)
                                 elif "opposites" in h2.text:
-                                    antonyms = h2.parent.find_all('li')
+                                    antonyms = h2.parent.find_next_sibling().find_all('li')
                                     for antonym in antonyms:
                                         if antonym.find('a'):
                                             text = antonym.find('a').text
                                             antonym_list.append(text)
-                            example_list = soup_saur.find('div', {'id': 'example-sentences'}).find_all('p')
-                            for ex in example_list:
-                                examples.append(ex.text)
+                                elif "EXAMPLE SENTENCES" in h2.text:
+                                    examples = h2.next_siblings
+                                    for example in examples:
+                                        text = example.find('span').text
+                                        example_list.append(text)
                         except:
                             pass
                     else:  # is_turkish
@@ -534,7 +542,7 @@ def dictionary(request, word):
         'audio': audio,
         'synonyms': synonym_list[:3],
         'antonyms': antonym_list[:3],
-        'examples': examples[:3],
+        'examples': example_list[:3],
         'last_20_history': history,
         'word_exists': word_exists,
         'error': error,
@@ -691,7 +699,6 @@ def word_cd(request):
     if request.method == "GET":
         word_en = request.GET['word_en']
         word_tr_list = request.GET.getlist('tr[]')
-
         if not WordEn.objects.filter(user=request.user, english=word_en).exists():
             try:
                 audio_src = request.GET['audio']

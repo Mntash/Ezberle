@@ -21,7 +21,7 @@
 <body>
 <header class="fixed-top">
   <div class="icon-bar">
-      <a href="{% url 'home' %}" style="text-decoration:none; font-size:24px !important; text-align: center !important;">
+      <a href="{% url 'home' %}">
           <div class="brand-logo">
             <span>Ez</span>
             <span class="span-ber">ber</span>
@@ -80,7 +80,7 @@
     mybutton = document.getElementById("scroll2top")
     window.onscroll = function() {scrollFunction()}
     function scrollFunction() {
-      if (document.body.scrollTop > 30 || document.documentElement.scrollTop > 30) {
+      if (document.body.scrollTop > 100 || document.documentElement.scrollTop > 100) {
         mybutton.style.display = "block"
       } else {
         mybutton.style.display = "none"
