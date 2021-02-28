@@ -4,7 +4,7 @@
 
 {% block content %}
 
-<div class="container-media" style="padding-top:48px">
+<div class="container-media">
 
 <div class="row">
 <div class="col-md-9 pd-neg">
@@ -21,13 +21,13 @@
             {% if is_english %}
             <div class="d-flex">
                 {% if audio %}
-                <div class="align-self-center mt-2">
-                    <i title="Dinle" style="cursor:pointer;" id="audio" class="material-icons">volume_up</i>
+                <div class="align-self-center mt-2 audio">
+                    <i title="Dinle" id="audio" class="material-icons">volume_up</i>
                     <audio src="{{audio}}"></audio>
                 </div>
                 {% else %}
-                <div class="align-self-center mt-2">
-                    <i title="Ses mevcut değil" style="cursor:pointer;" class="material-icons ">volume_off</i>
+                <div class="align-self-center mt-2 audio">
+                    <i title="Ses mevcut değil" class="material-icons ">volume_off</i>
                     <audio src=""></audio>
                 </div>
                 {% endif %}
@@ -74,7 +74,12 @@
                         <td class="category">{{ col.0 }}</td>
                         <td>{{ col.1 }}</td>
                         <td id="tr-first"><a class="hover-primary" href="{% url 'dictionary' col.2 %}">{{ col.2 }}</a></td>
-                        <td><input id="{{forloop.counter}}" type="checkbox" value="{{ col.2 }}" style="height:16px;width:16px"/></td>
+                        <td>
+                            <label class="custom-cb" id="checkbox" for="{{forloop.counter}}">
+                                <input id="{{forloop.counter}}" type="checkbox" value="{{ col.2 }}"/>
+                                <span class="checkbox"></span>
+                            </label>
+                        </td>
                     </tr>
                   {% endfor %}
                   </tbody>
@@ -83,7 +88,7 @@
                 <div class="scndTable">
                     "{{word|capfirst}}" kelimesinin içinde geçtiği bazı kalıplar
                 </div>
-                <table class="table table-hover table-striped">
+                <table class="table table-hover table-striped table-responsive">
                   <thead>
                     <tr>
                         <th class="category" scope="col">#</th>
@@ -130,7 +135,7 @@
                 <div class="scndTable">
                     "{{word|capfirst}}" kelimesinin içinde geçtiği bazı kalıplar veya cümle
                 </div>
-                <table class="table table-hover table-striped">
+                <table class="table table-hover table-striped table-responsive">
                   <thead>
                     <tr>
                         <th class="category" scope="col">#</th>
@@ -170,22 +175,24 @@
                 </div>
             {% endif %}
         </div>
-</div>
+    </div>
 </div>
 
 {% if user.is_authenticated %}
-<div id="history-big" class="col-lg-2 col-md-3" style="margin-left:-30px;">
+<div id="history-big" class="col-lg-2 col-md-3">
     <button id="open-his" class="history-head text-center">
         <img src="{% static 'img/history.png' %}" alt="Geçmiş">
         <span class="teal">Geçmiş</span>
     </button>
-    <div class="history-body d-none" style="min-height:530px">
+    <div class="history-body d-none">
         <ul>
         {% for history in last_20_history %}
         <li><a href="{% url 'dictionary' history.english %}">{{ history.english }}</a></li>
         {% endfor %}
         </ul>
     </div>
+</div>
+
 </div>
 
 <div id="history-sm" class="col-12 mb-4">
@@ -196,7 +203,7 @@
     <div class="history-body-sm">
         <ul class="row">
         {% for history in last_20_history %}
-        <li class="col-sm-6 example-li"><a href="{% url 'dictionary' history.english %}">{{ history.english }}</a></li>
+        <li class="col-sm-6 history-li"><a href="{% url 'dictionary' history.english %}">{{ history.english }}</a></li>
         {% endfor %}
         </ul>
     </div>
@@ -217,10 +224,12 @@
         </div>
         {% else %}
         <div class="examples mb-4">
-            <span class="text-center" style="margin-bottom:21px">Örnek Cümleler</span>
-            <ul><li style="border: medium outset darkturquoise !important;
-                           padding:10px; background: aliceblue;">Örnek cümle bulunamadı..
-            </li></ul>
+            <span class="text-center">Örnek Cümleler</span>
+            <ul>
+                <li>
+                    Örnek cümle bulunamadı..
+                </li>
+            </ul>
         </div>
         {% endif %}
     </div>
@@ -257,48 +266,85 @@
     </div>
 {% endif %}
 {% endif %}
+</div>
+
+<div id="fixedSearch">
+    <input class="fixedSearchInput" placeholder="Kelime Ara.." type="text">
+    <div class="swing fixedSearchSwing">
+        <div class="object-rope"></div>
+        <button class="fixedSearchBtn btn-before">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="white" width="24" height="24" viewBox="0 0 24 24">
+                <path d="M13 7v-6l11 11-11 11v-6h-13v-10z"/>
+            </svg>
+        </button>
+    </div>
+</div>
 
 {% if not user.is_authenticated %}
 <div class="modal fade" id="myModal">
     <div class="modal-dialog modal-dialog-centered">
-      <div class="modal-content">
-
+      <div class="modal-content modal-login">
         <div class="modal-header">
           <h6 class="modal-title">Bu özelliğe erişmek için lütfen giriş yapın..</h6>
-          <button style="outline:none" type="button" class="close" data-dismiss="modal">×</button>
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
         </div>
 
         <div class="modal-body">
-            <form class="login" action="/accounts/login/?next{{request.path}}" method="POST" style="display:grid">
+            <form class="login d-grid" action="/accounts/login/?next{{request.path}}" method="POST">
                 {% csrf_token %}
-                Email Adresiniz:
-                <input type="email" name="login" required>
-                Kullanıcı Şifreniz:
-                <input type="password" name="password" required>
+                <input class="login-input" type="email" name="login" placeholder="Email Adresi..." required>
+                <input class="login-input" type="password" name="password" placeholder="Kullanıcı Şifresi..." required>
                 <div>
-                    <label for="id_remember">Beni hatırla: </label>
-                    <input class="cb-dict" type="checkbox" name="remember" id="id_remember">
+                    <label class="custom-cb" for="remember">Beni Hatırla:
+                        <input id="remember" type="checkbox">
+                        <span class="checkbox"></span>
+                    </label>
                 </div>
-                <button id="login" type="submit" class="btn btn-success mt-2 w-50" style="justify-self:center">Giriş Yap</button>
-            </form>
-        </div>
-
-        <div class="modal-footer d-flex justify-content-between">
-            <div class="d-flex flex-column">
-                <a href="/accounts/password/reset">Şifrenizi mi unuttunuz?</a>
+                <button type="submit" class="btn-before my-2 login-btn">Giriş Yap</button>
                 <a href="{% url 'account_signup' %}">Kayıt ol</a>
-            </div>
-            <div><button type="button" class="btn btn-danger" data-dismiss="modal">Kapat</button></div>
+                <a href="/accounts/password/reset">Şifremi Unuttum</a>
+                <div class="socialaccount_ballot login-btn">
+                  <ul class="socialaccount_providers">
+                    {% include "socialaccount/snippets/provider_list.html" with process="login" %}
+                  </ul>
+                </div>
+            </form>
         </div>
       </div>
     </div>
 </div>
-</div>
 {% endif %}
-</div>
+
 
 <script>
 $(function(){
+
+    window.onscroll = function() {scrollFixedSearch()}
+    function scrollFixedSearch() {
+      if (document.body.scrollTop > 100 || document.documentElement.scrollTop > 100) {
+        $("#scroll2top").css("display", "block")
+        $("#fixedSearch").addClass("fixedSearchAnim")
+      } else {
+        $("#scroll2top").css("display", "none")
+        $("#fixedSearch").removeClass("fixedSearchAnim")
+      }
+    }
+
+    $(".fixedSearchBtn").click(function(e){
+        var input = $(this).parent().prev().val().trim()
+        if (input.length > 0) {
+            window.location.pathname = "/sözlük/q=" + input + "/"
+        } else if (input==="") {
+            e.preventDefault()
+        }
+    })
+
+    $(".fixedSearchInput").keypress(function(event){
+        var keycode = (event.keyCode ? event.keyCode : event.which);
+        if(keycode == '13'){
+            $(".fixedSearchBtn").click();
+        }
+    });
 
     function mediaCategory(x) {
       if (x.matches) {
@@ -310,13 +356,6 @@ $(function(){
     var category = window.matchMedia("(max-width:413px)")
     mediaCategory(category)
     category.addListener(mediaCategory)
-
-    $(".srch-i").keypress(function(event){
-        var keycode = (event.keyCode ? event.keyCode : event.which);
-        if(keycode == '13'){
-            $(".srch-btn").click();
-        }
-    });
 
     function mediaContainer(container) {
       if (container.matches) {
@@ -340,13 +379,6 @@ $(function(){
     var srch = window.matchMedia("(max-width: 391px)")
     mediaSrch(srch)
     srch.addListener(mediaSrch)
-
-    $(".srch-i").keypress(function(event){
-        var keycode = (event.keyCode ? event.keyCode : event.which);
-        if(keycode == '13'){
-            $(".srch-btn").click();
-        }
-    });
 
     $(".srch-i").keypress(function(event){
         var keycode = (event.keyCode ? event.keyCode : event.which);

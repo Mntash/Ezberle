@@ -4,10 +4,10 @@
 
 {% block content %}
 
-<div class="container-md" style="padding-top:48px">
+<div class="container-md">
 <div class="row mt-3">
 
-    <div class="col-lg-5 tbl-first pd-neg">
+    <div class="col-lg-5 tbl-first">
         <div class="tbl-words position-relative">
             <span class="wl-title paleturq">Öğreneceklerim <br> <div>(<span class="count-unl">{{ unlearned_count }}</span>)</div></span>
             <div class="tt">
@@ -33,25 +33,27 @@
                             </div>
                             <div data-id="{{word.id}}" class="btn-grp">
                                 {% if word.audio %}
-                                <i title="Dinle" style="cursor:pointer; right:10px;" class="material-icons audio">volume_up</i>
+                                <i title="Dinle" class="material-icons audio">volume_up</i>
                                 <audio src="{{word.audio}}"></audio>
                                 {% else %}
-                                <i title="Ses mevcut değil" style="cursor:pointer; right:10px;" class="material-icons audio">volume_off</i>
+                                <i title="Ses mevcut değil" class="material-icons audio">volume_off</i>
                                 <audio src="{{word.audio}}"></audio>
                                 {% endif %}
                                 {% if word.is_seen %}
-                                <i title="Görüldü" class="material-icons tick-seen dodger" style="cursor:pointer;">done_all</i>
+                                <i title="Görüldü" class="material-icons tick-seen dodger">done_all</i>
                                 {% else %}
-                                <i title="Görüldü" class="material-icons tick-seen cadet" style="cursor:pointer;">done_all</i>
+                                <i title="Görüldü" class="material-icons tick-seen cadet">done_all</i>
                                 {% endif %}
-                                <i title="Ezberledim" class="material-icons tick-learn memorize" style="cursor:pointer;">check_box</i>
-                                <button data-toggle="collapse" data-target=".tr{{word.id}}" class="eye"><i title="Türkçelerini göster" class="material-icons" style="margin-left: -6px;margin-right:-6px">remove_red_eye</i></button>
+                                <i title="Ezberledim" class="material-icons tick-learn memorize">check_box</i>
+                                <button data-toggle="collapse" data-target=".tr{{word.id}}" class="eye">
+                                    <i title="Türkçelerini göster" class="material-icons">remove_red_eye</i>
+                                </button>
                                 {% if not word.is_starred %}
-                                <i title="Favorilere ekle" class="material-icons star" style="cursor:pointer;">star_border</i>
+                                <i title="Favorilere ekle" class="material-icons star">star_border</i>
                                 {% else %}
-                                <i title="Favorilere eklendi" class="material-icons star pale-yellow" style="cursor:pointer;">star</i>
+                                <i title="Favorilere eklendi" class="material-icons star pale-yellow">star</i>
                                 {% endif %}
-                                <i title="Sil" class="material-icons del del-unl" style="cursor:pointer;">delete</i>
+                                <i title="Sil" class="material-icons del del-unl">delete</i>
                             </div>
                         </div>
                         <div class="tr-section collapse tr{{word.id}}">
@@ -131,7 +133,7 @@
         {% endif %}
     </div>
 
-    <div class="col-lg-5 mt-md-2 mt-lg-0 pd-neg">
+    <div class="col-lg-5 mt-md-2 mt-lg-0">
         <div class="tbl-words position-relative">
             <span class="wl-title palegr">Öğrendiklerim <br> (<span class="count-l">{{ learned_count }}</span>)</span>
             <div class="tt">
@@ -157,27 +159,27 @@
                             </div>
                             <div data-id="{{word.id}}" class="btn-grp">
                                 {% if word.audio %}
-                                <i title="Dinle" style="cursor:pointer; right:10px;" class="material-icons audio">volume_up</i>
+                                <i title="Dinle" class="material-icons audio">volume_up</i>
                                 <audio src="{{word.audio}}"></audio>
                                 {% else %}
-                                <i title="Ses mevcut değil" style="cursor:pointer; right:10px;" class="material-icons audio">volume_off</i>
+                                <i title="Ses mevcut değil" class="material-icons audio">volume_off</i>
                                 <audio src="{{word.audio}}"></audio>
                                 {% endif %}
                                 {% if word.is_seen %}
-                                <i title="Görüldü" class="material-icons tick-seen dodger" style="cursor:pointer;">done_all</i>
+                                <i title="Görüldü" class="material-icons tick-seen dodger">done_all</i>
                                 {% else %}
-                                <i title="Görüldü" class="material-icons tick-seen cadet" style="cursor:pointer;">done_all</i>
+                                <i title="Görüldü" class="material-icons tick-seen cadet">done_all</i>
                                 {% endif %}
-                                <i title="Unuttum" class="material-icons tick-unlearn memorize" style="cursor:pointer;">undo</i>
+                                <i title="Unuttum" class="material-icons tick-unlearn memorize">undo</i>
                                 {% if word.turkish %}
-                                <button data-toggle="collapse" data-target=".tr{{word.id}}" class="eye"><i title="Türkçelerini göster" class="material-icons" style="margin-left: -6px;margin-right:-6px">remove_red_eye</i></button>
+                                <button data-toggle="collapse" data-target=".tr{{word.id}}" class="eye"><i title="Türkçelerini göster" class="material-icons">remove_red_eye</i></button>
                                 {% endif %}
                                 {% if not word.is_starred %}
-                                <i title="Favorilere ekle" class="material-icons star" style="cursor:pointer;">star_border</i>
+                                <i title="Favorilere ekle" class="material-icons star">star_border</i>
                                 {% else %}
-                                <i title="Favorilere eklendi" class="material-icons star pale-yellow" style="cursor:pointer;">star</i>
+                                <i title="Favorilere eklendi" class="material-icons star pale-yellow">star</i>
                                 {% endif %}
-                                <i title="Sil" class="material-icons del del-l" style="cursor:pointer;">delete</i>
+                                <i title="Sil" class="material-icons del del-l">delete</i>
                             </div>
                         </div>
                         <div class="tr-section collapse tr{{word.id}}">
@@ -257,41 +259,52 @@
         {% endif %}
     </div>
 
-    <div class="col-lg-2 col-sm-8 word-mng mb-md-3 mb-lg-0 pd-neg">
-        <div style="height:50px">
-            <div class="d-flex justify-content-center" style="margin-top:9px">
+    <div class="col-lg-2 col-sm-8 word-mng mb-lg-0 mb-5">
+        <div>
+            <div class="d-flex justify-content-center word-mng-search">
                 {% if 'kelime_listesi/q=' in request.path and '$favorites' not in request.path %}
-                    <input class="wl-search w-75" name="q" placeholder="Kelime ara.." type="search" value="{{word}}" onClick="this.setSelectionRange(0, this.value.length)">
+                    <input title="Bir kelime arayın" class="srch-i" type="search" placeholder="Kelime ara.." onClick="this.setSelectionRange(0, this.value.length)" aria-autocomplete="none" autofocus>
+                    <button class="srch-btn" type="submit">
+                        <i class="material-icons">search</i>
+                    </button>
                 {% else %}
-                    <input class="wl-search w-75" name="q" placeholder="Kelime ara.." type="search">
+                    <input title="Bir kelime arayın" class="srch-i" type="search" placeholder="Kelime ara.." onClick="this.setSelectionRange(0, this.value.length)" aria-autocomplete="none" autofocus>
+                    <button class="srch-btn" type="submit">
+                        <i class="material-icons">search</i>
+                    </button>
                 {% endif %}
-                <button class="wl-search-btn"><i class="fas fa-search"></i></button>
             </div>
             {% if '$favorites' in request.path %}
-            <div class="d-flex justify-content-center"><input id="show-fav" type="checkbox" checked style="margin:5px 3px">
-                <label for="show-fav" style="font-size:12px;margin-top:2px">Favorileri Göster</label>
+            <div class="d-flex justify-content-center show-fav">
+                <label class="custom-cb" for="show-fav">Favorileri Göster
+                    <input id="show-fav" type="checkbox" checked>
+                    <span class="checkbox"></span>
+                </label>
             </div>
             {% else %}
-            <div class="d-flex justify-content-center"><input id="show-fav" type="checkbox" style="margin:5px 3px">
-                <label for="show-fav" style="font-size:12px;margin-top:2px">Favorileri Göster</label>
+            <div class="d-flex justify-content-center show-fav">
+                <label class="custom-cb" for="show-fav">Favorileri Göster
+                    <input id="show-fav" type="checkbox">
+                    <span class="checkbox"></span>
+                </label>
             </div>
             {% endif %}
         </div>
         <div class="mng-body">
-            <div class="text-center mng-top" style="border-bottom:medium solid gray;border-top:medium solid gray; display:grid">
+            <div class="text-center mng-top">
                 <div>
                     <span id="add-title-unl">Öğreneceklerime</span><br>
                     <label for="english-unl">Kelime Ekle:</label>
                 </div>
-                <div><input type="text" id="english-unl" name="english-unl" required aria-autocomplete="none"></div>
+                <div><input type="text" id="english-unl" name="english-unl" required autocomplete="off"></div>
                 <div><label for="turkish-unl">Türkçesi:</label></div>
-                <div><input type="text" id="turkish-unl" name="turkish-unl" class="input-tr-unl mt-1 turkish w-75" aria-autocomplete="none"></div>
+                <div><input type="text" id="turkish-unl" name="turkish-unl" class="input-tr-unl mt-1 turkish w-75" autocomplete="off"></div>
                 <div class="d-flex justify-content-center">
-                  <button class="del-tr del-tr-unl d-none"><i class="material-icons">indeterminate_check_box</i></button>
-                  <button class="add-tr add-tr-unl"><i class="material-icons">add_box</i></button>
+                  <button class="del-tr del-tr-unl d-none"><i class="material-icons teal">indeterminate_check_box</i></button>
+                  <button class="add-tr add-tr-unl"><i class="material-icons teal">add_box</i></button>
                 </div>
                 <div class="d-flex justify-content-center mb-1">
-                  <input class="btn btn-danger p-1 reset-unl" type="reset" value="Sıfırla" style="margin-right:5px;">
+                  <input class="btn btn-danger p-1 reset-unl" type="reset" value="Sıfırla">
                   <input class="btn btn-success p-1 add2unl" type="submit" value="Ekle">
                 </div>
             </div>
@@ -303,15 +316,15 @@
                 <span id="add-title-l">Öğrendiklerime</span> <br>
                 <label for="english-l">Kelime Ekle:</label>
             </div>
-            <div><input type="text" id="english-l" name="english-l" required aria-autocomplete="none"></div>
+            <div><input type="text" id="english-l" name="english-l" required autocomplete="off"></div>
             <div><label for="turkish-l">Türkçesi:</label></div>
-            <div><input type="text" id="turkish-l" name="turkish-l" class="input-tr-l mt-1 turkish w-75" aria-autocomplete="none"></div>
+            <div><input type="text" id="turkish-l" name="turkish-l" class="input-tr-l mt-1 turkish w-75" autocomplete="off"></div>
             <div class="d-flex justify-content-center">
-              <button class="del-tr del-tr-l d-none"><i class="material-icons">indeterminate_check_box</i></button>
-              <button class="add-tr add-tr-l"><i class="material-icons">add_box</i></button>
+              <button class="del-tr del-tr-l d-none"><i class="material-icons teal">indeterminate_check_box</i></button>
+              <button class="add-tr add-tr-l"><i class="material-icons teal">add_box</i></button>
             </div>
             <div class="d-flex justify-content-center mng-form2 mb-sm-1 mb-lg-0">
-              <input class="btn btn-danger p-1 reset-l" type="reset" value="Sıfırla" style="margin-right:5px">
+              <input class="btn btn-danger p-1 reset-l" type="reset" value="Sıfırla">
               <input class="btn btn-success p-1 add2l" type="submit" value="Ekle">
             </div>
         </div>
@@ -321,10 +334,10 @@
 </div>
 
 
-<div id="err-mng" style="text-align:left;width:100%;display:flex;justify-content:center">
-  <div class="rounded position-relative err-mng d-none shadow-sm">
-    <span class="err-msg" style="font-size:x-small"></span>
-    <span class="times-err" style="position:absolute;right:0;top:0;cursor:pointer">&times;</span>
+<div id="err-mng">
+  <div class="rounded position-relative err-mng d-none shadow-sm mt-1">
+    <span class="err-msg"></span>
+    <span class="times-err">&times;</span>
   </div>
 </div>
 
@@ -359,6 +372,7 @@ $(function(){
             });
         }
     })
+
     $("input[type='submit']").click(function(e){
     e.preventDefault();
     var tr_list = [];
@@ -452,7 +466,7 @@ $(function(){
         $(".btn-grp").removeClass("d-flex justify-content-center")
       } else {
         $(".en-section").removeClass("d-flex justify-content-between")
-        $(".word").css("border-bottom", "medium outset black")
+        $(".word").css("border-bottom", "medium solid teal")
         $(".word").css("margin-bottom", "5px")
         $(".word").css("text-align", "center")
         $(".btn-grp").addClass("d-flex justify-content-center")
@@ -488,7 +502,7 @@ $(function(){
         }
     });
 
-    $(".wl-search").autocomplete({
+    $(".srch-i").autocomplete({
         source: function(request, response) {
             $.getJSON("{% url 'autocomplete' %}", { q: request.term }, response);
         },
@@ -498,14 +512,14 @@ $(function(){
         }
     })
 
-    $(".wl-search").keypress(function(event){
+    $(".srch-i").keypress(function(event){
         var keycode = (event.keyCode ? event.keyCode : event.which);
         if(keycode == '13'){
-            $(".wl-search-btn").click();
+            $(".srch-btn").click();
         }
     });
 
-    $(".wl-search-btn").click(function(e) {
+    $(".srch-btn").click(function(e) {
         e.preventDefault()
         var value = $(this).prev().val();
         if (value.length > 0) {
@@ -526,13 +540,13 @@ $(function(){
         event.preventDefault();
         if ($(this).hasClass("add-tr-unl")) {
           if (tr_count_unl === 0) {
-              $(".input-tr-unl").parent().after('<div><input type="text" name="turkish-unl" class="mt-1 tr-2-unl w-75" aria-autocomplete="none"></div>');
+              $(".input-tr-unl").parent().after('<div><input type="text" name="turkish-unl" class="mt-1 tr-2-unl w-75" autocomplete="off"></div>');
               $(".tr-2-unl").hide().fadeIn().focus();
               $(".del-tr-unl").removeClass("d-none");
               $(this).css("margin-left", "-10px");
               tr_count_unl++;
           } else if (tr_count_unl === 1) {
-              $(".tr-2-unl").parent().after('<div><input type="text" name="turkish-unl" class="mt-1 tr-3-unl w-75" aria-autocomplete="none"></div>');
+              $(".tr-2-unl").parent().after('<div><input type="text" name="turkish-unl" class="mt-1 tr-3-unl w-75" autocomplete="off"></div>');
               $(".tr-3-unl").hide().fadeIn().focus();
               $(this).prop("disabled", "true");
               tr_count_unl++
@@ -540,13 +554,13 @@ $(function(){
         }
         else if ($(this).hasClass("add-tr-l")) {
           if (tr_count_l === 0) {
-              $(".input-tr-l").parent().after('<div><input type="text" name="turkish-l" class="mt-1 tr-2-l w-75" aria-autocomplete="none"></div>');
+              $(".input-tr-l").parent().after('<div><input type="text" name="turkish-l" class="mt-1 tr-2-l w-75" autocomplete="off"></div>');
               $(".tr-2-l").hide().fadeIn().focus();
               $(".del-tr-l").removeClass("d-none");
               $(this).css("margin-left", "-10px");
               tr_count_l++;
           } else if (tr_count_l === 1) {
-              $(".tr-2-l").parent().after('<div><input type="text" name="turkish-l" class="mt-1 tr-3-l w-75" aria-autocomplete="none"></div>');
+              $(".tr-2-l").parent().after('<div><input type="text" name="turkish-l" class="mt-1 tr-3-l w-75" autocomplete="off"></div>');
               $(".tr-3-l").hide().fadeIn().focus();
               $(this).prop("disabled", "true");
               tr_count_l++

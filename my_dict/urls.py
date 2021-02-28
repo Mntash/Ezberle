@@ -17,5 +17,6 @@ urlpatterns = [
     path('word_is_starred/', DelSeenLearned.as_view(), name='is-starred'),
     path('random-refresh/', refresh, name='random-refresh'),
     path('search/', ajax_search, name="search"),
+    path('complete_quiz/', complete_quiz, name='complete_quiz'),
     path("favicon.ico",RedirectView.as_view(url=staticfiles_storage.url("favicon.ico")),),
 ]

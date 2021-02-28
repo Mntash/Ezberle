@@ -14,11 +14,11 @@
 </li>
 {% endfor %}
 {% endif %}
-<li class="social" style="cursor:pointer">
-    <a title="{{provider.name}}" style="display:block;height:100%;width:100%" class="socialaccount_provider {{provider.id}} gmail"
+<li class="social">
+    <a title="{{provider.name}}" class="socialaccount_provider {{provider.id}} gmail"
     href="{% provider_login_url provider.id process=process scope=scope auth_params=auth_params %}">
         <img src="{% static 'img/google.svg' %}" alt="Google" height=18px" width="18px" style="margin-right:0.25em">
-        Google ile giriş yap
+        Google
     </a>
 </li>
 {% endfor %}

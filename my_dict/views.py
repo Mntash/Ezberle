@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from bs4 import BeautifulSoup
 import requests
-from .models import WordEn, WordTr, Search
+from .models import WordEn, WordTr, Search, Profile
 from django.contrib.auth.models import User
 import lxml
 import cchardet
@@ -90,6 +90,20 @@ def home(request):
             random_ = random.sample(starred_words, k=10)
             random_starred = random_
 
+    is_quiz_unl_finished = ""
+    is_quiz_l_finished = ""
+    if request.user.is_authenticated:
+        obj_unl = Profile.objects.get(user_id=request.user.id).is_quiz_unlearned_finished
+        if obj_unl:
+            is_quiz_unl_finished = "Finished"
+        else:
+            is_quiz_unl_finished = "Not Finished"
+        obj_l = Profile.objects.get(user_id=request.user.id).is_quiz_learned_finished
+        if obj_l:
+            is_quiz_l_finished = "Finished"
+        else:
+            is_quiz_l_finished = "Not Finished"
+
     context = {
         'word_1': word_mer,
         'word_2': word_ox,
@@ -110,6 +124,8 @@ def home(request):
         'rstrwords': random_starred,
         'count_unl': count_unl,
         'count_l': count_l,
+        'is_quiz_unl_finished':is_quiz_unl_finished,
+        'is_quiz_l_finished': is_quiz_l_finished
     }
 
     return render(request, 'my_dict/home.html', context=context)
@@ -766,3 +782,17 @@ class DelSeenLearned(View):
 
 def error_404_view(request, exception):
     return render(request, 'my_dict/404.html')
+
+
+def complete_quiz(request):
+    if request.method == "POST":
+        if request.POST.get('quiz-unl'):
+            obj = Profile.objects.get(user_id=request.user.id)
+            obj.is_quiz_unlearned_finished = True
+            obj.save()
+        if request.POST.get('quiz-l'):
+            obj = Profile.objects.get(user_id=request.user.id)
+            obj.is_quiz_learned_finished = True
+            obj.save()
+
+    return HttpResponse('')
