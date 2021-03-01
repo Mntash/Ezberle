@@ -1,60 +1,37 @@
 from django.shortcuts import render
 from bs4 import BeautifulSoup
 import requests
-from .models import WordEn, WordTr, Search, Profile
+from .models import WordEn, WordTr, Search, Profile, WotdEn, WotdTr
 from django.contrib.auth.models import User
 import lxml
 import cchardet
 from django.http import HttpResponse, JsonResponse
-from django.views.generic import View, DeleteView
-from django.urls import reverse_lazy
+from django.views.generic import View
 import random
 from django.contrib.auth.decorators import login_required
 import datetime
 from django.core.paginator import Paginator
-from django.contrib import messages
-from allauth.account.views import PasswordResetView
 
 tureng_url = 'https://tureng.com/tr/turkce-ingilizce/{}'
 saurus_url = 'https://www.thesaurus.com/browse/{}'
 
 
 def home(request):
-    req_mer = requests.get('https://www.merriam-webster.com/', headers={"User-Agent": "Mozilla/5.0"}).content
-    req_ox = requests.get('https://www.oxfordlearnersdictionaries.com/', headers={"User-Agent": "Mozilla/5.0"}).content
-    req_lex = requests.get('https://www.lexico.com/', headers={"User-Agent": "Mozilla/5.0"}).content
-    req_camb = requests.get('https://dictionary.cambridge.org/', headers={"User-Agent": "Mozilla/5.0"}).content
-    soup_mer = BeautifulSoup(req_mer, 'lxml')
-    soup_ox = BeautifulSoup(req_ox, 'lxml')
-    soup_lex = BeautifulSoup(req_lex, 'lxml')
-    soup_camb = BeautifulSoup(req_camb, 'lxml')
-    word_mer = soup_mer.find('a', {'class': 'header-wht'}).get_text().strip()
-    word_ox = soup_ox.find('a', {'class': 'headword'}).find_next().get_text().strip()
-    word_lex = soup_lex.find('a', {'class': 'linkword'}).text.strip()
-    word_camb = soup_camb.find('p', {'class': 'wotd-hw'}).find('a').get_text().strip()
-    tur_mer = []
-    tur_ox = []
-    tur_lex = []
-    tur_camb = []
-    if search_word(word_mer) is not None:
-        tur_mer = search_word(word_mer)
-    if search_word(word_ox) is not None:
-        tur_ox = search_word(word_ox)
-    if search_word(word_lex) is not None:
-        tur_lex = search_word(word_lex)
-    if search_word(word_camb) is not None:
-        tur_camb = search_word(word_camb)
+    word_mer = WotdEn.objects.get(website="Merriam")
+    word_ox = WotdEn.objects.get(website="Oxford")
+    word_dict = WotdEn.objects.get(website="Dictionary")
+    word_camb = WotdEn.objects.get(website="Cambridge")
 
     mer_exists = False
     ox_exists = False
-    lex_exists = False
+    dict_exists = False
     camb_exists = False
 
     if request.user.is_authenticated:
-        mer_exists = WordEn.objects.filter(user=request.user, english=word_mer).exists()
-        ox_exists = WordEn.objects.filter(user=request.user, english=word_ox).exists()
-        lex_exists = WordEn.objects.filter(user=request.user, english=word_lex).exists()
-        camb_exists = WordEn.objects.filter(user=request.user, english=word_camb).exists()
+        mer_exists = WordEn.objects.filter(user=request.user, english=word_mer.english).exists()
+        ox_exists = WordEn.objects.filter(user=request.user, english=word_ox.english).exists()
+        dict_exists = WordEn.objects.filter(user=request.user, english=word_dict.english).exists()
+        camb_exists = WordEn.objects.filter(user=request.user, english=word_camb.english).exists()
 
     last_words = []
     starred_words = []
@@ -105,17 +82,13 @@ def home(request):
             is_quiz_l_finished = "Not Finished"
 
     context = {
-        'word_1': word_mer,
-        'word_2': word_ox,
-        'word_3': word_lex,
-        'word_4': word_camb,
-        'tur_1': tur_mer,
-        'tur_2': tur_ox,
-        'tur_3': tur_lex,
-        'tur_4': tur_camb,
+        'word_mer': word_mer,
+        'word_ox': word_ox,
+        'word_dict': word_dict,
+        'word_camb': word_camb,
         'mer_exists': mer_exists,
         'ox_exists': ox_exists,
-        'lex_exists': lex_exists,
+        'dict_exists': dict_exists,
         'camb_exists': camb_exists,
         'last_words': last_words,
         'rlwords': random_learned,
@@ -676,39 +649,6 @@ def ajax_search(request):
             words.append(word.english)
 
         return JsonResponse(words, safe=False)
-
-
-def search_word(word):
-    pre_url = 'https://tureng.com/tr/turkce-ingilizce/{}'
-    plus_added_search = '+'.join(str(word).split())
-    url = pre_url.format(str(plus_added_search))
-    html = requests.get(url).content
-    soup = BeautifulSoup(html, 'lxml')
-    table = soup.find('table')
-    try:
-        rows = table.find_all('tr')[1:]
-        audio_and_tr = []
-        tr_list = []
-
-        for row in rows:
-            if not row.attrs:
-                tds = row.find_all('td')
-                tr = tds[3].text.strip()
-                tr_list.append(tr)
-
-        audio_and_tr.append(tr_list[:3])
-
-        if soup.find('audio', {'id': 'turengVoiceENTRENus'}):
-            if soup.find('audio', {'id': 'turengVoiceENTRENus'}).find('source'):
-                audio = soup.find('audio', {'id': 'turengVoiceENTRENus'}).find('source')['src']
-                audio_and_tr.append(audio)
-        else:
-            audio_and_tr.append(None)
-
-        return audio_and_tr[0], audio_and_tr[1]
-
-    except AttributeError:
-        return None
 
 
 def word_cd(request):

@@ -242,12 +242,6 @@ button.btn-before.disabled:hover {
     background: var(--clr-secondary) !important
 }
 
-.lexico {
-    height: 85px;
-    width: 90px;
-    max-width: 95px
-}
-
 .table td, .table th {
     border-top:none !important;
     border-bottom:none !important
@@ -702,10 +696,17 @@ ul {
 .wl-title {
     position: absolute;
     left: 50%;
+    -webkit-transform: translateX(-50%);
     transform: translateX(-50%);
-    border: medium solid;
-    padding: 5px;
-    text-align:center;
+    padding: 9px;
+    background: var(--clr-primary);
+    outline: 3px solid darkturquoise;
+    outline-offset: -8px;
+    border: 3px solid darkturquoise;
+    border-radius: 10px;
+    box-shadow: 0px 0px 5px 0px black;
+    color: oldlace;
+    text-align: center;
 }
 
 .palegr {
@@ -904,7 +905,7 @@ input:focus::placeholder {
         margin-top: -15px !important
     }
     .unl-word > li:first-child, .l-word > li:first-child {
-        margin-top: 50px !important
+        margin-top: 58px !important
     }
     .syn span,
     .anto span,
@@ -921,7 +922,7 @@ input:focus::placeholder {
         margin-top: -16px !important
     }
     .unl-word > li:first-child, .l-word > li:first-child {
-        margin-top: 64px !important
+        margin-top: 73px !important
     }
     .wl-title {
         margin-top: -1px !important

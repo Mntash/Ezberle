@@ -11,6 +11,9 @@ class Profile(models.Model):
     is_quiz_unlearned_finished = models.BooleanField(default=False)
     is_quiz_learned_finished = models.BooleanField(default=False)
 
+    def __str__(self):
+        return self.user
+
 
 @receiver(post_save, sender=User)
 def create_user_profile(sender, instance, created, **kwargs):
@@ -43,6 +46,9 @@ class WordEn(models.Model):
     class Meta:
         ordering = ['-create_time']
 
+    def __str__(self):
+        return self.english
+
 
 class WordTr(models.Model):
     english = models.ForeignKey(WordEn, on_delete=models.CASCADE, null=True, related_name="turkish")
@@ -51,13 +57,27 @@ class WordTr(models.Model):
 
 class Search(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
-    english = models.CharField(max_length=100, null=True)
+    search = models.CharField(max_length=100, null=True)
     create_time = models.DateTimeField(auto_now=True)
 
+    def __str__(self):
+        return self.search
 
-class WordOfTheDay(models.Model):
+
+class WotdEn(models.Model):
     english = models.CharField(max_length=100, null=True)
-    turkish = models.CharField(max_length=100, null=True)
-    create_time = models.DateTimeField(auto_now=True)
+    audio = models.CharField(max_length=300, null=True)
+    website = models.CharField(max_length=50, null=True)
+
+    def __str__(self):
+        return self.english
+
+
+class WotdTr(models.Model):
+    english = models.ForeignKey(WotdEn, on_delete=models.CASCADE, null=True, related_name="turkish")
+    turkish = models.CharField(max_length=100)
+
+    def __str__(self):
+        return self.turkish
 
 

@@ -11,12 +11,12 @@
         <div class="card card-shadow">
             <div><a href="https://www.merriam-webster.com/" target="_blank"><img class="card-img-top mx-auto" src="{% static 'img/merriam.png' %}" alt="Merriam Webster"></a></div>
             <div class="card-body home-card">
-                <a href="{% url 'dictionary' word_1 %}" target="_blank">
-                    <h4 id="word_1" class="font-weight-bold">{{ word_1 }}</h4>
+                <a href="{% url 'dictionary' word_mer.english %}" target="_blank">
+                    <h4 id="word_1" class="font-weight-bold">{{ word_mer.english }}</h4>
                 </a>
-                {% if tur_1.0 %}
+                {% if word_mer.turkish.all %}
                     <ul class="wotd-tr-list">
-                    {% for tr in tur_1.0 %}
+                    {% for tr in word_mer.turkish.all %}
                         <li>
                             {{ tr }}
                         </li>
@@ -28,13 +28,13 @@
                     </ul>
                 {% endif %}
                 <div class="home-card-footer">
-                {% if tur_1.1 is not None %}
+                {% if word_mer.audio is not None %}
                     <div>
                         <span class="audio">
                             <i title="Dinle" data-id="1" class="material-icons">volume_up</i>
                         </span>
                     </div>
-                    <audio id="au-1" src="{{tur_1.1}}"></audio>
+                    <audio id="au-1" src="{{word_mer.audio}}"></audio>
                 {% else %}
                     <div>
                         <span class="audio"><i title="Ses mevcut değil" class="material-icons">volume_off</i>
@@ -42,7 +42,7 @@
                     </div>
                     <audio src=""></audio>
                 {% endif %}
-                {% if tur_1.0 %}
+                {% if word_mer.turkish.all %}
                     {% if user.is_authenticated %}
                         {% if mer_exists %}
                             <div><button data-id="1" class="btn add-btn-home btn-after"><span>Kelime Eklendi</span></button></div>
@@ -72,12 +72,12 @@
         <div class="card card-shadow">
             <div><a href="https://www.oxfordlearnersdictionaries.com/" target="_blank"><img class="card-img-top mx-auto" src="{% static 'img/oxford.jfif' %}" alt="Oxford Dictionary"></a></div>
             <div class="card-body home-card">
-                <a href="{% url 'dictionary' word_2 %}" target="_blank">
-                    <h4 id="word_2" class="font-weight-bold">{{ word_2 }}</h4>
+                <a href="{% url 'dictionary' word_ox.english %}" target="_blank">
+                    <h4 id="word_2" class="font-weight-bold">{{ word_ox.english }}</h4>
                 </a>
-                {% if tur_2.0 %}
+                {% if word_ox.turkish.all %}
                     <ul class="wotd-tr-list">
-                    {% for tr in tur_2.0 %}
+                    {% for tr in word_ox.turkish.all %}
                         <li>
                             {{ tr }}
                         </li>
@@ -89,13 +89,13 @@
                     </ul>
                 {% endif %}
                 <div class="home-card-footer">
-                {% if tur_2.1 is not None %}
+                {% if word_ox.audio is not None %}
                     <div>
                         <span class="audio">
                             <i title="Dinle" data-id="2" class="material-icons">volume_up</i>
                         </span>
                     </div>
-                    <audio id="au-2" src="{{tur_2.1}}"></audio>
+                    <audio id="au-2" src="{{word_ox.audio}}"></audio>
                 {% else %}
                     <div>
                         <span class="audio">
@@ -104,7 +104,7 @@
                     </div>
                     <audio src=""></audio>
                 {% endif %}
-                {% if tur_2.0 %}
+                {% if word_ox.turkish.all %}
                     {% if user.is_authenticated %}
                         {% if ox_exists %}
                             <div><button data-id="2" class="btn add-btn-home btn-after"><span>Kelime Eklendi</span></button></div>
@@ -132,14 +132,14 @@
 
     <div class="col-lg-3 col-sm-6 text-center mb-sm-2">
         <div class="card card-shadow">
-            <div><a href="https://www.lexico.com/" target="_blank"><img class="card-img-top mx-auto lexico" src="{% static 'img/lexico.png' %}" alt="Lexico"></a></div>
+            <div><a href="https://www.dictionary.com/" target="_blank"><img class="card-img-top mx-auto dict" src="{% static 'img/dictionary.jpg' %}" alt="Dictionary"></a></div>
             <div class="card-body home-card">
-                <a href="{% url 'dictionary' word_3 %}" target="_blank">
-                    <h4 id="word_3" class="font-weight-bold">{{ word_3 }}</h4>
+                <a href="{% url 'dictionary' word_dict.english %}" target="_blank">
+                    <h4 id="word_3" class="font-weight-bold">{{ word_dict.english }}</h4>
                 </a>
-                {% if tur_3.0 %}
+                {% if word_dict.turkish.all %}
                     <ul class="wotd-tr-list">
-                    {% for tr in tur_3.0 %}
+                    {% for tr in word_dict.turkish.all %}
                         <li>
                             {{ tr }}
                         </li>
@@ -151,13 +151,13 @@
                     </ul>
                 {% endif %}
                 <div class="home-card-footer">
-                {% if tur_3.1 is not None %}
+                {% if word_dict.audio is not None %}
                 <div>
                     <span class="audio">
                         <i title="Dinle" data-id="3" class="material-icons">volume_up</i>
                     </span>
                 </div>
-                <audio id="au-3" src="{{tur_3.1}}"></audio>
+                <audio id="au-3" src="{{word_dict.audio}}"></audio>
                 {% else %}
                 <div>
                     <span class="audio">
@@ -166,9 +166,9 @@
                 </div>
                 <audio src=""></audio>
                 {% endif %}
-                {% if tur_3.0 %}
+                {% if word_dict.turkish.all %}
                     {% if user.is_authenticated %}
-                        {% if lex_exists %}
+                        {% if dict_exists %}
                             <div><button data-id="3" class="btn add-btn-home btn-after"><span>Kelime Eklendi</span></button></div>
                         {% else %}
                             <div><button data-id="3" class="btn add-btn-home btn-before"><span>Kelimeyi Ekle</span></button></div>
@@ -178,7 +178,7 @@
                     {% endif %}
                 {% else %}
                     {% if user.is_authenticated %}
-                        {% if lex_exists %}
+                        {% if dict_exists %}
                             <div><button data-id="3" class="btn add-btn-home btn-after disabled not-allowed" disabled><span>Kelime Eklendi</span></button></div>
                         {% else %}
                             <div><button data-id="3" class="btn add-btn-home btn-before disabled not-allowed" disabled><span>Kelimeyi Ekle</span></button></div>
@@ -196,12 +196,12 @@
         <div class="card card-shadow">
             <div><a href="https://dictionary.cambridge.org/" target="_blank"><img class="card-img-top mx-auto" src="{% static 'img/cambridge.png' %}" alt="Merriam Webster"></a></div>
             <div class="card-body home-card">
-                <a href="{% url 'dictionary' word_4 %}" target="_blank">
-                    <h4 id="word_4" class="font-weight-bold">{{ word_4 }}</h4>
+                <a href="{% url 'dictionary' word_camb.english %}" target="_blank">
+                    <h4 id="word_4" class="font-weight-bold">{{ word_camb.english }}</h4>
                 </a>
-                {% if tur_4.0 %}
+                {% if word_camb.turkish.all %}
                     <ul class="wotd-tr-list">
-                    {% for tr in tur_4.0 %}
+                    {% for tr in word_camb.turkish.all %}
                         <li>
                             {{ tr }}
                         </li>
@@ -213,13 +213,13 @@
                     </ul>
                 {% endif %}
                 <div class="home-card-footer">
-                {% if tur_4.1 is not None %}
+                {% if word_camb.audio is not None %}
                     <div>
                         <span class="audio">
                             <i title="Dinle" data-id="4" class="material-icons">volume_up</i>
                         </span>
                     </div>
-                    <audio id="au-4" src="{{tur_4.1}}"></audio>
+                    <audio id="au-4" src="{{word_camb.audio}}"></audio>
                 {% else %}
                     <div>
                         <span class="audio">
@@ -228,7 +228,7 @@
                     </div>
                     <audio src=""></audio>
                 {% endif %}
-                {% if tur_4.0 %}
+                {% if word_camb.turkish.all %}
                     {% if user.is_authenticated %}
                         {% if camb_exists %}
                             <div><button data-id="4" class="btn add-btn-home btn-after"><span>Kelime Eklendi</span></button></div>
