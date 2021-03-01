@@ -187,7 +187,7 @@
     <div class="history-body d-none">
         <ul>
         {% for history in last_20_history %}
-        <li><a href="{% url 'dictionary' history.english %}">{{ history.english }}</a></li>
+        <li><a href="{% url 'dictionary' history.search %}">{{ history.search }}</a></li>
         {% endfor %}
         </ul>
     </div>
@@ -203,7 +203,7 @@
     <div class="history-body-sm">
         <ul class="row">
         {% for history in last_20_history %}
-        <li class="col-sm-6 history-li"><a href="{% url 'dictionary' history.english %}">{{ history.english }}</a></li>
+        <li class="col-sm-6 history-li"><a href="{% url 'dictionary' history.search %}">{{ history.search }}</a></li>
         {% endfor %}
         </ul>
     </div>
