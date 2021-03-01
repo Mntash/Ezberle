@@ -252,11 +252,11 @@ def dictionary(request, word):
                                 data.append([category, english, turkish])
                         if word:
                             if request.user.is_authenticated:
-                                if not Search.objects.filter(user=request.user, english=word).exists():
-                                    create_search = Search.objects.create(user=request.user, english=word)
+                                if not Search.objects.filter(user=request.user, search=word).exists():
+                                    create_search = Search.objects.create(user=request.user, search=word)
                                     create_search.save()
                                 else:
-                                    obj = Search.objects.get(user=request.user, english=word)
+                                    obj = Search.objects.get(user=request.user, search=word)
                                     obj.create_time = datetime.datetime.now()
                                     obj.save()
                         for tb in tables:
@@ -309,11 +309,11 @@ def dictionary(request, word):
                             data.append([category, english, turkish])
                     if word:
                         if request.user.is_authenticated:
-                            if not Search.objects.filter(user=request.user, english=word).exists():
-                                create_search = Search.objects.create(user=request.user, english=word)
+                            if not Search.objects.filter(user=request.user, search=word).exists():
+                                create_search = Search.objects.create(user=request.user, search=word)
                                 create_search.save()
                             else:
-                                obj = Search.objects.get(user=request.user, english=word)
+                                obj = Search.objects.get(user=request.user, search=word)
                                 obj.create_time = datetime.datetime.now()
                                 obj.save()
                     for tb in tables:
@@ -366,11 +366,11 @@ def dictionary(request, word):
                         data.append([category, english, turkish])
                 if word:
                     if request.user.is_authenticated:
-                        if not Search.objects.filter(user=request.user, english=word).exists():
-                            create_search = Search.objects.create(user=request.user, english=word)
+                        if not Search.objects.filter(user=request.user, search=word).exists():
+                            create_search = Search.objects.create(user=request.user, search=word)
                             create_search.save()
                         else:
-                            obj = Search.objects.get(user=request.user, english=word)
+                            obj = Search.objects.get(user=request.user, search=word)
                             obj.create_time = datetime.datetime.now()
                             obj.save()
                 try:
