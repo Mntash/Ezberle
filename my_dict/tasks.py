@@ -130,10 +130,17 @@ def add_words2_db():
     soup_tur = BeautifulSoup(html_tur, 'lxml')
     tds = soup_tur.find_all('td', class_='blob-code')[:100]
     for td in tds:
-        response = requests.request("GET", url, headers=headers, params={'entry': td.text})
-        en = response.json()['response']
-        obj = WordDb.objects.create(english=en)
-        obj.save()
+        try:
+            response = requests.request("GET", url, headers=headers, params={'entry': td.text})
+            en = response.json()['response']
+            if not WordDb.objects.filter(english=en).exists:
+                obj = WordDb.objects.create(english=en)
+                obj.save()
+            else:
+                continue
+        except KeyError:
+            continue
+
 
 
 
