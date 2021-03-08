@@ -128,7 +128,7 @@ def add_words2_db():
     github = "https://github.com/first20hours/google-10000-english/blob/master/google-10000-english-usa-no-swears-long.txt"
     html_tur = requests.get(github).content
     soup_tur = BeautifulSoup(html_tur, 'lxml')
-    tds = soup_tur.find_all('td', class_='blob-code')[1283:2000]
+    tds = soup_tur.find_all('td', class_='blob-code')[1609:2000]
     for td in tds:
         try:
             response = requests.request("GET", url, headers=headers, params={'entry': td.text})
