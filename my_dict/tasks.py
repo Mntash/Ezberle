@@ -133,11 +133,9 @@ def add_words2_db():
         try:
             response = requests.request("GET", url, headers=headers, params={'entry': td.text})
             en = response.json()['response']
-            if not WordDb.objects.filter(english=en).exists:
-                obj = WordDb.objects.create(english=en)
-                obj.save()
-            else:
-                continue
+            obj = WordDb.objects.create(english=en)
+            obj.save()
+            continue
         except KeyError:
             continue
 
