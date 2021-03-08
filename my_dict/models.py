@@ -10,6 +10,7 @@ class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     is_quiz_unlearned_finished = models.BooleanField(default=False)
     is_quiz_learned_finished = models.BooleanField(default=False)
+    open_reminder_daily = models.BooleanField(default=False)
 
     def __str__(self):
         return self.user.username
@@ -34,6 +35,7 @@ class WordEn(models.Model):
     is_learned = models.BooleanField(default=False)
     is_seen = models.BooleanField(default=False)
     is_starred = models.BooleanField(default=False)
+    is_in_reminder_list = models.BooleanField(default=False)
 
     memorize_tracker = FieldTracker(fields=['is_learned'])
 
@@ -80,4 +82,14 @@ class WotdTr(models.Model):
     def __str__(self):
         return self.turkish
 
+
+class QuizRecorder(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    english = models.CharField(max_length=100)
+    is_learned = models.BooleanField(default=False)
+    is_correct = models.BooleanField(default=False)
+
+
+class WordDb(models.Model):
+    english = models.CharField(max_length=50)
 

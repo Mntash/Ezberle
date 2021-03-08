@@ -19,4 +19,8 @@ urlpatterns = [
     path('search/', ajax_search, name="search"),
     path('complete_quiz/', complete_quiz, name='complete_quiz'),
     path("favicon.ico",RedirectView.as_view(url=staticfiles_storage.url("favicon.ico")),),
+    path('reminder/', reminder_cd, name="reminder"),
+    path('get_reminder/', get_reminder_list, name="get-reminder"),
+    path('open_reminder/', open_reminder, name="open-reminder"),
+    path('save_quiz/', save_quiz, name="save-quiz"),
 ]

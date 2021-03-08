@@ -70,7 +70,7 @@
 
     <div class="col-lg-3 col-sm-6 text-center">
         <div class="card card-shadow">
-            <div><a href="https://www.oxfordlearnersdictionaries.com/" target="_blank"><img class="card-img-top mx-auto" src="{% static 'img/oxford.jfif' %}" alt="Oxford Dictionary"></a></div>
+            <div><a href="https://www.oxfordlearnersdictionaries.com/" target="_blank"><img class="card-img-top mx-auto" src="{% static 'img/oxford.png' %}" alt="Oxford Dictionary"></a></div>
             <div class="card-body home-card">
                 <a href="{% url 'dictionary' word_ox.english %}" target="_blank">
                     <h4 id="word_2" class="font-weight-bold">{{ word_ox.english }}</h4>
@@ -496,6 +496,12 @@
     </div>
 </div>
 
+<div class="reminder">
+    <img src="{% static 'img/notif.svg' %}" alt="Hatırlatıcı">
+</div>
+
+<div class="notif"></div>
+
 {% if not user.is_authenticated %}
 <div class="modal fade" id="loginModal">
     <div class="modal-dialog modal-dialog-centered">
@@ -535,6 +541,202 @@
 
 <script>
 $(function(){
+
+    function openReminder() {
+        if ( !($(".reminder").hasClass("reminder-modal")) ) {
+            $(".reminder").click()
+            $.ajax({
+                type:"GET",
+                url: "{% url 'open-reminder' %}",
+                dataType: 'json',
+            })
+        }
+    }
+
+    var open_reminder = "{{open_reminder_daily}}"
+    setTimeout(function(){
+        if (open_reminder == "False") {
+            openReminder()
+        }
+    }, 5000)
+
+    function closeReminder() {
+        if ($('.reminder').hasClass("reminder-modal")) {
+            $(document).click(function(e) {
+                if ($(e.target).closest('.reminder').length === 0) {
+                    $(".times").click()
+                }
+            })
+        }
+    }
+
+    $(document).click(function(){
+        closeReminder()
+    })
+
+
+    $(".reminder").click(function(){
+        var ths = $(this)
+
+        if ( !(ths.hasClass("reminder-modal")) ) {
+            word_list = []
+            quiz_unl_list = []
+            quiz_l_list = []
+            $.ajax({
+                type:"GET",
+                url: "{% url 'get-reminder' %}",
+                data: {
+                    'get-reminder': "get-reminder",
+                },
+                async:false,
+                dataType: 'json',
+                success: function(data) {
+                    list = data.reminder_list
+                    list.map(function(i){
+                        word_list.push(i)
+                    })
+                    quiz_unl = data.quiz_unl
+                    quiz_unl.map(function(i){
+                        quiz_unl_list.push(i)
+                    })
+                    quiz_l = data.quiz_l
+                    quiz_l.map(function(i){
+                        quiz_l_list.push(i)
+                    })
+                }
+            })
+            ths.addClass("reminder-modal").find("img").remove()
+            setTimeout(function(){
+                ths.append(`<span class="title-reminder">
+                                Hatırlatıcı
+                                <img src="{% static 'img/notif.svg' %}" alt="Hatırlatıcı">
+                            </span>
+                            <div role="tabpanel">
+                                <ul class="nav nav-tabs">
+                                    <li>
+                                        <a class="nav-link active" data-toggle="tab" href="#kelimeler">
+                                            <i class="fas fa-list-ol"></i>
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a class="nav-link" data-toggle="tab" href="#quiz-1">
+                                            Quiz-1
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a class="nav-link" data-toggle="tab" href="#quiz-2">
+                                            Quiz-2
+                                        </a>
+                                    </li>
+                                </ul>
+                                <div class="tab-content">
+                                    <div id="kelimeler" class="tab-pane active">
+                                        <ul class="modal-list"></ul>
+                                    </div>
+                                    <div id="quiz-1" class="tab-pane">
+                                        <ul class="modal-list"></ul>
+                                    </div>
+                                    <div id="quiz-2" class="tab-pane">
+                                        <ul class="modal-list"></ul>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="times"><span>&times;</span></div>`)
+                            word_list.map(function(i){
+                                $("#kelimeler").find($(".modal-list"))
+                                               .append(`<li>
+                                                          <span>${i}</span>
+                                                          <div class="dropdown">
+                                                              <button class="btn-dd"
+                                                                      type="button" id="dropdownReminder" data-toggle="dropdown"
+                                                                      aria-haspopup="true" aria-expanded="false">
+                                                                <img src="{% static 'img/menu.png' %}" alt="Menu">
+                                                              </button>
+                                                              <div class="dropdown-menu" data-reminder="true" aria-labelledby="dropdownReminder">
+                                                                <a target="_blank" class="dropdown-item" href="/sözlük/q=${i}">Sözlükte arat</a>
+                                                                <a target="_blank" class="dropdown-item" href="/kelime_listesi/q=${i}">Listende görüntüle</a>
+                                                                <a class="dropdown-item" href="#!">Hatırlatıcıdan kaldır</a>
+                                                              </div>
+                                                          </div>
+                                                        </li>`)
+                            })
+                            quiz_unl_list.map(function(i){
+                                if (i.is_correct) {
+                                    $("#quiz-1").find("ul").append(`<li>
+                                                                  <span class="correct">${i.english}</span>
+                                                                  <div class="dropdown">
+                                                                      <button class="btn-dd"
+                                                                              type="button" id="dropdownReminder" data-toggle="dropdown"
+                                                                              aria-haspopup="true" aria-expanded="false">
+                                                                        <img src="{% static 'img/menu.png' %}" alt="Menu">
+                                                                      </button>
+                                                                      <div class="dropdown-menu" data-reminder="true" aria-labelledby="dropdownReminder">
+                                                                        <a target="_blank" class="dropdown-item" href="/sözlük/q=${i.english}">Sözlükte arat</a>
+                                                                        <a target="_blank" class="dropdown-item" href="/kelime_listesi/q=${i.english}">Listende görüntüle</a>
+                                                                      </div>
+                                                                  </div>
+                                                                </li>`)
+                                } else {
+                                    $("#quiz-1").find("ul").append(`<li>
+                                                                  <span class="incorrect">${i.english}</span>
+                                                                  <div class="dropdown">
+                                                                      <button class="btn-dd"
+                                                                              type="button" id="dropdownReminder" data-toggle="dropdown"
+                                                                              aria-haspopup="true" aria-expanded="false">
+                                                                        <img src="{% static 'img/menu.png' %}" alt="Menu">
+                                                                      </button>
+                                                                      <div class="dropdown-menu" data-reminder="true" aria-labelledby="dropdownReminder">
+                                                                        <a target="_blank" class="dropdown-item" href="/sözlük/q=${i.english}">Sözlükte arat</a>
+                                                                        <a target="_blank" class="dropdown-item" href="/kelime_listesi/q=${i.english}">Listende görüntüle</a>
+                                                                      </div>
+                                                                  </div>
+                                                                </li>`)
+                                }
+                            })
+                            quiz_l_list.map(function(i){
+                                if (i.is_correct) {
+                                    $("#quiz-2").find("ul").append(`<li>
+                                                                  <span class="correct">${i.english}</span>
+                                                                  <div class="dropdown">
+                                                                      <button class="btn-dd"
+                                                                              type="button" id="dropdownReminder" data-toggle="dropdown"
+                                                                              aria-haspopup="true" aria-expanded="false">
+                                                                        <img src="{% static 'img/menu.png' %}" alt="Menu">
+                                                                      </button>
+                                                                      <div class="dropdown-menu" data-reminder="true" aria-labelledby="dropdownReminder">
+                                                                        <a target="_blank" class="dropdown-item" href="/sözlük/q=${i.english}">Sözlükte arat</a>
+                                                                        <a target="_blank" class="dropdown-item" href="/kelime_listesi/q=${i.english}">Listende görüntüle</a>
+                                                                      </div>
+                                                                  </div>
+                                                                </li>`)
+                                } else {
+                                    $("#quiz-2").find("ul").append(`<li>
+                                                                  <span class="incorrect">${i.english}</span>
+                                                                  <div class="dropdown">
+                                                                      <button class="btn-dd"
+                                                                              type="button" id="dropdownReminder" data-toggle="dropdown"
+                                                                              aria-haspopup="true" aria-expanded="false">
+                                                                        <img src="{% static 'img/menu.png' %}" alt="Menu">
+                                                                      </button>
+                                                                      <div class="dropdown-menu" data-reminder="true" aria-labelledby="dropdownReminder">
+                                                                        <a target="_blank" class="dropdown-item" href="/sözlük/q=${i.english}">Sözlükte arat</a>
+                                                                        <a target="_blank" class="dropdown-item" href="/kelime_listesi/q=${i.english}">Listende görüntüle</a>
+                                                                      </div>
+                                                                  </div>
+                                                                </li>`)
+                                }
+                            })
+            }, 700)
+        }
+    })
+
+    $(document).on("click", ".times", function(){
+        $(this).parent().find("span").remove()
+        $(this).parent().find("div[role]").remove()
+        $(this).parent().removeClass("reminder-modal")
+        $(this).parent().append(`<img src="{% static 'img/notif.svg' %}" alt="Hatırlatıcı">`)
+        $(this).remove()
+    })
 
     $(".object-content").hover(
         function(){
@@ -631,8 +833,8 @@ $(function(){
                             </div>`)
                         for (i=1;i<=value;i++) {
                           $(".nav-tabs-unl").append(`<li role="presentation" class="nav-item">
-                                                    <a class="nav-link" href="#unl-${i}" aria-controls="unl-${i}" role="tab" data-toggle="tab">${i}</a>
-                                                    </li>`)
+                                                        <a class="nav-link" href="#unl-${i}" aria-controls="unl-${i}" role="tab" data-toggle="tab">${i}</a>
+                                                     </li>`)
                           $(".tab-content-unl").append(`<div data-no="${i}" role="tabpanel" class="tab-pane" id="unl-${i}"></div>`)
                         }
                         $(".nav-tabs-unl").find("a").first().click()
@@ -777,6 +979,17 @@ $(function(){
                                     $(document).on("click", "#confirm-ok", function(e) {
                                         e.preventDefault()
                                         $(document).find(".quiz-dk-unl").click()
+                                        $.ajax({
+                                            type:"POST",
+                                            url: "{% url 'save-quiz' %}",
+                                            data: {
+                                                'quiz_unl': true,
+                                                'correct_list': correct_list,
+                                                'incorrect_list': incorrect_list,
+                                                'csrfmiddlewaretoken' : '{{csrf_token}}'
+                                            },
+                                            dataType: 'json',
+                                        })
                                         $(".nav-tabs-unl").append(`<li role="presentation" class="nav-item">
                                                                     <a class="nav-link" href="#res-unl" aria-controls="res-unl" role="tab" data-toggle="tab"><i class="fas fa-list-ol"></i></a>
                                                                    </li>`)
@@ -784,47 +997,65 @@ $(function(){
                                                                         <div>
                                                                             <h3>Sonuçlar</h3>
                                                                             ${value} adet sorudan ${correct_list.length} tanesini doğru yaptın.
-                                                                            <ul id="res-unl-ul"></ul>
+                                                                            <ul class="modal-list" id="res-unl-ul"></ul>
                                                                         </div>
                                                                       </div>`)
                                         for (i=0;i<value;i++) {
                                             word = $(document).find(".word-unl").eq(i).text()
+                                            is_added = false
+                                            $.ajax({
+                                                type:"GET",
+                                                url: "{% url 'reminder' %}",
+                                                data: {
+                                                    'is_added': 'is_added',
+                                                    'word': word,
+                                                },
+                                                async:false,
+                                                dataType: 'json',
+                                                success: function(data) {
+                                                    is_added = data.is_added
+                                                }
+                                            })
                                             if (correct_list.includes(word)) {
                                                 $("#res-unl-ul").append(`<li data-id="${i}">
-                                                                      <a href="" data-id="res-word" style="color:#2cb74c">${word}</a>
-                                                                      <div class="dropdown">
-                                                                          <butt on class="btn-dd"
-                                                                                  type="button" id="dropdownResUnl" data-toggle="dropdown"
-                                                                                  aria-haspopup="true" aria-expanded="false">
-                                                                            <img src="{% static 'img/menu.png' %}" alt="Menu">
-                                                                          </button>
-                                                                          <div class="dropdown-menu" aria-labelledby="dropdownResUnl">
-                                                                            <a class="dropdown-item" href="#!">Listende görüntüle</a>
-                                                                            <a class="dropdown-item" href="#!">Sözlükte arat</a>
-                                                                            <a class="dropdown-item" href="#!">Kelimeyi unuttum</a>
-                                                                            <a class="dropdown-item" href="#!">Hatırlatıcıya ekle</a>
-                                                                            <a class="dropdown-item" href="#!">Favorilere ekle</a>
-                                                                          </div>
-                                                                      </div>
-                                                                      </li>`)
-                                            } else {
-                                                $("#res-unl-ul").append(`<li data-id="${i}">
-                                                                      <a href="" data-id="res-word" style="color:#ff4e4e">${word}</a>
+                                                                      <a class="correct" href="" data-id="res-word">${word}</a>
                                                                       <div class="dropdown">
                                                                           <button class="btn-dd"
                                                                                   type="button" id="dropdownResUnl" data-toggle="dropdown"
                                                                                   aria-haspopup="true" aria-expanded="false">
                                                                             <img src="{% static 'img/menu.png' %}" alt="Menu">
                                                                           </button>
-                                                                          <div class="dropdown-menu" aria-labelledby="dropdownResUnl">
-                                                                            <a class="dropdown-item" href="#!">Listende görüntüle</a>
-                                                                            <a class="dropdown-item" href="#!">Sözlükte arat</a>
-                                                                            <a class="dropdown-item" href="#!">Kelimeyi unuttum</a>
-                                                                            <a class="dropdown-item" href="#!">Hatırlatıcıya ekle</a>
-                                                                            <a class="dropdown-item" href="#!">Favorilere ekle</a>
+                                                                          <div data-id="unl-${i}" class="dropdown-menu" aria-labelledby="dropdownResUnl">
+                                                                            <a target="_blank" class="dropdown-item" href="/sözlük/q=${word}">Sözlükte arat</a>
+                                                                            <a target="_blank" class="dropdown-item" href="/kelime_listesi/q=${word}">Listende görüntüle</a>
                                                                           </div>
                                                                       </div>
                                                                       </li>`)
+                                                if (is_added) {
+                                                    $(`div[data-id='unl-${i}']`).append(`<a class="dropdown-item" href="#!">Hatırlatıcıdan kaldır</a>`)
+                                                } else {
+                                                    $(`div[data-id='unl-${i}']`).append(`<a class="dropdown-item" href="#!">Hatırlatıcıya ekle</a>`)
+                                                }
+                                            } else {
+                                                $("#res-unl-ul").append(`<li data-id="${i}">
+                                                                          <a class="incorrect" href="" data-id="res-word">${word}</a>
+                                                                          <div class="dropdown">
+                                                                              <button class="btn-dd"
+                                                                                      type="button" id="dropdownResUnl" data-toggle="dropdown"
+                                                                                      aria-haspopup="true" aria-expanded="false">
+                                                                                <img src="{% static 'img/menu.png' %}" alt="Menu">
+                                                                              </button>
+                                                                              <div data-id="unl-${i}" class="dropdown-menu" aria-labelledby="dropdownResUnl">
+                                                                                <a target="_blank" class="dropdown-item" href="/sözlük/q=${word}">Sözlükte arat</a>
+                                                                                <a target="_blank" class="dropdown-item" href="/kelime_listesi/q=${word}">Listende görüntüle</a>
+                                                                              </div>
+                                                                          </div>
+                                                                         </li>`)
+                                                if (is_added) {
+                                                    $(`div[data-id='unl-${i}']`).append(`<a class="dropdown-item" href="#!">Hatırlatıcıdan kaldır</a>`)
+                                                } else {
+                                                    $(`div[data-id='unl-${i}']`).append(`<a class="dropdown-item" href="#!">Hatırlatıcıya ekle</a>`)
+                                                }
                                             }
                                         }
                                         $(".quiz-finish").remove()
@@ -1085,6 +1316,17 @@ $(function(){
                                     $(document).on("click", "#confirm-ok", function(e) {
                                         e.preventDefault()
                                         $(document).find(".quiz-dk-l").click()
+                                        $.ajax({
+                                            type:"POST",
+                                            url: "{% url 'save-quiz' %}",
+                                            data: {
+                                                'quiz_l': true,
+                                                'correct_list': correct_list,
+                                                'incorrect_list': incorrect_list,
+                                                'csrfmiddlewaretoken' : '{{csrf_token}}'
+                                            },
+                                            dataType: 'json',
+                                        })
                                         $(".nav-tabs-l").append(`<li role="presentation" class="nav-item">
                                                                     <a class="nav-link" href="#res-l" aria-controls="res-l" role="tab" data-toggle="tab">
                                                                         <i class="fas fa-list-ol"></i>
@@ -1094,47 +1336,66 @@ $(function(){
                                                                         <div>
                                                                             <h3>Sonuçlar</h3>
                                                                             ${value} adet sorudan ${correct_list.length} tanesini doğru yaptın.
-                                                                            <ul id="res-l-ul"></ul>
+                                                                            <ul class="modal-list" id="res-l-ul"></ul>
                                                                         </div>
                                                                       </div>`)
                                         for (i=0;i<value;i++) {
                                             word = $(document).find(".word-l").eq(i).text()
+                                            is_added = false
+                                            $.ajax({
+                                                type:"GET",
+                                                url: "{% url 'reminder' %}",
+                                                data: {
+                                                    'word': word,
+                                                    'is_added': 'is_added',
+                                                },
+                                                dataType: 'json',
+                                                success: function(data) {
+                                                    if (data.is_added) {
+                                                        is_added = true
+                                                    }
+                                                }
+                                            })
                                             if (correct_list.includes(word)) {
                                                 $("#res-l-ul").append(`<li data-id="${i}">
-                                                                      <a href="" data-id="res-word" style="color:#2cb74c">${word}</a>
+                                                                      <a class="correct" href="" data-id="res-word">${word}</a>
                                                                       <div class="dropdown">
                                                                           <button class="btn-dd"
                                                                                   type="button" id="dropdownResL" data-toggle="dropdown"
                                                                                   aria-haspopup="true" aria-expanded="false">
                                                                             <img src="{% static 'img/menu.png' %}" alt="Menu">
                                                                           </button>
-                                                                          <div class="dropdown-menu" aria-labelledby="dropdownResL">
-                                                                            <a class="dropdown-item" href="#!">Listende görüntüle</a>
-                                                                            <a class="dropdown-item" href="#!">Sözlükte arat</a>
-                                                                            <a class="dropdown-item" href="#!">Kelimeyi unuttum</a>
-                                                                            <a class="dropdown-item" href="#!">Hatırlatıcıya ekle</a>
-                                                                            <a class="dropdown-item" href="#!">Favorilere ekle</a>
+                                                                          <div data-id="l-${i}" class="dropdown-menu" aria-labelledby="dropdownResL" data-id="${i}">
+                                                                            <a target="_blank" class="dropdown-item" href="/sözlük/q=${word}">Sözlükte arat</a>
+                                                                            <a target="_blank" class="dropdown-item" href="/kelime_listesi/q=${word}">Listende görüntüle</a>
                                                                           </div>
                                                                       </div>
                                                                       </li>`)
+                                                if (is_added) {
+                                                    $(`div[data-id='l-${i}']`).append(`<a class="dropdown-item" href="#!">Hatırlatıcıdan kaldır</a>`)
+                                                } else {
+                                                    $(`div[data-id='l-${i}']`).append(`<a class="dropdown-item" href="#!">Hatırlatıcıya ekle</a>`)
+                                                }
                                             } else {
                                                 $("#res-l-ul").append(`<li data-id="${i}">
-                                                                      <a href="" data-id="res-word" style="color:#ff4e4e">${word}</a>
+                                                                      <a class="incorrect" href="" data-id="res-word">${word}</a>
                                                                       <div class="dropdown">
                                                                           <button class="btn-dd"
                                                                                   type="button" id="dropdownResL" data-toggle="dropdown"
                                                                                   aria-haspopup="true" aria-expanded="false">
                                                                             <img src="{% static 'img/menu.png' %}" alt="Menu">
                                                                           </button>
-                                                                          <div class="dropdown-menu" aria-labelledby="dropdownResL">
-                                                                            <a class="dropdown-item" href="#!">Listende görüntüle</a>
-                                                                            <a class="dropdown-item" href="#!">Sözlükte arat</a>
-                                                                            <a class="dropdown-item" href="#!">Kelimeyi unuttum</a>
-                                                                            <a class="dropdown-item" href="#!">Hatırlatıcıya ekle</a>
-                                                                            <a class="dropdown-item" href="#!">Favorilere ekle</a>
+                                                                          <div data-id="l-${i}" class="dropdown-menu" aria-labelledby="dropdownResL">
+                                                                            <a target="_blank" class="dropdown-item" href="/sözlük/q=${word}">Sözlükte arat</a>
+                                                                            <a target="_blank" class="dropdown-item" href="/kelime_listesi/q=${word}">Listende görüntüle</a>
                                                                           </div>
                                                                       </div>
                                                                       </li>`)
+                                                if (is_added) {
+                                                    $(`div[data-id='l-${i}']`).append(`<a class="dropdown-item" href="#!">Hatırlatıcıdan kaldır</a>`)
+                                                } else {
+                                                    $(`div[data-id='l-${i}']`).append(`<a class="dropdown-item" href="#!">Hatırlatıcıya ekle</a>`)
+                                                }
                                             }
                                         }
                                         $(".quiz-finish").remove()
@@ -1166,6 +1427,56 @@ $(function(){
                                                                 Yarın tekrar gelin!</div>`)
                 }
             }
+        }
+    })
+
+    $(document).on("click", "a.dropdown-item", function() {
+        var ths = $(this)
+        var text = ""
+        if ( ths.parent().attr("aria-labelledby", "dropdownReminder") ) {
+            text = ths.parent().parent().prev().text()
+        } else {
+            text = ths.parent().parent().prev().text()
+        }
+        if (ths.html() == "Hatırlatıcıya ekle") {
+            $.ajax({
+                type:"GET",
+                url: "{% url 'reminder' %}",
+                data: {
+                    'word': text,
+                    'add 2 reminder': true,
+                },
+                dataType: 'json',
+                success: function(data) {
+                    $(".notif").html("Hatırlatıcıya eklendi!").css("bottom", "20px")
+                    setTimeout(function() {
+                        $(".notif").css("bottom", "-90px")
+                    }, 3000)
+                    ths.html("Hatırlatıcıdan kaldır")
+                }
+            })
+        } else if (ths.html() == "Hatırlatıcıdan kaldır") {
+            $.ajax({
+                type:"GET",
+                url: "{% url 'reminder' %}",
+                data: {
+                    'word': text,
+                    'remove from reminder': true,
+                },
+                dataType: 'json',
+                success: function(data) {
+                    $(".notif").html("Hatırlatıcıdan kaldırıldı!").css("bottom", "20px")
+                    setTimeout(function() {
+                        $(".notif").css("bottom", "-90px")
+                    }, 3000)
+                    var attr = ths.parent().attr("data-reminder")
+                    if ( typeof attr !== typeof undefined && attr !== false ) {
+                        ths.parent().parent().parent().remove()
+                    } else {
+                        ths.html("Hatırlatıcıya ekle")
+                    }
+                }
+            })
         }
     })
 
@@ -1338,8 +1649,12 @@ $(function(){
                        "audio": audio
                     },
                     success: function(data) {
-                        ths.toggleClass("btn-before btn-after");
-                        ths.find("span").html("Kelime Eklendi");
+                        $(".notif").html("Kelime eklendi!").css("bottom", "20px")
+                        setTimeout(function() {
+                            $(".notif").css("bottom", "-90px")
+                        }, 3000)
+                        ths.toggleClass("btn-before btn-after")
+                        ths.find("span").html("Kelime Eklendi")
                     }
                 });
 
@@ -1353,8 +1668,12 @@ $(function(){
                         "audio": audio
                      },
                      success: function(data) {
-                        ths.toggleClass("btn-after btn-before");
-                        ths.find("span").html("Kelimeyi Ekle");
+                        $(".notif").html("Kelime silindi!").css("bottom", "20px")
+                        setTimeout(function() {
+                            $(".notif").css("bottom", "-90px")
+                        }, 3000)
+                        ths.toggleClass("btn-after btn-before")
+                        ths.find("span").html("Kelimeyi Ekle")
                      }
                 }); // end ajax
             } // end else if

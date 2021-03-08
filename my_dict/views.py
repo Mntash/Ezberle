@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from bs4 import BeautifulSoup
 import requests
-from .models import WordEn, WordTr, Search, Profile, WotdEn, WotdTr
+from .models import *
 from django.contrib.auth.models import User
 import lxml
 import cchardet
@@ -81,6 +81,11 @@ def home(request):
         else:
             is_quiz_l_finished = "Not Finished"
 
+    open_reminder_daily = False
+    if request.user.is_authenticated:
+        obj = Profile.objects.get(user_id=request.user.id).open_reminder_daily
+        open_reminder_daily = obj
+
     context = {
         'word_mer': word_mer,
         'word_ox': word_ox,
@@ -98,7 +103,8 @@ def home(request):
         'count_unl': count_unl,
         'count_l': count_l,
         'is_quiz_unl_finished':is_quiz_unl_finished,
-        'is_quiz_l_finished': is_quiz_l_finished
+        'is_quiz_l_finished': is_quiz_l_finished,
+        'open_reminder_daily': open_reminder_daily
     }
 
     return render(request, 'my_dict/home.html', context=context)
@@ -720,6 +726,29 @@ class DelSeenLearned(View):
         return JsonResponse(data)
 
 
+def reminder_cd(request):
+    is_added = False
+    if request.method == "GET":
+        word = request.GET.get("word")
+        if request.GET.get("add 2 reminder"):
+            obj = WordEn.objects.get(user=request.user, english=word)
+            obj.is_in_reminder_list = True
+            obj.save()
+        elif request.GET.get("remove from reminder"):
+            obj = WordEn.objects.get(user=request.user, english=word)
+            obj.is_in_reminder_list = False
+            obj.save()
+        elif request.GET.get("is_added"):
+            obj = WordEn.objects.get(user=request.user, english=word)
+            if obj.is_in_reminder_list:
+                is_added = True
+    data = {
+        'is_added': is_added
+    }
+
+    return JsonResponse(data=data)
+
+
 def error_404_view(request, exception):
     return render(request, 'my_dict/404.html')
 
@@ -736,3 +765,72 @@ def complete_quiz(request):
             obj.save()
 
     return HttpResponse('')
+
+
+def get_reminder_list(request):
+    reminder_list = []
+    quiz_unl = []
+    quiz_l = []
+    if request.method == "GET":
+        words = WordEn.objects.filter(user=request.user, is_in_reminder_list=True)
+        for word in words:
+            reminder_list.append(word.english)
+        obj_unl = QuizRecorder.objects.filter(user=request.user, is_learned=False)
+        for obj in obj_unl:
+            quiz_unl.append(
+                {
+                  'english': obj.english,
+                  'is_correct': obj.is_correct
+                }
+            )
+        obj_l = QuizRecorder.objects.filter(user=request.user, is_learned=True)
+        for obj in obj_l:
+            quiz_l.append(
+                {
+                  'english': obj.english,
+                  'is_correct': obj.is_correct
+                }
+            )
+
+    data = {
+        'reminder_list': reminder_list,
+        'quiz_unl': quiz_unl,
+        'quiz_l': quiz_l
+    }
+
+    return JsonResponse(data=data)
+
+
+def open_reminder(request):
+    if request.method == "GET":
+        obj = Profile.objects.get(user_id=request.user.id)
+        obj.open_reminder_daily = True
+        obj.save()
+
+    return HttpResponse("")
+
+
+def save_quiz(request):
+    if request.method == "POST":
+        if request.POST.get("quiz_unl"):
+            QuizRecorder.objects.filter(user=request.user, is_learned=False).delete()
+            correct_list = request.POST.getlist("correct_list[]")
+            incorrect_list = request.POST.getlist("incorrect_list[]")
+            for cor in correct_list:
+                obj = QuizRecorder.objects.create(user=request.user, english=cor, is_learned=False, is_correct=True)
+                obj.save()
+            for incor in incorrect_list:
+                obj = QuizRecorder.objects.create(user=request.user, english=incor, is_learned=False, is_correct=False)
+                obj.save()
+        elif request.POST.get("quiz_l"):
+            QuizRecorder.objects.filter(user=request.user, is_learned=True).delete()
+            correct_list = request.POST.getlist("correct_list[]")
+            incorrect_list = request.POST.getlist("incorrect_list[]")
+            for cor in correct_list:
+                obj = QuizRecorder.objects.create(user=request.user, english=cor, is_learned=True, is_correct=True)
+                obj.save()
+            for incor in incorrect_list:
+                obj = QuizRecorder.objects.create(user=request.user, english=incor, is_learned=True, is_correct=False)
+                obj.save()
+
+    return HttpResponse("")
