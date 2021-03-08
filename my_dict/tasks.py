@@ -135,7 +135,6 @@ def add_words2_db():
             en = response.json()['response']
             obj = WordDb.objects.create(english=en)
             obj.save()
-            continue
         except KeyError:
             continue
 
