@@ -125,10 +125,10 @@ def add_words2_db():
         'x-rapidapi-key': "c5cbdceae4msh740bd52ea8d5e8bp1f6881jsn7c651aa39638",
         'x-rapidapi-host': "twinword-word-graph-dictionary.p.rapidapi.com"
     }
-    github = "https://github.com/first20hours/google-10000-english/blob/master/google-10000-english-usa-no-swears-long.txt"
+    github = "https://github.com/first20hours/google-10000-english/blob/master/google-10000-english-usa-no-swears-medium.txt"
     html_tur = requests.get(github).content
     soup_tur = BeautifulSoup(html_tur, 'lxml')
-    tds = soup_tur.find_all('td', class_='blob-code')[1952:2600]
+    tds = soup_tur.find_all('td', class_='blob-code')[:500]
     for td in tds:
         try:
             response = requests.request("GET", url, headers=headers, params={'entry': td.text})
