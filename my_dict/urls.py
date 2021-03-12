@@ -23,4 +23,5 @@ urlpatterns = [
     path('get_reminder/', get_reminder_list, name="get-reminder"),
     path('open_reminder/', open_reminder, name="open-reminder"),
     path('save_quiz/', save_quiz, name="save-quiz"),
+    path('get_count/', get_word_count, name="word-count"),
 ]

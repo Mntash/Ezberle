@@ -9,6 +9,7 @@ import cchardet
 def reset_quiz():
     profiles = Profile.objects.all()
     for p in profiles:
+        p.is_quiz_db_finished = False
         p.is_quiz_unlearned_finished = False
         p.is_quiz_learned_finished = False
         p.save()
@@ -119,24 +120,12 @@ def search_word(word):
         return None
 
 
-def add_words2_db():
-    url = "https://twinword-word-graph-dictionary.p.rapidapi.com/association/"
-    headers = {
-        'x-rapidapi-key': "c5cbdceae4msh740bd52ea8d5e8bp1f6881jsn7c651aa39638",
-        'x-rapidapi-host': "twinword-word-graph-dictionary.p.rapidapi.com"
-    }
-    github = "https://github.com/first20hours/google-10000-english/blob/master/google-10000-english-usa-no-swears-medium.txt"
-    html_tur = requests.get(github).content
-    soup_tur = BeautifulSoup(html_tur, 'lxml')
-    tds = soup_tur.find_all('td', class_='blob-code')[5200:5458]
-    for td in tds:
-        try:
-            response = requests.request("GET", url, headers=headers, params={'entry': td.text})
-            en = response.json()['response']
-            obj = WordDb.objects.create(english=en)
-            obj.save()
-        except KeyError:
-            continue
+def reset_reminder_open():
+    profiles = Profile.objects.all()
+    for p in profiles:
+        p.open_reminder_daily = False
+        p.save()
+
 
 
 
