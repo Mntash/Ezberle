@@ -75,7 +75,7 @@
                         <td>{{ col.1 }}</td>
                         <td id="tr-first"><a class="hover-primary" href="{% url 'dictionary' col.2 %}">{{ col.2 }}</a></td>
                         <td>
-                            <label class="custom-cb" id="checkbox" for="{{forloop.counter}}">
+                            <label class="custom-cb checkbox" for="{{forloop.counter}}">
                                 <input id="{{forloop.counter}}" type="checkbox" value="{{ col.2 }}"/>
                                 <span class="checkbox"></span>
                             </label>
@@ -179,8 +179,8 @@
 </div>
 
 {% if user.is_authenticated %}
-<div id="history-big" class="col-lg-2 col-md-3">
-    <button id="open-his" class="history-head text-center">
+<div class="col-lg-2 col-md-3 history-big">
+    <button class="history-head open-his text-center">
         <img src="{% static 'img/history.png' %}" alt="Geçmiş">
         <span class="teal">Geçmiş</span>
     </button>
@@ -195,7 +195,7 @@
 
 </div>
 
-<div id="history-sm" class="col-12 mb-4">
+<div class="history-sm col-12 mb-4">
     <div class="history-head text-center">
         <img src="{% static 'img/history.png' %}" alt="Geçmiş">
         <span class="teal">Geçmiş</span>
@@ -239,7 +239,7 @@
             <div class="row">
                 <div class="syn col-sm-6 mb-4">
                     <span class="text-center">Eş Anlamlılar</span>
-                    <ul id="ul-syn">
+                    <ul class="ul-syn">
                         {% if synonyms %}
                             {% for synonym in synonyms %}
                                 <li><a href="{% url 'dictionary' synonym %}">{{ synonym }}</a></li>
@@ -251,7 +251,7 @@
                 </div>
                 <div class="anto col-sm-6">
                     <span class="text-center">Zıt Anlamlılar</span>
-                    <ul id="ul-anto">
+                    <ul class="ul-anto">
                         {% if antonyms %}
                             {% for antonym in antonyms %}
                                 <li><a href="{% url 'dictionary' antonym %}">{{ antonym }}</a></li>
@@ -268,7 +268,7 @@
 {% endif %}
 </div>
 
-<div id="fixedSearch">
+<div class="fixedSearch">
     <input class="fixedSearchInput" placeholder="Kelime Ara.." type="text">
     <div class="swing fixedSearchSwing">
         <div class="object-rope"></div>
@@ -322,11 +322,11 @@ $(function(){
     window.onscroll = function() {scrollFixedSearch()}
     function scrollFixedSearch() {
       if (document.body.scrollTop > 100 || document.documentElement.scrollTop > 100) {
-        $("#scroll2top").css("display", "block")
-        $("#fixedSearch").addClass("fixedSearchAnim")
+        $(".scroll2top").css("display", "block")
+        $(".fixedSearch").addClass("fixedSearchAnim")
       } else {
-        $("#scroll2top").css("display", "none")
-        $("#fixedSearch").removeClass("fixedSearchAnim")
+        $(".scroll2top").css("display", "none")
+        $(".fixedSearch").removeClass("fixedSearchAnim")
       }
     }
 
@@ -402,7 +402,7 @@ $(function(){
         }
     })
 
-    $("#open-his").click(function(event) {
+    $(".open-his").click(function(event) {
         event.preventDefault(event);
         $(".history-body").removeClass("d-none", 100);
         $(".history-body").toggle("slide", { direction: "left" }, 300);

@@ -16,7 +16,13 @@
     {% block body %}
 <header class="fixed-top">
   <div class="icon-bar">
-      <a href="{% url 'home' %}" style="text-decoration:none; font-size:24px !important; text-align: center !important;">Ezberle</a>
+      <a href="{% url 'home' %}">
+          <div class="brand-logo">
+            <span>Ez</span>
+            <span class="span-ber">ber</span>
+            <span>le</span>
+          </div>
+      </a>
       <div id="menu">
           <input type="checkbox" id="hi">
           <label class="menu" for="hi">
@@ -53,8 +59,6 @@
       <a class="aktif" href="{% url 'account_login' %}"><i class="fas fa-sign-in-alt"></i><span class="brand d-none">Giriş Yap</span></a>
     {% elif 'accounts/signup/' in request.path %}
       <a class="aktif" href="{% url 'account_login' %}"><i class="fas fa-sign-in-alt"></i><span class="brand d-none">Giriş Yap</span></a>
-    {% elif 'accounts/social/signup/' in request.path %}
-      <a class="aktif" href="{% url 'account_login' %}"><i class="fas fa-sign-in-alt"></i><span class="brand d-none">Giriş Yap</span></a>
     {% else %}
       <a href="{% url 'account_login' %}"><i class="fas fa-sign-in-alt"></i><span class="brand d-none">Giriş Yap</span></a>
     {% endif %}
@@ -62,7 +66,7 @@
   </div>
 </header>
 
-<button onclick="topFunction()" id="scroll2top" title="Yukarıya çık"><i class="fas fa-arrow-circle-up"></i></button>
+<button onclick="topFunction()" class="scroll2top" title="Yukarı çık"><i class="fas fa-arrow-circle-up"></i></button>
 
 
 <div class="auth-form col-sm-8 col-md-6">
@@ -72,60 +76,60 @@
 {% block extra_body %}
 {% endblock %}
 </div>
-  <script>
-  mybutton = document.getElementById("scroll2top")
-  window.onscroll = function() {scrollFunction()}
-  function scrollFunction() {
-    if (document.body.scrollTop > 30 || document.documentElement.scrollTop > 30) {
-      mybutton.style.display = "block"
-    } else {
-      mybutton.style.display = "none"
+<script>
+  scroll = $(".scroll2top")
+    window.onscroll = function() {scrollFunction()}
+    function scrollFunction() {
+      if (document.body.scrollTop > 100 || document.documentElement.scrollTop > 100) {
+        scroll.css("display", "block")
+      } else {
+        scroll.css("display", "none")
+      }
     }
-  }
 
-  function topFunction() {
-    document.body.scrollTop = 0
-    document.documentElement.scrollTop = 0
-  }
-
-  $(".menu").click(function() {
-      $(".icon-bar").children().slice(2,6).toggleClass("d-none")
-      if ( ($(".brand").hasClass("d-none")) ) {
-          $(".brand").removeClass("d-none")
-      }
-      if ( $(".brand").css("display", "none") ) {
-          $(".brand").css("display", "")
-      }
-  })
-
-  function mediaHeader(x) {
-    if (x.matches) {
-      $(".icon-bar").children().slice(0,2).css("width", "50%")
-      $(".icon-bar").children().slice(2,6).css("width", "100%")
-      $("#menu").removeClass("d-none")
-      $(".icon-bar").children().slice(2,6).addClass("d-none")
-    } else {
-      if ( !($(".brand").hasClass("d-none")) ) {
-          $(".brand").addClass("d-none")
-      }
-      $(".icon-bar").children().css("width", "20%")
-      $("#menu").addClass("d-none")
-      $(".icon-bar").children().slice(2,6).removeClass("d-none")
-      $('#hi').prop('checked', false);
+    function topFunction() {
+      document.body.scrollTop = 0
+      document.documentElement.scrollTop = 0
     }
-  }
 
-  $(".icon-bar a").hover(function() {
-      if ( $(".brand").hasClass("d-none") ) {
-          $(this).children(".brand").fadeToggle().toggleClass("d-none")
-      } else if ( $(this).children(".brand").css("display", "none") ) {
-          $(this).children(".brand").css("display", "")
+    $(".menu").click(function() {
+        $(".icon-bar").children().slice(2,6).toggleClass("d-none")
+        if ( ($(".brand").hasClass("d-none")) ) {
+            $(".brand").removeClass("d-none")
+        }
+        if ( $(".brand").css("display", "none") ) {
+            $(".brand").css("display", "")
+        }
+    })
+
+    function mediaHeader(x) {
+      if (x.matches) {
+        $(".icon-bar").children().slice(0,2).css("width", "50%")
+        $(".icon-bar").children().slice(2,6).css("width", "100%")
+        $("#menu").removeClass("d-none")
+        $(".icon-bar").children().slice(2,6).addClass("d-none")
+      } else {
+        if ( !($(".brand").hasClass("d-none")) ) {
+            $(".brand").addClass("d-none")
+        }
+        $(".icon-bar").children().css("width", "20%")
+        $("#menu").addClass("d-none")
+        $(".icon-bar").children().slice(2,6).removeClass("d-none")
+        $('#hi').prop('checked', false);
       }
-  })
+    }
 
-  var header = window.matchMedia("(max-width:421px)")
-  mediaHeader(header)
-  header.addListener(mediaHeader)
+    $(".icon-bar a").hover(function() {
+        if ( $(".brand").hasClass("d-none") ) {
+            $(this).children(".brand").fadeToggle().toggleClass("d-none")
+        } else if ( $(this).children(".brand").css("display", "none") ) {
+            $(this).children(".brand").css("display", "")
+        }
+    })
+
+    var header = window.matchMedia("(max-width:576px)")
+    mediaHeader(header)
+    header.addListener(mediaHeader)
 
 </script>
   </body>

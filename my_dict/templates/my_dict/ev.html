@@ -1,0 +1,76 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %} Ezberle {% endblock %}
+
+{% block content %}
+
+<div class="ev-container text-center" style="margin-top:48px">
+<h1>Ezberle'ye Hoş Geldin!</h1>
+<div class="home-sect bg-oldlace">
+    <div style="width:45%"><img class="home-img img-lace" src="{% static 'img/home.png' %}" alt="Ana Sayfa"></div>
+    <div class="home-def">
+        <h2><strong>Ezberle nedir?</strong></h2>
+        <span style="font-weight:700">Ezberle bir online İngilizce-Türkçe sözlüğüdür.</span> <br> <br>
+        <span class="red-bot-border">Ezberle size şu hizmetleri sunar:</span>
+        <ul>
+            <li>4 Farklı siteden her gün günlük kelimeleri Türkçeleriyle ve telaffuzlarıyla beraber
+                Ana Sayfa'da görüntüleyebilir ve kelime listenize kaydedebilirsiniz.</li>
+            <li>Listelerinizdeki kelimelerden oluşan rastgele maksimum 10'ar kelime (yenile butonuyla beraber) Ana Sayfa'da görüntülenir.</li>
+            <li>3 farklı listeden her gün birer kez quiz olabilirsiniz.</li>
+        </ul>
+    </div>
+</div>
+<div class="home-sect bg-teal">
+    <div class="home-def">
+        <h2><strong>Günlük Quiz</strong></h2>
+        Her gün 1 defaya mahsus listelerinize eklediğiniz kelimelerden ve "Biliyor muydun?" listesindeki kelimelerden quiz olabilirsiniz.
+        <br> <br>
+        <span class="red-bot-border">Günlük Quiz ile yapabilecekleriniz:</span>
+        <ul>
+            <li>"Öğreneceklerim", "Öğrendiklerim" ve "Biliyor muydun?" listelerinden her gün quiz olarak kelime bilginizi sınamak.</li>
+            <li>Her bir soruyu yanıtladıktan sonra sorunun yanıtlarını anlık olarak görüp öğrenmek.</li>
+            <li>Quiz sonunda genel bir doğru yanlış tablosuyla neleri doğru neleri yanlış yaptığınızı görüp
+                dilerseniz kelimeyi "Hatırlatıcıya" ekleyebilirsiniz.</li>
+        </ul>
+    </div>
+    <div style="width:45%"><img class="home-img img-teal" src="{% static 'img/quiz.png' %}" alt="Ana Sayfa"></div>
+</div>
+<div class="home-sect bg-oldlace">
+    <div style="width:45%"><img class="home-img img-lace" src="{% static 'img/home.png' %}" alt="Ana Sayfa"></div>
+    <div class="home-def">
+        <h2><strong>Hatırlatıcı</strong></h2>
+
+        Ezberle size şu hizmetleri sunar:
+        <ul>
+            <li>4 Farklı siteden her gün günlük kelimeleri Türkçeleriyle ve telaffuzlarıyla beraber
+                Ana Sayfa'da görüntüleyebilir ve kelime listenize kaydedebilirsiniz.</li>
+            <li>Listelerinizdeki kelimelerden oluşan rastgele maksimum 10'ar kelime (yenile butonuyla beraber) Ana Sayfa'da görüntülenir.</li>
+            <li>3 farklı listeden her gün birer kez quiz olabilirsiniz.</li>
+        </ul>
+    </div>
+</div>
+<div class="home-sect bg-teal">
+    <div class="home-def">
+        <h2><strong>Sözlük</strong></h2>
+        Her gün 1 defaya mahsus listelerinize eklediğiniz kelimelerden ve "Biliyor muydun?" listesindeki kelimelerden quiz olabilirsiniz.
+        <br> <br>
+        <span class="red-bot-border">Günlük Quiz ile yapabilecekleriniz:</span>
+        <ul>
+            <li>"Öğreneceklerim", "Öğrendiklerim" ve "Biliyor muydun?" listelerinden her gün quiz olarak kelime bilginizi sınamak.</li>
+            <li>Her bir soruyu yanıtladıktan sonra sorunun yanıtlarını anlık olarak görüp öğrenmek.</li>
+            <li>Quiz sonunda genel bir doğru yanlış tablosuyla neleri doğru neleri yanlış yaptığınızı görüp
+                dilerseniz kelimeyi "Hatırlatıcıya" ekleyebilirsiniz.</li>
+        </ul>
+    </div>
+    <div style="width:45%"><img class="home-img img-teal" src="{% static 'img/sözlük.png' %}" alt="Ana Sayfa"></div>
+</div>
+</div>
+
+
+
+
+
+
+
+
+{% endblock %}

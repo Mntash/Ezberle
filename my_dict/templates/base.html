@@ -71,19 +71,19 @@
   </div>
 </header>
 
-<button onclick="topFunction()" id="scroll2top" title="Yukarı çık"><i class="fas fa-arrow-circle-up"></i></button>
+<button onclick="topFunction()" class="scroll2top" title="Yukarı çık"><i class="fas fa-arrow-circle-up"></i></button>
 
 {% block content %}
 {% endblock %}
 <script>
 
-    mybutton = document.getElementById("scroll2top")
+    scroll = $(".scroll2top")
     window.onscroll = function() {scrollFunction()}
     function scrollFunction() {
       if (document.body.scrollTop > 100 || document.documentElement.scrollTop > 100) {
-        mybutton.style.display = "block"
+        scroll.css("display", "block")
       } else {
-        mybutton.style.display = "none"
+        scroll.css("display", "none")
       }
     }
 

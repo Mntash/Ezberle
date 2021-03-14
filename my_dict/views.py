@@ -894,3 +894,7 @@ def search_word(word):
         return tr_list
     except:
         return None
+
+
+def ev(request):
+    return render(request, 'my_dict/ev.html', context={})

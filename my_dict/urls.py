@@ -4,6 +4,7 @@ from django.views.generic.base import RedirectView
 from .views import *
 
 urlpatterns = [
+    path('ev', ev, name='ev'),
     path('', home, name='home'),
     path('sözlük/', pre_dictionary, name='pre-dictionary'),
     path('sözlük/q=<path:word>/', dictionary, name='dictionary'),
