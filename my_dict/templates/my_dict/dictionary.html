@@ -12,8 +12,8 @@
         <div class="search-top d-flex justify-content-between">
             <div class="d-flex">
                 <input title="Bir kelime arayın" class="srch-i" type="search" placeholder="Kelime ara.." onClick="this.setSelectionRange(0, this.value.length)" aria-autocomplete="none" autofocus>
-                <button class="srch-btn" type="submit"><i class="material-icons">search</i></button>
-                <div class="text-capitalize word align-self-center ml-2">
+                <button class="srch-btn" type="submit"><i class="fas fa-search"></i></button>
+                <div class="text-capitalize word align-self-center ml-3">
                     <span>{{word|capfirst}}</span>
                 </div>
             </div>
@@ -23,7 +23,7 @@
                 {% if audio %}
                 <div class="align-self-center mt-2 audio">
                     <i title="Dinle" id="audio" class="material-icons">volume_up</i>
-                    <audio src="{{audio}}"></audio>
+                    <audio id="dict_audio" src="{{audio}}"></audio>
                 </div>
                 {% else %}
                 <div class="align-self-center mt-2 audio">
@@ -212,7 +212,7 @@
 
 {% if data %}
 {% if is_english %}
-    <div class="col-sm-12 col-lg-">
+    <div class="col-sm-12 col-lg-2" style="padding-left:0;padding-right:0">
         {% if examples %}
         <div class="examples mb-4">
             <span class="text-center">Örnek Cümleler</span>
@@ -414,7 +414,7 @@ $(function(){
     });
 
     $("#audio").click(function() {
-        $("audio")[0].play()
+        $("#dict_audio")[0].play()
     });
 
     var tr_list = [];
@@ -423,7 +423,7 @@ $(function(){
         var plus = $(".plus");
         var minus = $(".minus");
         var word = "{{ word }}";
-        var audio = $("audio").attr("src");
+        var audio = $("#dict_audio").attr("src");
         var ths = $(this);
         $(":checked").each(function () {
             var value = $(this).attr("value").trim();

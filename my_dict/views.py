@@ -11,6 +11,7 @@ import random
 from django.contrib.auth.decorators import login_required
 import datetime
 from django.core.paginator import Paginator
+import json
 
 tureng_url = 'https://tureng.com/tr/turkce-ingilizce/{}'
 saurus_url = 'https://www.thesaurus.com/browse/{}'
@@ -133,7 +134,7 @@ def refresh(request):
                 random_ = random.sample(db_words, k=number)
                 random_db = random_
                 for word in random_:
-                    tr_list.append(search_word(word))
+                    tr_list.append(search_word(word, 1))
         elif request.GET.get('random-unlearned'):
             if request.GET.get('random-unlearned') == "refresh":
                 if len(unlearned_words) < 10:
@@ -875,26 +876,129 @@ def get_word_count(request):
             return JsonResponse(data={'count_l': count_l})
 
 
-def search_word(word):
+def search_word(word, opt):
     pre_url = 'https://tureng.com/tr/turkce-ingilizce/{}'
     plus_added_search = '+'.join(str(word).split())
     url = pre_url.format(str(plus_added_search))
     html = requests.get(url).content
     soup = BeautifulSoup(html, 'lxml')
 
-    try:
-        table = soup.find('table')
-        rows = table.find_all('tr')[1:]
-        tr_list = []
-        for row in rows:
-            if not row.attrs:
-                tds = row.find_all('td')
-                tr = tds[3].text.strip()
-                tr_list.append(tr)
-        return tr_list
-    except:
-        return None
+    if opt == 1:
+        try:
+            table = soup.find('table')
+            rows = table.find_all('tr')[1:]
+            tr_list = []
+            for row in rows:
+                if not row.attrs:
+                    tds = row.find_all('td')
+                    tr = tds[3].text.strip()
+                    tr_list.append(tr)
+            return tr_list
+        except:
+            return None
+    else:
+        try:
+            table = soup.find('table')
+            rows = table.find_all('tr')[1:]
+            audio_and_tr = [None, None]
+            tr_list = []
+            for row in rows:
+                if not row.attrs:
+                    tds = row.find_all('td')
+                    tr = tds[3].text.strip()
+                    tr_list.append(tr)
+            if tr_list:
+                audio_and_tr[0] = tr_list[:9]
+            else:
+                audio_and_tr[0] = None
+
+            try:
+                if soup.find('audio', {'id': 'turengVoiceENTRENus'}).find('source'):
+                    audio = soup.find('audio', {'id': 'turengVoiceENTRENus'}).find('source')['src']
+                    audio_and_tr[1] = audio
+                else:
+                    audio_and_tr[1] = None
+            except:
+                pass
+
+            return audio_and_tr
+        except:
+            return None
 
 
 def ev(request):
     return render(request, 'my_dict/ev.html', context={})
+
+
+def ajax_word_info(request):
+    words_api = "https://wordsapiv1.p.rapidapi.com/words/{}"
+    if request.method == "GET":
+        data = {}
+        sel = request.GET.get("selection")
+        headers = {
+            'x-rapidapi-key': "c5cbdceae4msh740bd52ea8d5e8bp1f6881jsn7c651aa39638",
+            'x-rapidapi-host': "wordsapiv1.p.rapidapi.com"
+        }
+
+        response = requests.request("GET", words_api.format(sel), headers=headers)
+        if 'success' not in json.loads(response.text):
+            tr_audio = search_word(sel, 2)[:9]
+            if tr_audio[0] is not None:
+                data['tr'] = tr_audio[0]
+            else:
+                data['tr'] = "None"
+            if tr_audio[1] is not None:
+                data['audio'] = tr_audio[1]
+            else:
+                data['audio'] = "None"
+            if json.loads(response.text).get('word'):
+                data['word'] = json.loads(response.text)['word']
+            else:
+                data['word'] = "—"
+            if json.loads(response.text).get('syllables'):
+                data['syllables'] = json.loads(response.text)['syllables']['count']
+            else:
+                data['syllables'] = "—"
+            if json.loads(response.text).get('pronunciation'):
+                data['pronunciation'] = json.loads(response.text)['pronunciation']['all']
+            else:
+                data['pronunciation'] = "—"
+            if json.loads(response.text).get('results'):
+                res = json.loads(response.text)['results']
+                all_results = []
+                for r in res:
+                    result = {}
+                    if r.get('definition'):
+                        result['definition'] = r['definition']
+                    if r.get('partOfSpeech'):
+                        if r['partOfSpeech'] == 'noun':
+                            result['partOfSpeech'] = 'isim'
+                        elif r['partOfSpeech'] == 'verb':
+                            result['partOfSpeech'] = 'fiil'
+                        elif r['partOfSpeech'] == 'pronoun':
+                            result['partOfSpeech'] = 'zamir'
+                        elif r['partOfSpeech'] == 'adjective':
+                            result['partOfSpeech'] = 'sıfat'
+                        elif r['partOfSpeech'] == 'adverb':
+                            result['partOfSpeech'] = 'zarf'
+                        elif r['partOfSpeech'] == 'preposition':
+                            result['partOfSpeech'] = 'edat'
+                        elif r['partOfSpeech'] == 'conjunction':
+                            result['partOfSpeech'] = 'bağlaç'
+                        elif r['partOfSpeech'] == 'interjection':
+                            result['partOfSpeech'] = 'ünlem'
+                    if r.get('synonyms'):
+                        result['synonyms'] = r['synonyms']
+                    if r.get('antonyms'):
+                        result['antonyms'] = r['antonyms']
+                    if r.get('examples'):
+                        result['examples'] = r['examples']
+                    all_results.append(result)
+                data['all_results'] = all_results
+            else:
+                data['success'] = "False"
+        else:
+            data['success'] = "False"
+        return JsonResponse(data)
+
+    return HttpResponse("")

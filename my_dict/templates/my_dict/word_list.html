@@ -5,9 +5,9 @@
 {% block content %}
 
 <div class="container-md">
-<div class="row mt-3">
+<div class="row mt-4">
 
-    <div class="col-lg-5 tbl-first">
+    <div class="col-lg-5 tbl-first mt-md-4">
         <div class="tbl-words position-relative">
             <span class="wl-title">Öğreneceklerim <br> <div>(<span class="count-unl">{{ unlearned_count }}</span>)</div></span>
             <div class="tt">
@@ -133,7 +133,7 @@
         {% endif %}
     </div>
 
-    <div class="col-lg-5 mt-md-2 mt-lg-0">
+    <div class="col-lg-5 mt-md-4">
         <div class="tbl-words position-relative">
             <span class="wl-title">Öğrendiklerim <br> (<span class="count-l">{{ learned_count }}</span>)</span>
             <div class="tt">
@@ -259,18 +259,18 @@
         {% endif %}
     </div>
 
-    <div class="col-lg-2 col-sm-8 word-mng mb-lg-0 mb-5">
+    <div class="col-lg-2 col-sm-8 word-mng mb-lg-0 mb-5 mt-4">
         <div>
             <div class="d-flex justify-content-center word-mng-search">
                 {% if 'kelime_listesi/q=' in request.path and '$favorites' not in request.path %}
                     <input title="Bir kelime arayın" class="srch-i" type="search" placeholder="Kelime ara.." onClick="this.setSelectionRange(0, this.value.length)" aria-autocomplete="none" autofocus>
                     <button class="srch-btn" type="submit">
-                        <i class="material-icons">search</i>
+                        <i class="fas fa-search"></i>
                     </button>
                 {% else %}
                     <input title="Bir kelime arayın" class="srch-i" type="search" placeholder="Kelime ara.." onClick="this.setSelectionRange(0, this.value.length)" aria-autocomplete="none" autofocus>
                     <button class="srch-btn" type="submit">
-                        <i class="material-icons">search</i>
+                        <i class="fas fa-search"></i>
                     </button>
                 {% endif %}
             </div>
@@ -300,8 +300,8 @@
                 <div><label for="turkish-unl">Türkçesi:</label></div>
                 <div><input type="text" id="turkish-unl" name="turkish-unl" class="input-tr-unl mt-1 turkish w-75" autocomplete="off"></div>
                 <div class="d-flex justify-content-center">
-                  <button class="del-tr del-tr-unl d-none"><i class="material-icons teal">indeterminate_check_box</i></button>
-                  <button class="add-tr add-tr-unl"><i class="material-icons teal">add_box</i></button>
+                  <button class="del-tr del-tr-unl d-none"><i class="material-icons">indeterminate_check_box</i></button>
+                  <button class="add-tr add-tr-unl"><i class="material-icons">add_box</i></button>
                 </div>
                 <div class="d-flex justify-content-center mb-1">
                   <input class="btn-danger-custom reset-unl" type="reset" value="Sıfırla">
@@ -320,8 +320,8 @@
             <div><label for="turkish-l">Türkçesi:</label></div>
             <div><input type="text" id="turkish-l" name="turkish-l" class="input-tr-l mt-1 turkish w-75" autocomplete="off"></div>
             <div class="d-flex justify-content-center">
-              <button class="del-tr del-tr-l d-none"><i class="material-icons teal">indeterminate_check_box</i></button>
-              <button class="add-tr add-tr-l"><i class="material-icons teal">add_box</i></button>
+              <button class="del-tr del-tr-l d-none"><i class="material-icons">indeterminate_check_box</i></button>
+              <button class="add-tr add-tr-l"><i class="material-icons">add_box</i></button>
             </div>
             <div class="d-flex justify-content-center mng-form2 mb-sm-1 mb-lg-0">
               <input class="btn-danger-custom reset-l" type="reset" value="Sıfırla">
@@ -543,7 +543,6 @@ $(function(){
               $(".input-tr-unl").parent().after('<div><input type="text" name="turkish-unl" class="mt-1 tr-2-unl w-75" autocomplete="off"></div>');
               $(".tr-2-unl").hide().fadeIn().focus();
               $(".del-tr-unl").removeClass("d-none");
-              $(this).css("margin-left", "-10px");
               tr_count_unl++;
           } else if (tr_count_unl === 1) {
               $(".tr-2-unl").parent().after('<div><input type="text" name="turkish-unl" class="mt-1 tr-3-unl w-75" autocomplete="off"></div>');
@@ -557,7 +556,6 @@ $(function(){
               $(".input-tr-l").parent().after('<div><input type="text" name="turkish-l" class="mt-1 tr-2-l w-75" autocomplete="off"></div>');
               $(".tr-2-l").hide().fadeIn().focus();
               $(".del-tr-l").removeClass("d-none");
-              $(this).css("margin-left", "-10px");
               tr_count_l++;
           } else if (tr_count_l === 1) {
               $(".tr-2-l").parent().after('<div><input type="text" name="turkish-l" class="mt-1 tr-3-l w-75" autocomplete="off"></div>');
@@ -578,7 +576,7 @@ $(function(){
           } else if (tr_count_unl === 1) {
               $(this).parent().prev().remove();
               $(this).addClass("d-none");
-              $(".add-tr-unl").css("margin-left", "5px")
+              $(".add-tr-unl").css("margin-left", "7px")
               tr_count_unl -= 1
           }
         }
@@ -590,7 +588,7 @@ $(function(){
           } else if (tr_count_l === 1) {
               $(this).parent().prev().remove();
               $(this).addClass("d-none");
-              $(".add-tr-l").css("margin-left", "5px")
+              $(".add-tr-l").css("margin-left", "7px")
               tr_count_l -= 1
           }
         }
@@ -768,7 +766,7 @@ $(function(){
         });
     })
 
-    $(".audio").click(function() {
+    $("i.audio").click(function() {
             $(this).next()[0].play()
     })
 

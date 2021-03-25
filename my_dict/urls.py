@@ -25,4 +25,5 @@ urlpatterns = [
     path('open_reminder/', open_reminder, name="open-reminder"),
     path('save_quiz/', save_quiz, name="save-quiz"),
     path('get_count/', get_word_count, name="word-count"),
+    path('ajax_word_info/', ajax_word_info, name="ajax-word-info"),
 ]

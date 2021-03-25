@@ -76,6 +76,159 @@
 {% block content %}
 {% endblock %}
 <script>
+$(function(){
+    var timeoutId;
+
+    function notifHide() {
+        timeoutId = setTimeout(function(){
+            $(".notif").removeClass("notif-show")
+        }, 3000)
+    }
+
+    function stopNotif() {
+        clearTimeout(timeoutId);
+    }
+
+    $(document).on("click", "i[title='Dinle']", function(){
+        $("#ajax_audio")[0].play()
+    })
+
+    $(document).click(function(e) {
+        if ( $(e.target).closest('.ajaxWordInfo').length === 0 ) {
+            $(".ajaxWordInfo").eq(0).remove()
+        }
+    })
+
+    var selection_text;
+    var width;
+    $(document.body).bind('mouseup', function(e){
+        var sel;
+        globalThis.x;
+        globalThis.left;
+        var y;
+        if (window.getSelection) {
+            sel = window.getSelection();
+            oRange = sel.getRangeAt(0);
+            oRect = oRange.getBoundingClientRect();
+            width = Math.round( (Math.round(oRect.width) - 45)  / 2)
+            left = Math.round( (Math.round(oRect.width) - 302)  / 2)
+            height = Math.round(oRect.height) + 8
+            x = Math.round(oRect.x + window.scrollX) + "px"
+            y = Math.round(oRect.y + window.scrollY) + "px"
+        }
+        if ( !($(".ajaxWordInfo").length) ) {
+            sel.toString() !== '' &&
+            $(`<div class='ajaxWordInfo'></div>`).appendTo($(this))
+            $(`<div class='ajaxWordInfo'>
+                <div class="ajaxWordDiv"></div>
+                <button class="ajaxWordBtn"><i class="fab fa-readme oldlace"></i></button>
+            </div>`).css("top", `${parseInt(y)+height}px`).css("left", `${parseInt(x)+width}px`).appendTo($(this))
+            selection_text = sel
+        }
+    });
+
+    $(document).on("click", ".ajaxWordBtn", function(){
+        ths = $(this)
+        $.ajax({
+            type:"GET",
+            url: "{% url 'ajax-word-info' %}",
+            data: {
+                'selection': selection_text.toString(),
+            },
+            dataType: 'json',
+            success: function(data) {
+                if (!('success' in data)) {
+                    ths.parent().css("left", `${parseInt(x)+width-Math.abs(left)}px`).css("padding", "10px 5px").draggable({ zIndex: 300, cursor: 'move' })
+                    $(".ajaxWordDiv").addClass("p-3").css("width", "292px").css("height", "300px").append(`<table class="awdt">
+                                                                                             <tr>
+                                                                                                <th>Kelime</th>
+                                                                                                <th>Hece</th>
+                                                                                                <th>Telaffuz</th>
+                                                                                                <th>Dinle</th>
+                                                                                             </tr>
+                                                                                             <tr>
+                                                                                                <td>${data.word}</td>
+                                                                                                <td>${data.syllables}</td>
+                                                                                                <td>${data.pronunciation}</td>
+                                                                                                <td class="audio"></td>
+                                                                                             </tr>
+                                                                                           </table>`)
+                    if (data.audio != "None") {
+                        $("td.audio").append(`
+                                            <i title="Dinle" class="material-icons">volume_up</i>
+                                            <audio id="ajax_audio" src="${data.audio}"></audio>
+                                            `)
+                    } else { $("td.audio").append(`
+                                                <i title="Ses mevcut değil" class="material-icons">volume_off</i>
+                                                <audio src=""></audio>
+                                                `)
+                    }
+                    if (data.tr != "None") {
+                        $(".ajaxWordDiv").append(`<div>
+                                                    <strong>Türkçeleri:</strong>
+                                                    <ul id="ajaxTrUl"></ul>
+                                                 </div>`)
+                        data.tr.map(function(i){
+                            $("#ajaxTrUl").append(`<li>${i}</li>`)
+                        })
+                    }
+                    data.all_results.map(function(i){
+                        no = data.all_results.indexOf(i)
+                        $(".ajaxWordDiv").append(`
+                            <div data-ajax-id="${no}"></div>
+                        `)
+                        if (i["definition"]) {
+                            $(`div[data-ajax-id=${no}]`).append(`<div>
+                                                                    <strong>Tanım:</strong> <br>
+                                                                    ${i["definition"]}
+                                                                </div>`)
+                        }
+                        if (i["partOfSpeech"]) {
+                            $(`div[data-ajax-id=${no}]`).append(`<div>
+                                                                    <strong>Sözcük türü:</strong> <br>
+                                                                    ${i["partOfSpeech"]}
+                                                                </div>`)
+                        }
+                        if (i["synonyms"]) {
+                            $(`div[data-ajax-id=${no}]`).append(`<div>
+                                                                    <strong>Eş anlamlılar:</strong>
+                                                                    <div class="flex-wrap" data-syn-id="${no}">
+                                                                    </div>
+                                                                </div>`)
+                            i["synonyms"].map(function(x){
+                                $(`div[data-syn-id=${no}]`).append(`<a href="/sözlük/q=${x}" target="_blank">${x}</a>`)
+                            })
+                        }
+                        if (i["antonyms"]) {
+                            $(`div[data-ajax-id=${no}]`).append(`<div>
+                                                                    <strong>Zıt anlamlılar:</strong>
+                                                                    <div class="flex-wrap" data-anto-id="${no}">
+                                                                    </div>
+                                                                </div>`)
+                            i["antonyms"].map(function(x){
+                                $(`div[data-anto-id=${no}]`).append(`<a href="/sözlük/q=${x}" target="_blank">${x}</a>`)
+                            })
+                        }
+                        if (i["examples"]) {
+                            $(`div[data-ajax-id=${no}]`).append(`<div>
+                                                                    <strong>Örnek Cümleler:</strong>
+                                                                    <ul data-ex-id="${no}">
+                                                                    </ul>
+                                                                </div>`)
+                            i["examples"].map(function(x){
+                                $(`ul[data-ex-id=${no}]`).append(`<li>${x}</li>`)
+                            })
+                        }
+                    })
+                    ths.remove()
+                } else {
+                    stopNotif()
+                    $(".notif").html("Kelime hakkında sonuç bulunamadı").addClass("notif-show")
+                    notifHide()
+                }
+            }
+        })
+    })
 
     scroll = $(".scroll2top")
     window.onscroll = function() {scrollFunction()}
@@ -130,6 +283,8 @@
     var header = window.matchMedia("(max-width:576px)")
     mediaHeader(header)
     header.addListener(mediaHeader)
+
+})
 </script>
 </body>
 </html>
