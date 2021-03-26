@@ -3363,8 +3363,8 @@ label[for="remember"] span {
     top: 0;
     left: 0;
     background: indianred;
-    border-radius:10px;
     padding:5px;
+    border-radius:10px;
     box-shadow: 0 0 4px #000;
     max-height:400px;
     max-width:302px;
