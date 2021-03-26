@@ -597,6 +597,7 @@
 
 <script>
 $(function(){
+
     var timeoutId;
 
     function notifHide() {
@@ -1517,11 +1518,11 @@ $(function(){
                                                                             <img src="{% static 'img/menu.png' %}" alt="Menu">
                                                                           </button>
                                                                           <div data-id="unl-${i}" class="dropdown-menu" aria-labelledby="dropdownResUnl">
-                                                                            <a target="_blank" class="dropdown-item" href="/sözlük/q=${i.english}">
+                                                                            <a target="_blank" class="dropdown-item" href="/sözlük/q=${word}">
                                                                                 <i class="fa fa-search"></i>
                                                                                 Sözlükte arat
                                                                             </a>
-                                                                            <a target="_blank" class="dropdown-item" href="/kelime_listesi/q=${i.english}">
+                                                                            <a target="_blank" class="dropdown-item" href="/kelime_listesi/q=${word}">
                                                                                 <i class="fas fa-clipboard-list"></i>
                                                                                 Listende görüntüle
                                                                             </a>
@@ -1549,11 +1550,11 @@ $(function(){
                                                                                 <img src="{% static 'img/menu.png' %}" alt="Menu">
                                                                               </button>
                                                                               <div data-id="unl-${i}" class="dropdown-menu" aria-labelledby="dropdownResUnl">
-                                                                                <a target="_blank" class="dropdown-item" href="/sözlük/q=${i.english}">
+                                                                                <a target="_blank" class="dropdown-item" href="/sözlük/q=${word}">
                                                                                     <i class="fa fa-search"></i>
                                                                                     Sözlükte arat
                                                                                 </a>
-                                                                                <a target="_blank" class="dropdown-item" href="/kelime_listesi/q=${i.english}">
+                                                                                <a target="_blank" class="dropdown-item" href="/kelime_listesi/q=${word}">
                                                                                     <i class="fas fa-clipboard-list"></i>
                                                                                     Listende görüntüle
                                                                                 </a>
@@ -1883,11 +1884,11 @@ $(function(){
                                                                             <img src="{% static 'img/menu.png' %}" alt="Menu">
                                                                           </button>
                                                                           <div data-id="l-${i}" class="dropdown-menu" aria-labelledby="dropdownResL" data-id="${i}">
-                                                                            <a target="_blank" class="dropdown-item" href="/sözlük/q=${i.english}">
+                                                                            <a target="_blank" class="dropdown-item" href="/sözlük/q=${word}">
                                                                                 <i class="fa fa-search"></i>
                                                                                 Sözlükte arat
                                                                             </a>
-                                                                            <a target="_blank" class="dropdown-item" href="/kelime_listesi/q=${i.english}">
+                                                                            <a target="_blank" class="dropdown-item" href="/kelime_listesi/q=${word}">
                                                                                     <i class="fas fa-clipboard-list"></i>
                                                                                     Listende görüntüle
                                                                             </a>
@@ -1915,11 +1916,11 @@ $(function(){
                                                                             <img src="{% static 'img/menu.png' %}" alt="Menu">
                                                                           </button>
                                                                           <div data-id="l-${i}" class="dropdown-menu" aria-labelledby="dropdownResL">
-                                                                            <a target="_blank" class="dropdown-item" href="/sözlük/q=${i.english}">
+                                                                            <a target="_blank" class="dropdown-item" href="/sözlük/q=${word}">
                                                                                 <i class="fa fa-search"></i>
                                                                                 Sözlükte arat
                                                                             </a>
-                                                                            <a target="_blank" class="dropdown-item" href="/kelime_listesi/q=${i.english}">
+                                                                            <a target="_blank" class="dropdown-item" href="/kelime_listesi/q=${word}">
                                                                                     <i class="fas fa-clipboard-list"></i>
                                                                                     Listende görüntüle
                                                                             </a>

@@ -71,12 +71,21 @@
   </div>
 </header>
 
-<button onclick="topFunction()" class="scroll2top" title="Yukarı çık"><i class="fas fa-arrow-circle-up"></i></button>
+<button class="scroll2top" title="Yukarı çık"><i class="fas fa-arrow-circle-up"></i></button>
 
 {% block content %}
 {% endblock %}
 <script>
 $(function(){
+    $(".scroll2top").click(function(){
+        topFunction()
+    })
+
+    function topFunction() {
+      document.body.scrollTop = 0
+      document.documentElement.scrollTop = 0
+    }
+
     var timeoutId;
 
     function notifHide() {
@@ -129,6 +138,17 @@ $(function(){
 
     $(document).on("click", ".ajaxWordBtn", function(){
         ths = $(this)
+        ths.fadeOut("500")
+        setTimeout(function(){
+            $(".ajaxWordInfo").append(`<div class="sk-chase">
+                                          <div class="sk-chase-dot"></div>
+                                          <div class="sk-chase-dot"></div>
+                                          <div class="sk-chase-dot"></div>
+                                          <div class="sk-chase-dot"></div>
+                                          <div class="sk-chase-dot"></div>
+                                          <div class="sk-chase-dot"></div>
+                                        </div>`)
+        }, 500)
         $.ajax({
             type:"GET",
             url: "{% url 'ajax-word-info' %}",
@@ -138,7 +158,8 @@ $(function(){
             dataType: 'json',
             success: function(data) {
                 if (!('success' in data)) {
-                    ths.parent().css("left", `${parseInt(x)+width-Math.abs(left)}px`).css("padding", "10px 5px").draggable({ zIndex: 300, cursor: 'move' })
+                    $(".sk-chase").remove()
+                    $(".ajaxWordInfo").css("left", `${parseInt(x)+width-Math.abs(left)}px`).css("padding", "10px 5px").draggable({ zIndex: 300, cursor: 'move' })
                     $(".ajaxWordDiv").addClass("p-3").css("width", "292px").css("height", "300px").append(`<table class="awdt">
                                                                                              <tr>
                                                                                                 <th>Kelime</th>
@@ -220,11 +241,12 @@ $(function(){
                             })
                         }
                     })
-                    ths.remove()
                 } else {
                     stopNotif()
                     $(".notif").html("Kelime hakkında sonuç bulunamadı").addClass("notif-show")
                     notifHide()
+                    $(".sk-chase").remove()
+                    $(".ajaxWordInfo").append("<button class='ajaxWordBtn'><i class='fab fa-readme oldlace'></i></button>")
                 }
             }
         })
@@ -238,11 +260,6 @@ $(function(){
       } else {
         scroll.css("display", "none")
       }
-    }
-
-    function topFunction() {
-      document.body.scrollTop = 0
-      document.documentElement.scrollTop = 0
     }
 
     $(".menu").click(function() {
