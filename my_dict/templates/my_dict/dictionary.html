@@ -193,8 +193,6 @@
     </div>
 </div>
 
-</div>
-
 <div class="history-sm col-12 mb-4">
     <div class="history-head text-center">
         <img src="{% static 'img/history.png' %}" alt="Geçmiş">
@@ -209,10 +207,10 @@
     </div>
 </div>
 {% endif %}
-
+</div>
 {% if data %}
 {% if is_english %}
-    <div class="col-sm-12 col-lg-2" style="padding-left:0;padding-right:0">
+    <div class="col-sm-12 col-lg-2">
         {% if examples %}
         <div class="examples mb-4">
             <span class="text-center">Örnek Cümleler</span>
@@ -414,7 +412,7 @@ $(function(){
     });
 
     $("#audio").click(function() {
-        $("#dict_audio")[0].play()
+        $("audio")[0].play()
     });
 
     var tr_list = [];
@@ -423,7 +421,7 @@ $(function(){
         var plus = $(".plus");
         var minus = $(".minus");
         var word = "{{ word }}";
-        var audio = $("#dict_audio").attr("src");
+        var audio = $("audio").attr("src");
         var ths = $(this);
         $(":checked").each(function () {
             var value = $(this).attr("value").trim();

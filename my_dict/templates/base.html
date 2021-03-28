@@ -76,7 +76,6 @@
 {% block content %}
 {% endblock %}
 <script>
-$(function(){
     $(".scroll2top").click(function(){
         topFunction()
     })
@@ -111,29 +110,32 @@ $(function(){
     var selection_text;
     var width;
     $(document.body).bind('mouseup', function(e){
-        var sel;
-        globalThis.x;
-        globalThis.left;
-        var y;
-        if (window.getSelection) {
-            sel = window.getSelection();
-            oRange = sel.getRangeAt(0);
-            oRect = oRange.getBoundingClientRect();
-            width = Math.round( (Math.round(oRect.width) - 45)  / 2)
-            left = Math.round( (Math.round(oRect.width) - 302)  / 2)
-            height = Math.round(oRect.height) + 8
-            x = Math.round(oRect.x + window.scrollX) + "px"
-            y = Math.round(oRect.y + window.scrollY) + "px"
+        if (e.which === 1) {
+            var sel;
+            globalThis.x;
+            globalThis.left;
+            var y;
+            if (window.getSelection) {
+                sel = window.getSelection();
+                oRange = sel.getRangeAt(0);
+                oRect = oRange.getBoundingClientRect();
+                width = Math.round( (Math.round(oRect.width) - 45)  / 2)
+                left = Math.round( (Math.round(oRect.width) - 302)  / 2)
+                height = Math.round(oRect.height) + 8
+                x = Math.round(oRect.x + window.scrollX) + "px"
+                y = Math.round(oRect.y + window.scrollY) + "px"
+            }
+            if ( !($(".ajaxWordInfo").length) ) {
+                sel.toString() !== '' &&
+                $(`<div class='ajaxWordInfo'></div>`).appendTo($(this))
+                $(`<div class='ajaxWordInfo'>
+                    <div class="ajaxWordDiv"></div>
+                    <button class="ajaxWordBtn"><i class="fab fa-readme oldlace"></i></button>
+                </div>`).css("top", `${parseInt(y)+height}px`).css("left", `${parseInt(x)+width}px`).appendTo($(this))
+                selection_text = sel
+            }
         }
-        if ( !($(".ajaxWordInfo").length) ) {
-            sel.toString() !== '' &&
-            $(`<div class='ajaxWordInfo'></div>`).appendTo($(this))
-            $(`<div class='ajaxWordInfo'>
-                <div class="ajaxWordDiv"></div>
-                <button class="ajaxWordBtn"><i class="fab fa-readme oldlace"></i></button>
-            </div>`).css("top", `${parseInt(y)+height}px`).css("left", `${parseInt(x)+width}px`).appendTo($(this))
-            selection_text = sel
-        }
+
     });
 
     $(document).on("click", ".ajaxWordBtn", function(){
@@ -300,8 +302,6 @@ $(function(){
     var header = window.matchMedia("(max-width:576px)")
     mediaHeader(header)
     header.addListener(mediaHeader)
-
-})
 </script>
 </body>
 </html>

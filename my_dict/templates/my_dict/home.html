@@ -741,16 +741,16 @@ $(function(){
                                         </li>
                                     </ul>
                                     <div class="tab-content">
-                                        <div id="kelimeler" class="tab-pane active">
+                                        <div id="kelimeler" class="tab-pane active text-center">
                                             <ul class="modal-list"></ul>
                                         </div>
-                                        <div class="tab-pane quiz-1">
+                                        <div class="tab-pane quiz-1 text-center">
                                             <ul class="modal-list"></ul>
                                         </div>
-                                        <div class="tab-pane quiz-2">
+                                        <div class="tab-pane quiz-2 text-center">
                                             <ul class="modal-list"></ul>
                                         </div>
-                                        <div class="tab-pane quiz-3">
+                                        <div class="tab-pane quiz-3 text-center">
                                             <ul class="modal-list"></ul>
                                         </div>
                                     </div>
@@ -2170,7 +2170,7 @@ $(function(){
     $(".add-btn-home").on("click", function(){
         var ths = $(this)
         var no = ths.attr('data-id')
-        var en = $("#word_" + no).text()
+        var en = $("#word_" + no).text().trim()
         var tr_list = []
         ths.parent().parent().prev().children().map(function(){
             tr_list.push($(this).text().toLowerCase().trim())
