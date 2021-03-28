@@ -27,19 +27,19 @@ def word_of_the_day():
     req_mer = requests.get('https://www.merriam-webster.com/', headers={"User-Agent": "Mozilla/5.0"}).content
     req_ox = requests.get('https://www.oxfordlearnersdictionaries.com/', headers={"User-Agent": "Mozilla/5.0"}).content
     req_dict = requests.get('https://www.dictionary.com/', headers={"User-Agent": "Mozilla/5.0"}).content
-    req_camb = requests.get('https://dictionary.cambridge.org/', headers={"User-Agent": "Mozilla/5.0"}).content
+    req_wiki = requests.get('https://en.wiktionary.org/', headers={"User-Agent": "Mozilla/5.0"}).content
     soup_mer = BeautifulSoup(req_mer, 'lxml')
     soup_ox = BeautifulSoup(req_ox, 'lxml')
     soup_dict = BeautifulSoup(req_dict, 'lxml')
-    soup_camb = BeautifulSoup(req_camb, 'lxml')
+    soup_wiki = BeautifulSoup(req_wiki, 'lxml')
     word_mer = soup_mer.find('a', {'class': 'header-wht'}).get_text().strip()
     word_ox = soup_ox.find('a', {'class': 'headword'}).find_next().get_text().strip()
     word_dict = soup_dict.find('span', {'class': 'colored-card-heading'}).text.strip()
-    word_camb = soup_camb.find('p', {'class': 'wotd-hw'}).find('a').get_text().strip()
+    word_wiki = soup_wiki.find('span', {'id': 'WOTD-rss-title'}).strip()
     tur_mer = []
     tur_ox = []
     tur_dict = []
-    tur_camb = []
+    tur_wiki = []
     if search_word(word_mer) is not None:
         tur_mer = search_word(word_mer)
     else:
@@ -52,10 +52,10 @@ def word_of_the_day():
         tur_dict = search_word(word_dict)
     else:
         tur_dict = [None, None]
-    if search_word(word_camb) is not None:
-        tur_camb = search_word(word_camb)
+    if search_word(word_wiki) is not None:
+        tur_wiki = search_word(word_wiki)
     else:
-        tur_camb = [None, None]
+        tur_wiki = [None, None]
 
     create_mer = WotdEn.objects.create(english=word_mer, audio=tur_mer[1], website="Merriam")
     create_mer.save()
@@ -63,8 +63,8 @@ def word_of_the_day():
     create_ox.save()
     create_dict = WotdEn.objects.create(english=word_dict, audio=tur_dict[1], website="Dictionary")
     create_dict.save()
-    create_camb = WotdEn.objects.create(english=word_camb, audio=tur_camb[1], website="Cambridge")
-    create_camb.save()
+    create_wiki = WotdEn.objects.create(english=word_wiki, audio=tur_wiki[1], website="Wiktionary")
+    create_wiki.save()
 
     if tur_mer[0] is not None:
         for tr in tur_mer[0]:
@@ -78,9 +78,9 @@ def word_of_the_day():
         for tr in tur_dict[0]:
             create_tr = create_dict.turkish.create(turkish=tr)
             create_tr.save()
-    if tur_camb[0] is not None:
-        for tr in tur_camb[0]:
-            create_tr = create_camb.turkish.create(turkish=tr)
+    if tur_wiki[0] is not None:
+        for tr in tur_wiki[0]:
+            create_tr = create_wiki.turkish.create(turkish=tr)
             create_tr.save()
 
 

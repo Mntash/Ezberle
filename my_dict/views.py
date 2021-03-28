@@ -21,18 +21,18 @@ def home(request):
     word_mer = WotdEn.objects.get(website="Merriam")
     word_ox = WotdEn.objects.get(website="Oxford")
     word_dict = WotdEn.objects.get(website="Dictionary")
-    word_camb = WotdEn.objects.get(website="Cambridge")
+    word_wiki = WotdEn.objects.get(website="Wiktionary")
 
     mer_exists = False
     ox_exists = False
     dict_exists = False
-    camb_exists = False
+    wiki_exists = False
 
     if request.user.is_authenticated:
         mer_exists = WordEn.objects.filter(user=request.user, english=word_mer.english).exists()
         ox_exists = WordEn.objects.filter(user=request.user, english=word_ox.english).exists()
         dict_exists = WordEn.objects.filter(user=request.user, english=word_dict.english).exists()
-        camb_exists = WordEn.objects.filter(user=request.user, english=word_camb.english).exists()
+        wiki_exists = WordEn.objects.filter(user=request.user, english=word_wiki.english).exists()
 
     last_words = []
     random_db = []
@@ -90,11 +90,11 @@ def home(request):
         'word_mer': word_mer,
         'word_ox': word_ox,
         'word_dict': word_dict,
-        'word_camb': word_camb,
+        'word_wiki': word_wiki,
         'mer_exists': mer_exists,
         'ox_exists': ox_exists,
         'dict_exists': dict_exists,
-        'camb_exists': camb_exists,
+        'wiki_exists': wiki_exists,
         'last_words': last_words,
         'random_db': random_db,
         'random_unl': random_unlearned,
