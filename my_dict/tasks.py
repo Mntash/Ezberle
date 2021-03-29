@@ -35,7 +35,7 @@ def word_of_the_day():
     word_mer = soup_mer.find('a', {'class': 'header-wht'}).get_text().strip()
     word_ox = soup_ox.find('a', {'class': 'headword'}).find_next().get_text().strip()
     word_dict = soup_dict.find('span', {'class': 'colored-card-heading'}).text.strip()
-    word_wiki = soup_wiki.find('span', {'id': 'WOTD-rss-title'}).strip()
+    word_wiki = soup_wiki.find('span', {'id': 'WOTD-rss-title'}).text.strip()
     tur_mer = []
     tur_ox = []
     tur_dict = []

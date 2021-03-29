@@ -194,14 +194,14 @@
 
     <div class="col-lg-3 col-sm-6 text-center mb-sm-2 mb-2">
         <div class="card card-shadow">
-            <div><a href="https://dictionary.cambridge.org/" target="_blank"><img class="card-img-top mx-auto" src="{% static 'img/cambridge.png' %}" alt="Merriam Webster"></a></div>
+            <div><a href="https://en.wiktionary.org/" target="_blank"><img class="card-img-top mx-auto" src="{% static 'img/wiktionary.svg' %}" alt="Wiktionary"></a></div>
             <div class="card-body home-card">
-                <a class="wotd" id="word_4" href="{% url 'dictionary' word_camb.english %}" target="_blank">
-                    {{ word_camb.english }}
+                <a class="wotd" id="word_4" href="{% url 'dictionary' word_wiki.english %}" target="_blank">
+                    {{ word_wiki.english }}
                 </a>
-                {% if word_camb.turkish.all %}
+                {% if word_wiki.turkish.all %}
                     <ul class="wotd-tr-list">
-                    {% for tr in word_camb.turkish.all %}
+                    {% for tr in word_wiki.turkish.all %}
                         <li>
                             {{ tr }}
                         </li>
@@ -213,13 +213,13 @@
                     </ul>
                 {% endif %}
                 <div class="home-card-footer">
-                {% if word_camb.audio is not None %}
+                {% if word_wiki.audio is not None %}
                     <div>
                         <span class="audio">
                             <i title="Dinle" data-id="4" class="material-icons">volume_up</i>
                         </span>
                     </div>
-                    <audio id="au-4" src="{{word_camb.audio}}"></audio>
+                    <audio id="au-4" src="{{word_wiki.audio}}"></audio>
                 {% else %}
                     <div>
                         <span class="audio">
@@ -228,9 +228,9 @@
                     </div>
                     <audio src=""></audio>
                 {% endif %}
-                {% if word_camb.turkish.all %}
+                {% if word_wiki.turkish.all %}
                     {% if user.is_authenticated %}
-                        {% if camb_exists %}
+                        {% if wiki_exists %}
                             <div><button data-id="4" class="add-btn-home btn-after"><span>Kelime Eklendi</span></button></div>
                         {% else %}
                             <div><button data-id="4" class="add-btn-home btn-before"><span>Kelimeyi Ekle</span></button></div>
@@ -240,7 +240,7 @@
                     {% endif %}
                 {% else %}
                     {% if user.is_authenticated %}
-                        {% if camb_exists %}
+                        {% if wiki_exists %}
                             <div><button data-id="4" class="add-btn-home btn-after disabled not-allowed" disabled><span>Kelime Eklendi</span></button></div>
                         {% else %}
                             <div><button data-id="4" class="add-btn-home btn-before disabled not-allowed" disabled><span>Kelimeyi Ekle</span></button></div>
