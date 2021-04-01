@@ -10,7 +10,7 @@
     <div class="home-def-frame"><img class="home-img img-lace" src="{% static 'img/ana sayfa.png' %}" alt="Ana Sayfa"></div>
     <div class="home-def">
         <h2><b>Ezberle nedir?</b></h2>
-        <span style="font-weight:700">Ezberle bir online İngilizce-Türkçe sözlüğü hizmetidir.</span> <br> <br>
+        <p style="font-weight:700">Ezberle bir online İngilizce-Türkçe sözlüğü hizmetidir.</p>
         <span class="red-bot-border">Ezberle size şu hizmetleri sunar:</span>
         <ul>
             <li>4 Farklı siteden her gün günlük kelimeleri Türkçeleriyle ve telaffuzlarıyla beraber
@@ -23,10 +23,10 @@
 </div>
 <div class="home-sect bg-teal">
     <div class="home-def">
-        <h2><b>Günlük Quiz</b></h2>
-        Her gün 1 defaya mahsus listelerinize eklediğiniz kelimelerden ve "Biliyor muydun?"
-        listesindeki kelimelerden quiz olabilirsiniz.
-        <br> <br>
+        <h2><b class="ry-bs">Günlük Quiz</b></h2>
+        <p>Her gün 1 defaya mahsus listelerinize eklediğiniz kelimelerden ve "Biliyor muydun?"
+           listesindeki kelimelerden quiz olabilirsiniz.
+        </p>
         <span class="red-bot-border">Günlük Quiz ile yapabilecekleriniz:</span>
         <ul>
             <li>"Öğreneceklerim", "Öğrendiklerim" ve "Biliyor muydun?" listelerinden her gün quiz olarak
@@ -41,23 +41,19 @@
 <div class="home-sect bg-oldlace">
     <div class="home-def-frame"><img class="home-img img-lace" src="{% static 'img/hatırlatıcı.png' %}" alt="Ana Sayfa"></div>
     <div class="home-def">
-        <h2><b>Hatırlatıcı</b></h2>
-
-        Ezberle size şu hizmetleri sunar:
+        <h2><b class="ry-bs">Hatırlatıcı</b></h2>
+        <p></p>
+        <span class="red-bot-border">Hatırlatıcı sizin için şunların kaydını tutar:</span>
         <ul>
-            <li>4 Farklı siteden her gün günlük kelimeleri Türkçeleriyle ve telaffuzlarıyla beraber
-                Ana Sayfa'da görüntüleyebilir ve kelime listenize kaydedebilirsiniz.</li>
-            <li>Listelerinizdeki kelimelerden oluşan rastgele maksimum 10'ar kelime (yenile butonuyla beraber) Ana Sayfa'da görüntülenir.</li>
-            <li>3 farklı listeden her gün birer kez quiz olabilirsiniz.</li>
+            <li>Quiz sonlarında hatırlatıcıya kaydettiğiniz kelimeler</li>
+            <li>"Öğreneceklerim", "Öğrendiklerim" ve "Biliyor muydun?" listelerinden olduğunuz son quizin sonuçları</li>
         </ul>
     </div>
 </div>
 <div class="home-sect bg-teal">
     <div class="home-def">
-        <h2><b>Sözlük</b></h2>
-        Her gün 1 defaya mahsus listelerinize eklediğiniz kelimelerden ve "Biliyor muydun?" listesindeki kelimelerden quiz olabilirsiniz.
-        <br> <br>
-        <span class="red-bot-border">Günlük Quiz ile yapabilecekleriniz:</span>
+        <h2><b class="ry-bs">Sözlük</b></h2>
+        <span class="red-bot-border">Sözlük ile yapabilecekleriniz:</span>
         <ul>
             <li>"Öğreneceklerim", "Öğrendiklerim" ve "Biliyor muydun?" listelerinden her gün quiz olarak
                 kelime bilginizi sınamak.</li>
@@ -71,7 +67,7 @@
 <div class="home-sect bg-oldlace">
     <div class="home-def-frame"><img class="home-img img-lace" src="{% static 'img/kelime listesi.png' %}" alt="Ana Sayfa"></div>
     <div class="home-def">
-        <h2><b>Hatırlatıcı</b></h2>
+        <h2><b class="ry-bs">Kelime Listesi</b></h2>
 
         Ezberle size şu hizmetleri sunar:
         <ul>
@@ -87,7 +83,46 @@
 
 </div>
 
-
+<script>
+$(function(){
+    $(this).scrollTop(0)
+    window.onscroll = function() {animateDivs()}
+    function animateDivs() {
+        var slide = window.matchMedia("(min-width:992px)")
+        if (document.documentElement.scrollTop > 130) {
+            function mediaAnimation(slide) {
+                if (slide.matches) {
+                    $(".ev-container").find(".home-sect").eq(2).css("transform", "translate(0)").css("opacity", "1")
+                }
+            }
+            mediaAnimation(slide)
+            slide.addListener(mediaAnimation)
+            if (document.documentElement.scrollTop > 550) {
+                function mediaAnimation(slide) {
+                    if (slide.matches) {
+                        $(".ev-container").find(".home-sect").eq(3).css("transform", "translate(0)").css("opacity", "1")
+                    } else {
+                        alert("2")
+                    }
+                }
+                mediaAnimation(slide)
+                slide.addListener(mediaAnimation)
+                if (document.documentElement.scrollTop > 990) {
+                    function mediaAnimation(slide) {
+                        if (slide.matches) {
+                            $(".ev-container").find(".home-sect").eq(4).css("transform", "translate(0)").css("opacity", "1")
+                        } else {
+                            alert("2")
+                        }
+                    }
+                    mediaAnimation(slide)
+                    slide.addListener(mediaAnimation)
+                }
+            }
+        }
+    }
+})
+</script>
 
 
 

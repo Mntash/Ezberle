@@ -44,6 +44,7 @@ body {
     background: var(--clr-primary) !important;
     font-family: system-ui !important;
     font-weight: 600 !important;
+    overflow-x:hidden
 }
 
 html {
@@ -889,8 +890,23 @@ header {
     text-align:center;
 }
 
+.ev-container .home-sect:nth-child(3),
+.ev-container .home-sect:nth-child(4),
+.ev-container .home-sect:nth-child(5) {
+    transition:all 1.2s;
+}
+
+.ev-container h2 {
+    margin-bottom:2.5rem
+}
+
 .red-bot-border {
     border-bottom:2px solid var(--clr-ired);
+}
+
+.ry-bs {
+    box-shadow:1px 1px 0 1px var(--clr-ired),
+               2px 2px 0 2px palegoldenrod
 }
 
 /* ---ev---  */
@@ -3074,8 +3090,17 @@ label[for="show-fav"] span {
 }
 
 @media (min-width:992px) {
+    .ev-container .home-sect:nth-child(3),
+    .ev-container .home-sect:nth-child(5) {
+        opacity:0;
+        transform:translate(-1300px)
+    }
+    .ev-container .home-sect:nth-child(4) {
+        opacity:0;
+        transform:translate(1300px)
+    }
     .home-sect {
-        padding:3rem 3.5rem
+        padding:3rem 3.5rem;
     }
     .home-sect div {
         width:45%;

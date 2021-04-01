@@ -155,6 +155,14 @@ def dictionary(request):
         if request.method == "GET":
             word = request.GET.get('q')
             dictionary_search(request, word)
+        pre_reminder_count = Profile.objects.get(user_id=request.user.id).reminder_count
+        new_reminder_count = len(WordEn.objects.filter(user=request.user, is_in_reminder_list=True))
+        prof = Profile.objects.get(user_id=request.user.id)
+        prof.reminder_count = new_reminder_count
+        data['reminder_count'] = new_reminder_count
+        prof.save()
+        if new_reminder_count > pre_reminder_count:
+            data['show_reminder_notif'] = True
 
     return render(request, 'my_dict/dictionary.html', context=data)
 
@@ -513,6 +521,14 @@ def dictionary_search(request, word):
         if word:
             if WordEn.objects.filter(user=request.user, english=word).exists():
                 data['word_exists'] = True
+        pre_reminder_count = Profile.objects.get(user_id=request.user.id).reminder_count
+        new_reminder_count = len(WordEn.objects.filter(user=request.user, is_in_reminder_list=True))
+        prof = Profile.objects.get(user_id=request.user.id)
+        prof.reminder_count = new_reminder_count
+        data['reminder_count'] = new_reminder_count
+        prof.save()
+        if new_reminder_count > pre_reminder_count:
+            data['show_reminder_notif'] = True
 
     return render(request, 'my_dict/dictionary.html', context=data)
 
@@ -570,6 +586,15 @@ def my_word_list(request):
         'unlearned_count': len(unl_words),
         'learned_count': len(l_words),
     }
+
+    pre_reminder_count = Profile.objects.get(user_id=request.user.id).reminder_count
+    new_reminder_count = len(WordEn.objects.filter(user=request.user, is_in_reminder_list=True))
+    prof = Profile.objects.get(user_id=request.user.id)
+    prof.reminder_count = new_reminder_count
+    data['reminder_count'] = new_reminder_count
+    prof.save()
+    if new_reminder_count > pre_reminder_count:
+        data['show_reminder_notif'] = True
 
     return render(request, 'my_dict/word_list.html', context=data)
 
@@ -962,4 +987,4 @@ def ajax_word_info(request):
 
 
 def cron(request):
-    return render(request, 'my_dict/cron.html')
+    return HttpResponse("")

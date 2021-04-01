@@ -341,6 +341,16 @@
   </div>
 </div>
 
+{% if show_reminder_notif %}
+<div class="reminder">
+    <img src="{% static 'img/reminder-1.svg' %}" alt="Hatırlatıcı">
+</div>
+{% else %}
+<div class="reminder">
+    <img src="{% static 'img/reminder.svg' %}" alt="Hatırlatıcı">
+</div>
+{% endif %}
+
 <div class="notif"></div>
 
 <script>
