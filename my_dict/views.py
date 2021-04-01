@@ -23,94 +23,64 @@ def home(request):
     word_dict = WotdEn.objects.get(website="Dictionary")
     word_wiki = WotdEn.objects.get(website="Wiktionary")
 
-    mer_exists = False
-    ox_exists = False
-    dict_exists = False
-    wiki_exists = False
-
-    if request.user.is_authenticated:
-        mer_exists = WordEn.objects.filter(user=request.user, english=word_mer.english).exists()
-        ox_exists = WordEn.objects.filter(user=request.user, english=word_ox.english).exists()
-        dict_exists = WordEn.objects.filter(user=request.user, english=word_dict.english).exists()
-        wiki_exists = WordEn.objects.filter(user=request.user, english=word_wiki.english).exists()
-
-    last_words = []
-    random_db = []
-    random_unlearned = []
-    random_learned = []
-
-    if request.user.is_authenticated:
-        last_words = WordEn.objects.filter(user=request.user).order_by("-create_time")[:10]
-        db_words = [word["english"] for word in WordDb.objects.all().values()]
-        unlearned_words = [word["english"] for word in WordEn.objects.filter(user=request.user, is_learned=False).values()]
-        learned_words = [word["english"] for word in WordEn.objects.filter(user=request.user, is_learned=True).values()]
-
-        random_ = random.sample(db_words, k=10)
-        random_db = random_
-        if len(unlearned_words) < 10:
-            random_ = random.sample(unlearned_words, len(unlearned_words))
-            random_unlearned = random_
-        else:
-            random_ = random.sample(unlearned_words, k=10)
-            random_unlearned = random_
-        if len(learned_words) < 10:
-            random_ = random.sample(learned_words, len(learned_words))
-            random_learned = random_
-        else:
-            random_ = random.sample(learned_words, k=10)
-            random_learned = random_
-
-    is_quiz_db_finished = False
-    is_quiz_unl_finished = False
-    is_quiz_l_finished = False
-
-    if request.user.is_authenticated:
-        if Profile.objects.get(user_id=request.user.id).is_quiz_db_finished:
-            is_quiz_db_finished = True
-        if Profile.objects.get(user_id=request.user.id).is_quiz_unlearned_finished:
-            is_quiz_unl_finished = True
-        if Profile.objects.get(user_id=request.user.id).is_quiz_learned_finished:
-            is_quiz_l_finished = True
-
-    show_reminder_notif = False
-    open_reminder_daily = False
-    reminder_count = ""
-    if request.user.is_authenticated:
-        pre_reminder_count = Profile.objects.get(user_id=request.user.id).reminder_count
-        new_reminder_count = len(WordEn.objects.filter(user=request.user, is_in_reminder_list=True))
-        prof = Profile.objects.get(user_id=request.user.id)
-        prof.reminder_count = new_reminder_count
-        reminder_count = new_reminder_count
-        prof.save()
-        if new_reminder_count > pre_reminder_count:
-            show_reminder_notif = True
-        open_reminder_daily = Profile.objects.get(user_id=request.user.id).open_reminder_daily
-
-    context = {
+    data = {
         'word_mer': word_mer,
         'word_ox': word_ox,
         'word_dict': word_dict,
         'word_wiki': word_wiki,
-        'mer_exists': mer_exists,
-        'ox_exists': ox_exists,
-        'dict_exists': dict_exists,
-        'wiki_exists': wiki_exists,
-        'last_words': last_words,
-        'random_db': random_db,
-        'random_unl': random_unlearned,
-        'random_l': random_learned,
-        'is_quiz_db_finished': is_quiz_db_finished,
-        'is_quiz_unl_finished': is_quiz_unl_finished,
-        'is_quiz_l_finished': is_quiz_l_finished,
-        'open_reminder_daily': open_reminder_daily,
-        'show_reminder_notif': show_reminder_notif,
-        'reminder_count': reminder_count,
     }
 
-    return render(request, 'my_dict/home.html', context=context)
+    if request.user.is_authenticated:
+        data['last_words'] = WordEn.objects.filter(user=request.user).order_by("-create_time")[:10]
+        db_words = [word["english"] for word in WordDb.objects.all().values()]
+        unlearned_words = [word["english"] for word in
+                           WordEn.objects.filter(user=request.user, is_learned=False).values()]
+        learned_words = [word["english"] for word in WordEn.objects.filter(user=request.user, is_learned=True).values()]
+
+        random_ = random.sample(db_words, k=10)
+        data['random_db'] = random_
+        if len(unlearned_words) < 10:
+            random_ = random.sample(unlearned_words, len(unlearned_words))
+            data['random_unl'] = random_
+        else:
+            random_ = random.sample(unlearned_words, k=10)
+            data['random_unl'] = random_
+        if len(learned_words) < 10:
+            random_ = random.sample(learned_words, len(learned_words))
+            data['random_l'] = random_
+        else:
+            random_ = random.sample(learned_words, k=10)
+            data['random_l'] = random_
+
+        if WordEn.objects.filter(user=request.user, english=word_mer.english).exists():
+            data['mer_exists'] = True
+        if WordEn.objects.filter(user=request.user, english=word_ox.english).exists():
+            data['ox_exists'] = True
+        if WordEn.objects.filter(user=request.user, english=word_dict.english).exists():
+            data['dict_exists'] = True
+        if WordEn.objects.filter(user=request.user, english=word_wiki.english).exists():
+            data['wiki_exists'] = True
+
+        if Profile.objects.get(user_id=request.user.id).is_quiz_db_finished:
+            data['is_quiz_db_finished'] = True
+        if Profile.objects.get(user_id=request.user.id).is_quiz_unlearned_finished:
+            data['is_quiz_unl_finished'] = True
+        if Profile.objects.get(user_id=request.user.id).is_quiz_learned_finished:
+            data['is_quiz_l_finished'] = True
+
+        pre_reminder_count = Profile.objects.get(user_id=request.user.id).reminder_count
+        new_reminder_count = len(WordEn.objects.filter(user=request.user, is_in_reminder_list=True))
+        prof = Profile.objects.get(user_id=request.user.id)
+        prof.reminder_count = new_reminder_count
+        data['reminder_count'] = new_reminder_count
+        prof.save()
+        if new_reminder_count > pre_reminder_count:
+            data['show_reminder_notif'] = True
+        data['open_reminder_daily'] = Profile.objects.get(user_id=request.user.id).open_reminder_daily
+    return render(request, 'my_dict/home.html', context=data)
 
 
-def refresh(request):
+def quiz_and_refresh(request):
     db_words = []
     unlearned_words = []
     learned_words = []
@@ -178,39 +148,29 @@ def refresh(request):
     return JsonResponse(data)
 
 
-def pre_dictionary(request):
-    history = []
+def dictionary(request):
+    data = {}
     if request.user.is_authenticated:
-        history = Search.objects.filter(user=request.user).order_by("-create_time")[:20]
+        data['last_20_history'] = Search.objects.filter(user=request.user).order_by("-create_time")[:20]
         if request.method == "GET":
             word = request.GET.get('q')
-            dictionary(request, word)
+            dictionary_search(request, word)
 
-    context = {
-        'last_20_history': history
-    }
-
-    return render(request, 'my_dict/dictionary.html', context=context)
+    return render(request, 'my_dict/dictionary.html', context=data)
 
 
-def dictionary(request, word):
+def dictionary_search(request, word):
     data = []
     data_2 = []
     synonym_list = []
     antonym_list = []
     example_list = []
     audio = ""
-    history = []
-    word_exists = False
     error = False
     suggestion_exists = False
     suggestion_list = []
     is_english = True
-    if request.user.is_authenticated:
-        history = Search.objects.filter(user=request.user).order_by("-create_time")[:20]
-        if word:
-            if WordEn.objects.filter(user=request.user, english=word).exists():
-                word_exists = True
+
     try:
         url_tur = tureng_url.format(word)
         html_tur = requests.get(url_tur).content
@@ -534,7 +494,7 @@ def dictionary(request, word):
             suggestion_exists = True
         error = True
 
-    context = {
+    data = {
         'data': data,
         'data_2': data_2,
         'word': word,
@@ -542,23 +502,25 @@ def dictionary(request, word):
         'synonyms': synonym_list[:3],
         'antonyms': antonym_list[:3],
         'examples': example_list[:3],
-        'last_20_history': history,
-        'word_exists': word_exists,
         'error': error,
         'suggestion_exists': suggestion_exists,
         'suggestion_list': suggestion_list,
         'is_english': is_english
     }
 
-    return render(request, 'my_dict/dictionary.html', context=context)
+    if request.user.is_authenticated:
+        data['last_20_history'] = Search.objects.filter(user=request.user).order_by("-create_time")[:20]
+        if word:
+            if WordEn.objects.filter(user=request.user, english=word).exists():
+                data['word_exists'] = True
+
+    return render(request, 'my_dict/dictionary.html', context=data)
 
 
 @login_required
 def my_word_list(request):
-    learned_words = WordEn.objects.filter(user=request.user, is_learned=True)
-    unlearned_words = WordEn.objects.filter(user=request.user, is_learned=False)
-    learned_count = len(learned_words)
-    unlearned_count = len(unlearned_words)
+    l_words = WordEn.objects.filter(user=request.user, is_learned=True)
+    unl_words = WordEn.objects.filter(user=request.user, is_learned=False)
 
     if request.method == 'POST':
         if "english-unl" in request.POST:
@@ -595,31 +557,27 @@ def my_word_list(request):
         word = request.GET.get("q")
         my_word_list_search(request, word)
 
-    paginator_unl = Paginator(unlearned_words, 10)
+    paginator_unl = Paginator(unl_words, 10)
     page_no_unl = request.GET.get('s')
     page_unl = paginator_unl.get_page(page_no_unl)
-    paginator_l = Paginator(learned_words, 10)
+    paginator_l = Paginator(l_words, 10)
     page_no_l = request.GET.get('p')
     page_l = paginator_l.get_page(page_no_l)
 
-    context = {
+    data = {
         'page_obj_unl': page_unl,
         'page_obj_l': page_l,
-        'learned_words': learned_words,
-        'unlearned_words': unlearned_words,
-        'learned_count': learned_count,
-        'unlearned_count': unlearned_count,
+        'unlearned_count': len(unl_words),
+        'learned_count': len(l_words),
     }
 
-    return render(request, 'my_dict/word_list.html', context=context)
+    return render(request, 'my_dict/word_list.html', context=data)
 
 
 @login_required
 def my_word_list_search(request, word):
-    unlearned_words = WordEn.objects.filter(user=request.user, is_learned=False)
-    learned_words = WordEn.objects.filter(user=request.user, is_learned=True)
-    learned_count = len(learned_words)
-    unlearned_count = len(unlearned_words)
+    unl_words = WordEn.objects.filter(user=request.user, is_learned=False)
+    l_words = WordEn.objects.filter(user=request.user, is_learned=True)
     word_unl = list()
     word_l = list()
     if word:
@@ -636,19 +594,17 @@ def my_word_list_search(request, word):
     page_no_l = request.GET.get('p')
     page_l = paginator_l.get_page(page_no_l)
 
-    context = {
+    data = {
         'page_obj_unl': page_unl,
         'page_obj_l': page_l,
-        'learned_words': learned_words,
-        'unlearned_words': unlearned_words,
-        'learned_count': learned_count,
-        'unlearned_count': unlearned_count,
+        'unlearned_count': len(unl_words),
+        'learned_count': len(l_words),
         'unl_pg_count': len(word_unl),
         'l_pg_count': len(word_l),
         'word': word
     }
 
-    return render(request, 'my_dict/word_list.html', context=context)
+    return render(request, 'my_dict/word_list.html', context=data)
 
 
 def ajax_search(request):
@@ -673,16 +629,19 @@ def word_cd(request):
                 for word_tr in word_tr_list:
                     create_word_tr = create_word_en.turkish.create(turkish=word_tr)
                     create_word_tr.save()
+                return JsonResponse(data={'is_added': True})
             except:
                 create_word_en = WordEn(user=request.user, english=word_en)
                 create_word_en.save()
+                return JsonResponse(data={'is_added': True})
         else:
             WordEn.objects.filter(user=request.user, english=word_en).delete()
+            return JsonResponse(data={'is_deleted': True})
 
     return HttpResponse()
 
 
-class DelSeenLearned(View):
+class DelSeenLearnedStarred(View):
     def get(self, request):
         word_id = request.GET.get('id')
         word = WordEn.objects.get(user=request.user, id=word_id)
@@ -731,7 +690,7 @@ class DelSeenLearned(View):
 
 
 def reminder_cd(request):
-    is_added = False
+    data = {}
     if request.method == "GET":
         word = request.GET.get("word")
         if request.GET.get("add 2 reminder"):
@@ -745,10 +704,7 @@ def reminder_cd(request):
         elif request.GET.get("is_added"):
             obj = WordEn.objects.get(user=request.user, english=word)
             if obj.is_in_reminder_list:
-                is_added = True
-    data = {
-        'is_added': is_added
-    }
+                data['is_added'] = True
 
     return JsonResponse(data=data)
 
@@ -999,6 +955,11 @@ def ajax_word_info(request):
                 data['success'] = "False"
         else:
             data['success'] = "False"
+
         return JsonResponse(data)
 
     return HttpResponse("")
+
+
+def cron(request):
+    return render(request, 'my_dict/cron.html')

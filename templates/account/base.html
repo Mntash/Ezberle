@@ -37,9 +37,9 @@
       <a href="{% url 'home' %}"><i class="fa fa-home"></i><span class="brand d-none">Ana Sayfa</span></a>
     {% endif %}
     {% if 'sözlük' in request.path %}
-      <a class="aktif" href="{% url 'pre-dictionary' %}"><i class="fa fa-search"></i><span class="brand d-none">Sözlük</span></a>
+      <a class="aktif" href="{% url 'dictionary' %}"><i class="fa fa-search"></i><span class="brand d-none">Sözlük</span></a>
     {% else %}
-      <a href="{% url 'pre-dictionary' %}"><i class="fa fa-search"></i><span class="brand d-none">Sözlük</span></a>
+      <a href="{% url 'dictionary' %}"><i class="fa fa-search"></i><span class="brand d-none">Sözlük</span></a>
     {% endif %}
     {% if 'kelime_listesi' in request.path %}
       <a class="aktif" href="{% url 'word-list' %}"><i class="fas fa-clipboard-list"></i><span class="brand d-none">Liste</span></a>

@@ -73,7 +73,7 @@
                         <th class="category" scope="row">{{ forloop.counter }}</th>
                         <td class="category">{{ col.0 }}</td>
                         <td>{{ col.1 }}</td>
-                        <td id="tr-first"><a class="hover-primary" href="{% url 'dictionary' col.2 %}">{{ col.2 }}</a></td>
+                        <td id="tr-first"><a class="hover-primary" href="{% url 'dictionary-search' col.2 %}">{{ col.2 }}</a></td>
                         <td>
                             <label class="custom-cb checkbox" for="{{forloop.counter}}">
                                 <input id="{{forloop.counter}}" type="checkbox" value="{{ col.2 }}"/>
@@ -103,7 +103,7 @@
                         <th class="category" scope="row">{{ forloop.counter }}</th>
                         <td class="category">{{ col.0 }}</td>
                         <td>{{ col.1 }}</td>
-                        <td><a class="hover-primary" href="{% url 'dictionary' col.2 %}">{{ col.2 }}</a></td>
+                        <td><a class="hover-primary" href="{% url 'dictionary-search' col.2 %}">{{ col.2 }}</a></td>
                     </tr>
                   {% endfor %}
                   </tbody>
@@ -126,7 +126,7 @@
                         <th class="category" scope="row">{{ forloop.counter }}</th>
                         <td class="category">{{ col.0 }}</td>
                         <td>{{ col.1 }}</td>
-                        <td><a class="hover-primary" href="{% url 'dictionary' col.2 %}">{{ col.2 }}</a></td>
+                        <td><a class="hover-primary" href="{% url 'dictionary-search' col.2 %}">{{ col.2 }}</a></td>
                     </tr>
                   {% endfor %}
                   </tbody>
@@ -150,7 +150,7 @@
                         <th class="category" scope="row">{{ forloop.counter }}</th>
                         <td class="category">{{ col.0 }}</td>
                         <td>{{ col.1 }}</td>
-                        <td><a class="hover-primary" href="{% url 'dictionary' col.2 %}">{{ col.2 }}</a></td>
+                        <td><a class="hover-primary" href="{% url 'dictionary-search' col.2 %}">{{ col.2 }}</a></td>
                     </tr>
                   {% endfor %}
                   </tbody>
@@ -163,11 +163,11 @@
                 <div class="srch-sug">
                     "<u>{{word|capfirst}}</u>" hakkında herhangi bir sonuç bulunamadı.
                     {% if suggestion_exists %}
-                    <p>Şunları demek istemiş olabilir misiniz?</p>
+                    <p>Şunları aratmak istemiş olabilir misiniz?</p>
                     <ul>
                         {% for word in suggestion_list %}
                         <li>
-                            <a class="hover-primary" href="{% url 'dictionary' word %}">{{word}}</a>
+                            <a class="hover-primary" href="{% url 'dictionary-search' word %}">{{word}}</a>
                         </li>
                         {% endfor %}
                     </ul>
@@ -187,7 +187,7 @@
     <div class="history-body d-none">
         <ul>
         {% for history in last_20_history %}
-        <li><a href="{% url 'dictionary' history.search %}">{{ history.search }}</a></li>
+        <li><a href="{% url 'dictionary-search' history.search %}">{{ history.search }}</a></li>
         {% endfor %}
         </ul>
     </div>
@@ -201,7 +201,7 @@
     <div class="history-body-sm">
         <ul class="row">
         {% for history in last_20_history %}
-        <li class="col-sm-6 history-li"><a href="{% url 'dictionary' history.search %}">{{ history.search }}</a></li>
+        <li class="col-sm-6 history-li"><a href="{% url 'dictionary-search' history.search %}">{{ history.search }}</a></li>
         {% endfor %}
         </ul>
     </div>
@@ -240,7 +240,7 @@
                     <ul class="ul-syn">
                         {% if synonyms %}
                             {% for synonym in synonyms %}
-                                <li><a href="{% url 'dictionary' synonym %}">{{ synonym }}</a></li>
+                                <li><a href="{% url 'dictionary-search' synonym %}">{{ synonym }}</a></li>
                             {% endfor %}
                         {% else %}
                             <li>Bu kelimenin eş anlamı bulunamadı.</li>
@@ -252,7 +252,7 @@
                     <ul class="ul-anto">
                         {% if antonyms %}
                             {% for antonym in antonyms %}
-                                <li><a href="{% url 'dictionary' antonym %}">{{ antonym }}</a></li>
+                                <li><a href="{% url 'dictionary-search' antonym %}">{{ antonym }}</a></li>
                             {% endfor %}
                         {% else %}
                             <li>Bu kelimenin zıt anlamı bulunamadı.</li>
@@ -313,6 +313,7 @@
 </div>
 {% endif %}
 
+<div class="notif"></div>
 
 <script>
 $(function(){
@@ -338,11 +339,11 @@ $(function(){
     })
 
     $(".fixedSearchInput").keypress(function(event){
-        var keycode = (event.keyCode ? event.keyCode : event.which);
+        var keycode = (event.keyCode ? event.keyCode : event.which)
         if(keycode == '13'){
-            $(".fixedSearchBtn").click();
+            $(".fixedSearchBtn").click()
         }
-    });
+    })
 
     function mediaCategory(x) {
       if (x.matches) {
@@ -368,10 +369,10 @@ $(function(){
 
     function mediaSrch(x) {
       if (x.matches) {
-        $(".srch-i").attr("placeholder", "Ara..");
+        $(".srch-i").attr("placeholder", "Ara..")
         $(".search").css("min-height", "0")
       } else {
-        $(".srch-i").attr("placeholder", "Kelime ara..");
+        $(".srch-i").attr("placeholder", "Kelime ara..")
       }
     }
     var srch = window.matchMedia("(max-width: 391px)")
@@ -379,20 +380,20 @@ $(function(){
     srch.addListener(mediaSrch)
 
     $(".srch-i").keypress(function(event){
-        var keycode = (event.keyCode ? event.keyCode : event.which);
+        var keycode = (event.keyCode ? event.keyCode : event.which)
         if(keycode == '13'){
-            $(".srch-btn").click();
+            $(".srch-btn").click()
         }
-    });
+    })
 
     $('p:contains("{{word}}")', document.body).each(function(){
       $(this).html($(this).html().replace(
             new RegExp("{{word}}", 'g'), '<span style="color:red; font-style:italic">'+ "{{word}}" +'</span>'
-      ));
-    });
+      ))
+    })
 
     $(".srch-btn").click(function(e) {
-        var input = $(this).prev().val().trim();
+        var input = $(this).prev().val().trim()
         if (input.length > 0) {
             window.location.pathname = "/sözlük/q=" + input + "/"
         } else if (input==="") {
@@ -401,32 +402,32 @@ $(function(){
     })
 
     $(".open-his").click(function(event) {
-        event.preventDefault(event);
-        $(".history-body").removeClass("d-none", 100);
-        $(".history-body").toggle("slide", { direction: "left" }, 300);
+        event.preventDefault(event)
+        $(".history-body").removeClass("d-none", 100)
+        $(".history-body").toggle("slide", { direction: "left" }, 300)
     })
 
     $("input:checkbox").click(function() {
-        var limit = $("input:checkbox:checked").length >= 3;
-        $("input:checkbox").not(":checked").attr("disabled",limit);
-    });
+        var limit = $("input:checkbox:checked").length >= 3
+        $("input:checkbox").not(":checked").attr("disabled",limit)
+    })
 
     $("#audio").click(function() {
         $("audio")[0].play()
-    });
+    })
 
-    var tr_list = [];
+    var tr_list = []
 
     $(".add-btn").click(function() {
-        var plus = $(".plus");
-        var minus = $(".minus");
-        var word = "{{ word }}";
-        var audio = $("audio").attr("src");
-        var ths = $(this);
+        var plus = $(".plus")
+        var minus = $(".minus")
+        var word = "{{ word }}"
+        var audio = $("audio").attr("src")
+        var ths = $(this)
         $(":checked").each(function () {
-            var value = $(this).attr("value").trim();
-            tr_list.push(value);
-        });
+            var value = $(this).attr("value").trim()
+            tr_list.push(value)
+        })
 
         if ( !(ths.hasClass("add-btn-modal")) ) {
             if (ths.hasClass('change')) {
@@ -439,8 +440,8 @@ $(function(){
             }
 
             if (tr_list.length === 0) {
-                tr_first = [];
-                tr_first.push($("#tr-first").first().text().trim());
+                tr_first = []
+                tr_first.push($("#tr-first").first().text().trim())
 
                 $.ajax({
                          type:"GET",
@@ -449,8 +450,19 @@ $(function(){
                             "word_en": word,
                             "tr": tr_first,
                             "audio": audio
+                         },
+                         success: function(data) {
+                            if (data.is_added) {
+                                stopNotif()
+                                $(".notif").html("Kelime eklendi!").addClass("notif-show")
+                                notifHide()
+                            } else if (data.is_deleted) {
+                                stopNotif()
+                                $(".notif").html("Kelime silindi!").addClass("notif-show")
+                                notifHide()
+                            }
                          }
-                      });
+                      })
                 tr_list.splice(0,tr_list.length)
 
             } else {
@@ -461,17 +473,28 @@ $(function(){
                         "word_en": word,
                         "tr": tr_list,
                         "audio": audio
+                     },
+                     success: function(data) {
+                        if (data.is_added=="True") {
+                            stopNotif()
+                            $(".notif").html("Kelime eklendi!").addClass("notif-show")
+                            notifHide()
+                        } else if (data.is_deleted=="True") {
+                            stopNotif()
+                            $(".notif").html("Kelime silindi!").addClass("notif-show")
+                            notifHide()
+                        }
                      }
-                });
+                })
                 tr_list.splice(0,tr_list.length)
             }
         }
         else {
             $("#myModal").modal()
         }
-    });
+    })
 
-});
+})
 </script>
 
 {% endblock %}

@@ -11,7 +11,7 @@
         <div class="card card-shadow">
             <div><a href="https://www.merriam-webster.com/" target="_blank"><img class="card-img-top mx-auto" src="{% static 'img/merriam.png' %}" alt="Merriam Webster"></a></div>
             <div class="card-body home-card">
-                <a id="word_1" class="wotd" href="{% url 'dictionary' word_mer.english %}" target="_blank">
+                <a id="word_1" class="wotd" href="{% url 'dictionary-search' word_mer.english %}" target="_blank">
                     {{ word_mer.english }}
                 </a>
                 {% if word_mer.turkish.all %}
@@ -72,7 +72,7 @@
         <div class="card card-shadow">
             <div><a href="https://www.oxfordlearnersdictionaries.com/" target="_blank"><img class="card-img-top mx-auto" src="{% static 'img/oxford.png' %}" alt="Oxford Dictionary"></a></div>
             <div class="card-body home-card">
-                <a class="wotd" id="word_2" href="{% url 'dictionary' word_ox.english %}" target="_blank">
+                <a class="wotd" id="word_2" href="{% url 'dictionary-search' word_ox.english %}" target="_blank">
                     {{ word_ox.english }}
                 </a>
                 {% if word_ox.turkish.all %}
@@ -134,7 +134,7 @@
         <div class="card card-shadow">
             <div><a href="https://www.dictionary.com/" target="_blank"><img class="card-img-top mx-auto dict" src="{% static 'img/dictionary.jpg' %}" alt="Dictionary"></a></div>
             <div class="card-body home-card">
-                <a class="wotd" id="word_3" href="{% url 'dictionary' word_dict.english %}" target="_blank">
+                <a class="wotd" id="word_3" href="{% url 'dictionary-search' word_dict.english %}" target="_blank">
                     {{ word_dict.english }}
                 </a>
                 {% if word_dict.turkish.all %}
@@ -196,7 +196,7 @@
         <div class="card card-shadow">
             <div><a href="https://en.wiktionary.org/" target="_blank"><img class="card-img-top mx-auto" src="{% static 'img/wiktionary.svg' %}" alt="Wiktionary"></a></div>
             <div class="card-body home-card">
-                <a class="wotd" id="word_4" href="{% url 'dictionary' word_wiki.english %}" target="_blank">
+                <a class="wotd" id="word_4" href="{% url 'dictionary-search' word_wiki.english %}" target="_blank">
                     {{ word_wiki.english }}
                 </a>
                 {% if word_wiki.turkish.all %}
@@ -264,7 +264,7 @@
                 <ul class="ul-last-added">
                     {% for word in last_words %}
                     <li>
-                        <a href="{% url 'dictionary' word.english %}" target="_blank">{{ word.english }}</a>
+                        <a href="{% url 'dictionary-search' word.english %}" target="_blank">{{ word.english }}</a>
                     </li>
                     {% endfor %}
                 </ul>
@@ -279,7 +279,7 @@
                 <ul class="ul-db">
                     {% for word in random_db %}
                     <li>
-                        <a href="{% url 'dictionary' word %}" target="_blank">{{ word }}</a>
+                        <a href="{% url 'dictionary-search' word %}" target="_blank">{{ word }}</a>
                     </li>
                     {% endfor %}
                 </ul>
@@ -330,7 +330,7 @@
                 <ul class="ul-unlearned">
                     {% for word in random_unl %}
                     <li>
-                        <a href="{% url 'dictionary' word %}" target="_blank">{{ word }}</a>
+                        <a href="{% url 'dictionary-search' word %}" target="_blank">{{ word }}</a>
                     </li>
                     {% endfor %}
                 </ul>
@@ -380,7 +380,7 @@
                 <ul class="ul-learned">
                     {% for word in random_l %}
                     <li>
-                        <a href="{% url 'dictionary' word %}" target="_blank">{{ word }}</a>
+                        <a href="{% url 'dictionary-search' word %}" target="_blank">{{ word }}</a>
                     </li>
                     {% endfor %}
                 </ul>
@@ -597,18 +597,6 @@
 
 <script>
 $(function(){
-
-    var timeoutId;
-
-    function notifHide() {
-        timeoutId = setTimeout(function(){
-            $(".notif").removeClass("notif-show")
-        }, 3000)
-    }
-
-    function stopNotif() {
-        clearTimeout(timeoutId);
-    }
 
     $(".object-content").click(function(){
         if ( $(this).attr("data-target") == "#quiz-unl" )
@@ -961,7 +949,7 @@ $(function(){
         if(!event.detail || event.detail == 1) {
             var ths = $(this)
             if (ths.hasClass("start-db")) {
-                if ( "{{is_quiz_db_finished}}" == "False" ) {
+                if ( !("{{is_quiz_db_finished}}") ) {
                     $.ajax({
                         type:"POST",
                         url: "{% url 'complete_quiz' %}",
@@ -1009,7 +997,7 @@ $(function(){
                                                         <span>Yükleniyor</span>
                                                       </div>
                                                      </div>`)
-                      }, 500);
+                      }, 500)
                         $.ajax({
                             type:"GET",
                             url: "{% url 'random-refresh' %}",
@@ -1090,7 +1078,7 @@ $(function(){
                                             </svg>`)
                                         setTimeout(function() {
                                             ths.parent().prev().find(".quiz-result").find(".path").removeClass("path")
-                                        }, 1000);
+                                        }, 1000)
                                     })
                                     $(document).on("keypress", ".quiz-answer", function() {
                                         var keycode = (event.keyCode ? event.keyCode : event.which)
@@ -1124,14 +1112,14 @@ $(function(){
                                                 </svg>`)
                                                 setTimeout(function() {
                                                     ths.parent().prev().find(".quiz-result").find(".path").removeClass("path")
-                                                }, 1000);
+                                                }, 1000)
                                             } else {
                                                 if (count==0) {
                                                     ths.parent().prev().find(".quiz-answer").addClass("shake box-dk")
                                                     ths.parent().prev().prev().html("1/2")
                                                     setTimeout(function() {
                                                         ths.parent().prev().find(".quiz-answer").removeClass("shake")
-                                                    }, 300);
+                                                    }, 300)
                                                 } else if (count==1) {
                                                     if ( ths.parent().prev().find(".quiz-answer").hasClass("shake") ) {
                                                         ths.parent().prev().find(".quiz-answer").removeClass("shake")
@@ -1154,14 +1142,14 @@ $(function(){
                                                         </svg>`)
                                                     setTimeout(function() {
                                                         ths.parent().prev().find(".quiz-result").find(".path").removeClass("path")
-                                                    }, 1000);
+                                                    }, 1000)
                                                 }
                                             }
                                         } else {
                                             ths.parent().prev().find(".quiz-answer").addClass("shake")
                                             setTimeout(function() {
                                                 ths.parent().prev().find(".quiz-answer").removeClass("shake")
-                                            }, 300);
+                                            }, 300)
                                         }
                                     })
                                     $(document).on("click", ".quiz-finish-db", function() {
@@ -1224,7 +1212,7 @@ $(function(){
                                         $(".confirm-1").modal("hide")
                                         setTimeout(function() {
                                             $("a[aria-controls='res-db']").click()
-                                        }, 4);
+                                        }, 4)
                                     })
                                     $(document).on("click", ".confirm-no-1", function(e) {
                                         e.preventDefault()
@@ -1235,13 +1223,13 @@ $(function(){
                                 }
                             }
                         })
-                } else if ( "{{is_quiz_db_finished}}" == "True" ) {
+                } else {
                     $(".quiz-err-db").remove()
                     ths.after(`<div class="quiz-err-db mt-1">* Günlük Quiz'inizi zaten tamamlamışsınız.
                                                                 Yarın tekrar gelin!</div>`)
                 }
             } else if (ths.hasClass("start-unl")) {
-                if ( "{{is_quiz_unl_finished}}" == "False" ) {
+                if ( !("{{is_quiz_unl_finished}}") ) {
                     $.ajax({
                         type:"POST",
                         url: "{% url 'complete_quiz' %}",
@@ -1302,7 +1290,7 @@ $(function(){
                                                         <span>Yükleniyor</span>
                                                       </div>
                                                      </div>`)
-                      }, 500);
+                      }, 500)
                       setTimeout(function() {
                         $(".loader-wrapper-unl").remove()
                         $(".modal-body-content-unl").append(
@@ -1385,7 +1373,7 @@ $(function(){
                                             </svg>`)
                                         setTimeout(function() {
                                             ths.parent().prev().find(".quiz-result").find(".path").removeClass("path")
-                                        }, 1000);
+                                        }, 1000)
                                     })
                                     $(document).on("keypress", ".quiz-answer", function() {
                                         var keycode = (event.keyCode ? event.keyCode : event.which)
@@ -1419,14 +1407,14 @@ $(function(){
                                                 </svg>`)
                                                 setTimeout(function() {
                                                     ths.parent().prev().find(".quiz-result").find(".path").removeClass("path")
-                                                }, 1000);
+                                                }, 1000)
                                             } else {
                                                 if (count==0) {
                                                     ths.parent().prev().find(".quiz-answer").addClass("shake box-dk")
                                                     ths.parent().prev().prev().html("1/2")
                                                     setTimeout(function() {
                                                         ths.parent().prev().find(".quiz-answer").removeClass("shake")
-                                                    }, 300);
+                                                    }, 300)
                                                 } else if (count==1) {
                                                     if ( ths.parent().prev().find(".quiz-answer").hasClass("shake") ) {
                                                         ths.parent().prev().find(".quiz-answer").removeClass("shake")
@@ -1449,14 +1437,14 @@ $(function(){
                                                         </svg>`)
                                                     setTimeout(function() {
                                                         ths.parent().prev().find(".quiz-result").find(".path").removeClass("path")
-                                                    }, 1000);
+                                                    }, 1000)
                                                 }
                                             }
                                         } else {
                                             ths.parent().prev().find(".quiz-answer").addClass("shake")
                                             setTimeout(function() {
                                                 ths.parent().prev().find(".quiz-answer").removeClass("shake")
-                                            }, 300);
+                                            }, 300)
                                         }
                                     })
                                     $(document).on("click", ".quiz-finish-unl", function() {
@@ -1583,7 +1571,7 @@ $(function(){
                                         $(".confirm-2").modal("hide")
                                         setTimeout(function() {
                                             $("a[aria-controls='res-unl']").click()
-                                        }, 4);
+                                        }, 4)
                                     })
                                     $(document).on("click", ".confirm-no-2", function(e) {
                                         e.preventDefault()
@@ -1597,14 +1585,14 @@ $(function(){
                         $(".modal-body-content-unl").fadeIn()
                       }, 3300)
                     }
-                } else if ( "{{is_quiz_unl_finished}}" == "True" ) {
+                } else {
                     $(".quiz-err-unl").remove()
                     ths.after(`<div class="quiz-err-unl mt-1">* Günlük Quiz'inizi zaten tamamlamışsınız.
                                                                 Yarın tekrar gelin!</div>`)
                 }
 
             } else if (ths.hasClass("start-l")) {
-                if ( "{{is_quiz_l_finished}}" == "False" ) {
+                if ( !("{{is_quiz_l_finished}}") ) {
                     $.ajax({
                         type:"POST",
                         url: "{% url 'complete_quiz' %}",
@@ -1665,7 +1653,7 @@ $(function(){
                                                         <span>Yükleniyor</span>
                                                       </div>
                                                      </div>`)
-                      }, 500);
+                      }, 500)
                       setTimeout(function() {
                         $(".loader-wrapper-l").remove()
                         $(".modal-body-content-l").append(
@@ -1748,7 +1736,7 @@ $(function(){
                                             </svg>`)
                                         setTimeout(function() {
                                             ths.parent().prev().find(".quiz-result").find(".path").removeClass("path")
-                                        }, 1000);
+                                        }, 1000)
                                     })
                                     $(document).on("keypress", ".quiz-answer", function() {
                                         var keycode = (event.keyCode ? event.keyCode : event.which)
@@ -1782,14 +1770,14 @@ $(function(){
                                                 </svg>`)
                                                 setTimeout(function() {
                                                     ths.parent().prev().find(".quiz-result").find(".path").removeClass("path")
-                                                }, 1000);
+                                                }, 1000)
                                             } else {
                                                 if (count==0) {
                                                     ths.parent().prev().find(".quiz-answer").addClass("shake box-dk")
                                                     ths.parent().prev().prev().html("1/2")
                                                     setTimeout(function() {
                                                         ths.parent().prev().find(".quiz-answer").removeClass("shake")
-                                                    }, 300);
+                                                    }, 300)
                                                 } else if (count==1) {
                                                     if ( ths.parent().prev().find(".quiz-answer").hasClass("shake") ) {
                                                         ths.parent().prev().find(".quiz-answer").removeClass("shake")
@@ -1812,14 +1800,14 @@ $(function(){
                                                         </svg>`)
                                                     setTimeout(function() {
                                                         ths.parent().prev().find(".quiz-result").find(".path").removeClass("path")
-                                                    }, 1000);
+                                                    }, 1000)
                                                 }
                                             }
                                         } else {
                                             ths.parent().prev().find(".quiz-answer").addClass("shake")
                                             setTimeout(function() {
                                                 ths.parent().prev().find(".quiz-answer").removeClass("shake")
-                                            }, 300);
+                                            }, 300)
                                         }
                                     })
                                     $(document).on("click", ".quiz-finish-l", function() {
@@ -1949,7 +1937,7 @@ $(function(){
                                         })
                                         setTimeout(function() {
                                             $("a[aria-controls='res-l']").click()
-                                        }, 4);
+                                        }, 4)
                                     })
                                     $(document).on("click", ".confirm-no-3", function(e) {
                                         e.preventDefault()
@@ -1963,7 +1951,7 @@ $(function(){
                         $(".modal-body-content-l").fadeIn()
                       }, 3300)
                     }
-                } else if ( "{{is_quiz_l_finished}}" == "True" ) {
+                } else {
                     $(".quiz-err-l").remove()
                     ths.after(`<div class="quiz-err-l mt-1">* Günlük Quiz'inizi zaten tamamlamışsınız.
                                                                 Yarın tekrar gelin!</div>`)
@@ -2032,14 +2020,14 @@ $(function(){
             $("div.active").find(".chevron-left").click()
             setTimeout(function() {
                 $("div.active").find(".quiz-answer").focus()
-            }, 4);
+            }, 4)
         } else if (e.keyCode == 39) {
             $("div.active").find(".chevron-right").click()
             setTimeout(function() {
                 $("div.active").find(".quiz-answer").focus()
-            }, 4);
+            }, 4)
         }
-    });
+    })
 
     function mediaContainer(container) {
       if (container.matches) {
@@ -2053,7 +2041,7 @@ $(function(){
     container.addListener(mediaContainer)
 
     $(".ref").click(function() {
-        var ths = $(this);
+        var ths = $(this)
         if (ths.hasClass('ref-l')) {
             if (ths.parents().eq(3).hasClass("flip-card")) {
                 ths.parents().eq(3).removeClass("flip-card")
@@ -2073,7 +2061,7 @@ $(function(){
                         var ref;
                         var quiz;
                         setTimeout(function() {
-                            $(".ul-learned").empty();
+                            $(".ul-learned").empty()
                             $(".title-l").css("z-index", "-1").html("")
                             ref = $(".ref-img-l").detach()
                             $("button[data-target='#quiz-l']").html("")
@@ -2083,8 +2071,8 @@ $(function(){
                             $(".ref-l").prepend(ref)
                             $("button[data-target='#quiz-l']").html("Quiz")
                             data.random_learned.map(function(i) {
-                                $(".ul-learned").append(`<li><a class="teal" href="/sözlük/q=${i}/">${i}</a></li>`);
-                            });
+                                $(".ul-learned").append(`<li><a class="teal" href="/sözlük/q=${i}/">${i}</a></li>`)
+                            })
                         },1900)
                     }
                 }
@@ -2108,7 +2096,7 @@ $(function(){
                         var ref;
                         var quiz;
                         setTimeout(function() {
-                            $(".ul-unlearned").empty();
+                            $(".ul-unlearned").empty()
                             $(".title-unl").css("z-index", "-1").html("")
                             ref = $(".ref-img-unl").detach()
                             $("button[data-target='#quiz-unl']").html("")
@@ -2118,8 +2106,8 @@ $(function(){
                             $(".ref-unl").prepend(ref)
                             $("button[data-target='#quiz-unl']").html("Quiz")
                             data.random_unlearned.map(function(i) {
-                                $(".ul-unlearned").append(`<li><a class="teal" href="/sözlük/q=${i}/">${i}</a></li>`);
-                            });
+                                $(".ul-unlearned").append(`<li><a class="teal" href="/sözlük/q=${i}/">${i}</a></li>`)
+                            })
                         },1900)
                     }
                 }
@@ -2144,7 +2132,7 @@ $(function(){
                         var ref;
                         var quiz;
                         setTimeout(function() {
-                            $(".ul-db").empty();
+                            $(".ul-db").empty()
                             $(".title-db").css("z-index", "-1").html("")
                             ref = $(".ref-img-db").detach()
                             $("button[data-target='#quiz-db']").html("")
@@ -2154,8 +2142,8 @@ $(function(){
                             $(".ref-db").prepend(ref)
                             $("button[data-target='#quiz-db']").html("Quiz")
                             data.random_db.map(function(i) {
-                                $(".ul-db").append(`<li><a class="teal" href="/sözlük/q=${i}/">${i}</a></li>`);
-                            });
+                                $(".ul-db").append(`<li><a class="teal" href="/sözlük/q=${i}/">${i}</a></li>`)
+                            })
                         },1900)
                     }
                 }
@@ -2165,7 +2153,7 @@ $(function(){
 
     $("span.audio").click(function() {
         $(this).parent().next()[0].play()
-    });
+    })
 
     $(".add-btn-home").on("click", function(){
         var ths = $(this)
@@ -2194,7 +2182,7 @@ $(function(){
                         ths.toggleClass("btn-before btn-after")
                         ths.find("span").html("Kelime Eklendi")
                     }
-                });
+                })
 
             } else if (ths.find("span").html() == "Kelime Eklendi") {
                 $.ajax({
@@ -2212,13 +2200,13 @@ $(function(){
                         ths.toggleClass("btn-after btn-before")
                         ths.find("span").html("Kelimeyi Ekle")
                      }
-                }); // end ajax
-            } // end else if
+                })
+            }
         }
-    });
+    })
 
 
-}); // end ready
+})
 </script>
 
 {% endblock %}
