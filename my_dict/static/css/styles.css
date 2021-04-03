@@ -1577,10 +1577,27 @@ header {
     border: 3px solid rgba(0,0,0,0.2);
     z-index: 99999;
     box-shadow: 0 0 5px 5px #CD5C5C;
+    padding-bottom:1.25rem
+}
+
+.notif::before {
+    content: '';
+    width: 77%;
+    background: indianred;
+    height: 3px;
+    position: absolute;
+    bottom: 4px;
+    transition: width 4s;
+    transform-origin: right;
+    left: 14px;
 }
 
 .notif-show {
     bottom:20px
+}
+
+.notif-show::before {
+    width:0%;
 }
 
 .correct,
