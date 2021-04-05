@@ -36,16 +36,14 @@
 <form class="login d-grid" action="/accounts/login/?next{{request.path}}" method="POST">
     {% csrf_token %}
     <label for="id_email" class=" requiredField">E-posta*:</label>
-    <input class="login-input" type="email" name="login" placeholder="E-posta Adresi..." id="id_email" required>
+    <div class="w-100"><input class="login-input" type="email" name="login" placeholder="E-posta Adresi..." id="id_email" required></div>
     <label for="id_password" class="requiredField">Şifre*:</label>
-    <input class="login-input" type="password" name="password" placeholder="Kullanıcı Şifresi..." id="id_password" required>
-    <div>
-        <label class="custom-cb" for="remember">Beni Hatırla:
-            <input id="remember" type="checkbox">
-            <span class="checkbox"></span>
-        </label>
-    </div>
-      <button type="submit" class="btn-before my-2 login-btn">Giriş Yap</button>
+    <div class="w-100"><input class="login-input" type="password" name="password" placeholder="Kullanıcı Şifresi..." id="id_password" required></div>
+    <label class="custom-cb" for="remember">Beni Hatırla:
+        <input id="remember" type="checkbox">
+        <span class="checkbox"></span>
+    </label>
+    <button type="submit" class="btn-before my-2 login-btn">Giriş Yap</button>
     <a href="/accounts/password/reset">Şifremi Unuttum</a>
 </form>
 

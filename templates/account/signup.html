@@ -26,21 +26,15 @@
   {% csrf_token %}
 <div id="div_id_email">
   <label for="id_email" class=" requiredField">E-posta*:</label>
-  <div>
-    <input type="email" name="email" placeholder="E-posta adresi..." autocomplete="email" class="login-input" required id="id_email">
-  </div>
+  <div class="w-100"><input type="email" name="email" placeholder="E-posta adresi..." autocomplete="email" class="login-input" required id="id_email"></div>
 </div>
 <div id="div_id_password1">
   <label for="id_password1" class="requiredField">Parola*:</label>
-    <div>
-      <input type="password" name="password1" placeholder="Parola..." autocomplete="new-password" class="login-input" required id="id_password1">
-    </div>
+  <div class="w-100"><input type="password" name="password1" placeholder="Parola..." autocomplete="new-password" class="login-input" required id="id_password1"></div>
 </div>
 <div id="div_id_password2">
-  <label for="id_password2" class="requiredField">Parola (tekrar)*:</label>
-  <div>
-    <input type="password" name="password2" placeholder="Parola (tekrar)..." class="login-input" required id="id_password2">
-  </div>
+  <label for="id_password2" class="requiredField">Parola* (tekrar):</label>
+  <div class="w-100"><input type="password" name="password2" placeholder="Parola (tekrar)..." class="login-input" required id="id_password2"></div>
 </div>
   <button class="btn-before login-btn mt-3" type="submit">Kayıt ol »</button>
 </form>
