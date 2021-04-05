@@ -3,7 +3,7 @@
 {% block title %} Kelime Listesi {% endblock %}
 
 {% block content %}
-
+<div class="wrapper">
 <div class="container-md">
 <div class="row mt-4">
 
@@ -351,8 +351,11 @@
 </div>
 {% endif %}
 
-<div class="notif"></div>
+<div class="notif">
+    <span></span>
+</div>
 
+</div>
 <script>
 
 $(function(){
@@ -774,8 +777,8 @@ $(function(){
             },
             dataType: 'json',
             success: function(data) {
-                stopNotif()
-                $(".notif").html("Kelime silindi!").addClass("notif-show")
+                    stopNotif()
+                $(".notif").addClass("notif-show").append(`<div class="notif-timer"></div>`).find("span").html("Kelime silindi!")
                 notifHide()
             }
         })

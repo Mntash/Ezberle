@@ -90,7 +90,7 @@
                 dataType: 'json',
                 success: function(data) {
                     stopNotif()
-                    $(".notif").html("Hatırlatıcıya eklendi!").addClass("notif-show")
+                    $(".notif").addClass("notif-show").append(`<div class="notif-timer"></div>`).find("span").html("Hatırlatıcıya eklendi!")
                     notifHide()
                     ths.html("Hatırlatıcıdan kaldır")
                 }
@@ -106,7 +106,7 @@
                 dataType: 'json',
                 success: function(data) {
                     stopNotif()
-                    $(".notif").html("Hatırlatıcıdan kaldırıldı!").addClass("notif-show")
+                    $(".notif").addClass("notif-show").append(`<div class="notif-timer"></div>`).find("span").html("Hatırlatıcıdan kaldırıldı!")
                     notifHide()
                     var attr = ths.parent().attr("data-reminder")
                     if ( typeof attr !== typeof undefined && attr !== false ) {
@@ -442,12 +442,13 @@
 
     function notifHide() {
         timeoutId = setTimeout(function(){
-            $(".notif").removeClass("notif-show")
+            $(".notif").removeClass("notif-show").find("div").remove()
         }, 3000)
     }
 
     function stopNotif() {
-        clearTimeout(timeoutId);
+        $(document).find(".notif-timer").remove()
+        clearTimeout(timeoutId)
     }
 
     $(document).on("click", "i[title='Dinle']", function(){
@@ -513,8 +514,9 @@
             dataType: 'json',
             success: function(data) {
                 if (!('success' in data)) {
+                    $(".ajaxWordInfo").prepend('<div class="drag"></div>')
                     $(".sk-chase").remove()
-                    $(".ajaxWordInfo").css("left", `${parseInt(x)+width-Math.abs(left)}px`).css("padding", "10px 5px").draggable({ zIndex: 300, cursor: 'move' })
+                    $(".ajaxWordInfo").css("left", `${parseInt(x)+width-Math.abs(left)}px`).css("padding", "5px").draggable({ zIndex: 300, cursor: 'move', containment:$(".wrapper"), handle: '.drag' })
                     $(".ajaxWordDiv").addClass("p-3").css("width", "292px").css("height", "300px").append(`<table class="awdt">
                                                                                              <tr>
                                                                                                 <th>Kelime</th>
@@ -568,7 +570,7 @@
                         if (i["synonyms"]) {
                             $(`div[data-ajax-id=${no}]`).append(`<div>
                                                                     <strong>Eş anlamlılar:</strong>
-                                                                    <div class="flex-wrap" data-syn-id="${no}">
+                                                                    <div class="d-flex flex-wrap" data-syn-id="${no}">
                                                                     </div>
                                                                 </div>`)
                             i["synonyms"].map(function(x){
@@ -578,7 +580,7 @@
                         if (i["antonyms"]) {
                             $(`div[data-ajax-id=${no}]`).append(`<div>
                                                                     <strong>Zıt anlamlılar:</strong>
-                                                                    <div class="flex-wrap" data-anto-id="${no}">
+                                                                    <div class="d-flex flex-wrap" data-anto-id="${no}">
                                                                     </div>
                                                                 </div>`)
                             i["antonyms"].map(function(x){
@@ -598,10 +600,10 @@
                     })
                 } else {
                     stopNotif()
-                    $(".notif").html("Kelime hakkında sonuç bulunamadı").addClass("notif-show")
+                    $(".notif").addClass("notif-show").append(`<div class="notif-timer"></div>`).find("span").html("Kelime hakkında sonuç bulunamadı!")
                     notifHide()
                     $(".sk-chase").remove()
-                    $(".ajaxWordInfo").append("<button class='ajaxWordBtn'><i class='fab fa-readme oldlace'></i></button>")
+                    $(".ajaxWordInfo").append(`<button class='ajaxWordBtn'><i class='fab fa-readme oldlace'></i></button>`)
                 }
             }
         })

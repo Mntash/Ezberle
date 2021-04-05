@@ -74,7 +74,6 @@ def home(request):
         prof.reminder_count = new_reminder_count
         data['reminder_count'] = new_reminder_count
         prof.save()
-        print(new_reminder_count, pre_reminder_count)
         if new_reminder_count > pre_reminder_count:
             data['show_reminder_notif'] = True
         data['open_reminder_daily'] = Profile.objects.get(user_id=request.user.id).open_reminder_daily

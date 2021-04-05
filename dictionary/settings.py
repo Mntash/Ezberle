@@ -170,9 +170,11 @@ ACCOUNT_DEFAULT_HTTP_PROTOCOL = 'https'
 
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
 
+DEFAULT_FROM_EMAIL = "ezberle@outlook.com.tr"
+EMAIL_FROM = 'ezberle@outlook.com.tr'
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-EMAIL_HOST_USER = 'mtash3469@gmail.com'
-EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_HOST_USER = 'ezberle@outlook.com.tr'
+EMAIL_HOST = 'smtp.office365.com'
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 EMAIL_HOST_PASSWORD = "mtas3469"

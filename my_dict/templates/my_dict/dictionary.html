@@ -3,7 +3,7 @@
 {% block title %} Sözlük {% endblock %}
 
 {% block content %}
-
+<div class="wrapper">
 <div class="container-media">
 
 <div class="row">
@@ -279,7 +279,7 @@
 </div>
 
 {% if not user.is_authenticated %}
-<div class="modal fade" id="myModal">
+<div class="modal fade" id="loginModal">
     <div class="modal-dialog modal-dialog-centered">
       <div class="modal-content modal-login">
         <div class="modal-header">
@@ -323,8 +323,11 @@
 </div>
 {% endif %}
 
-<div class="notif"></div>
+<div class="notif">
+    <span></span>
+</div>
 
+</div>
 <script>
 $(function(){
 
@@ -464,11 +467,11 @@ $(function(){
                          success: function(data) {
                             if (data.is_added) {
                                 stopNotif()
-                                $(".notif").html("Kelime eklendi!").addClass("notif-show")
+                                $(".notif").addClass("notif-show").append(`<div class="notif-timer"></div>`).find("span").html("Kelime eklendi!")
                                 notifHide()
                             } else if (data.is_deleted) {
                                 stopNotif()
-                                $(".notif").html("Kelime silindi!").addClass("notif-show")
+                                $(".notif").addClass("notif-show").append(`<div class="notif-timer"></div>`).find("span").html("Kelime silindi!")
                                 notifHide()
                             }
                          }
@@ -487,11 +490,11 @@ $(function(){
                      success: function(data) {
                         if (data.is_added=="True") {
                             stopNotif()
-                            $(".notif").html("Kelime eklendi!").addClass("notif-show")
+                            $(".notif").addClass("notif-show").append(`<div class="notif-timer"></div>`).find("span").html("Kelime eklendi!")
                             notifHide()
                         } else if (data.is_deleted=="True") {
                             stopNotif()
-                            $(".notif").html("Kelime silindi!").addClass("notif-show")
+                            $(".notif").addClass("notif-show").append(`<div class="notif-timer"></div>`).find("span").html("Kelime silindi!")
                             notifHide()
                         }
                      }

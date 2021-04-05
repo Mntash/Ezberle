@@ -3,6 +3,7 @@
 {% block title %} Ezberle {% endblock %}
 
 {% block content %}
+<div class="wrapper">
 <div class="container container-home">
 
 <div class="row">
@@ -437,7 +438,9 @@
 </div>
 {% endif %}
 
-<div class="notif"></div>
+<div class="notif">
+    <span></span>
+</div>
 
 <div class="modal fade" id="quiz-db" tabindex="-1" role="dialog">
     <div class="modal-dialog modal-dialog-centered" role="document">
@@ -594,7 +597,7 @@
 {% endif %}
 
 
-
+</div>
 <script>
 $(function(){
 
@@ -733,7 +736,7 @@ $(function(){
                                         </div>
                                         <div class="d-flex justify-content-center hak")>0/2</div>
                                         <div class="d-flex justify-content-center mb-2 mt-1">
-                                            <input type="text" class="quiz-answer mr-1" placeholder="Min. 2 harf" onClick="this.setSelectionRange(0, this.value.length)">
+                                            <input type="text" class="quiz-answer mr-1" placeholder="Min. 2 harf">
                                             <div class="quiz-result"></div>
                                         </div>
                                         <div class="d-flex justify-content-center">
@@ -744,7 +747,7 @@ $(function(){
                                             <div>Türkçeleri:</div>
                                             <div><ul></ul></div>
                                         </div>
-                                        <div class="quiz-finish-div"><button class="btn-danger-custom quiz-finish quiz-finish-db" data-toggle="confirmation">Quiz'i bitir</button></div>`)
+                                        <div class="quiz-finish-div d-flex justify-content-end"><button class="btn-danger-custom quiz-finish quiz-finish-db" data-toggle="confirmation">Quiz'i bitir</button></div>`)
                                     })
                                     $(document).on("click", ".quiz-dk-db", function() {
                                         let ths = $(this)
@@ -781,8 +784,8 @@ $(function(){
                                         var no = parseInt($("a.active").text())
                                         let ths = $(this)
                                         var tr = tr_list[no-1]
-                                        if (ths.parent().prev().find(".quiz-answer").val().length >= 2) {
-                                            if (tr.includes( ths.parent().prev().find(".quiz-answer").val().toLowerCase() )) {
+                                        if (ths.parent().prev().find(".quiz-answer").val().trim().length >= 2) {
+                                            if (tr.includes( ths.parent().prev().find(".quiz-answer").val().toLowerCase().trim() )) {
                                                 if ( ths.parent().prev().find(".quiz-answer").hasClass("shake") ) {
                                                     ths.parent().prev().find(".quiz-answer").removeClass("shake")
                                                 }
@@ -1026,7 +1029,7 @@ $(function(){
                                         </div>
                                         <div class="d-flex justify-content-center hak")>0/2</div>
                                         <div class="d-flex justify-content-center mb-2 mt-1">
-                                            <input type="text" class="quiz-answer mr-1" placeholder="Min. 2 harf" onClick="this.setSelectionRange(0, this.value.length)">
+                                            <input type="text" class="quiz-answer mr-1" placeholder="Min. 2 harf"">
                                             <div class="quiz-result"></div>
                                         </div>
                                         <div class="d-flex justify-content-center">
@@ -1076,8 +1079,8 @@ $(function(){
                                         var no = parseInt($("a.active").text())
                                         let ths = $(this)
                                         var tr = tr_list[no-1]
-                                        if (ths.parent().prev().find(".quiz-answer").val().length >= 2) {
-                                            if (tr.includes( ths.parent().prev().find(".quiz-answer").val().toLowerCase() )) {
+                                        if (ths.parent().prev().find(".quiz-answer").val().trim().length >= 2) {
+                                            if (tr.includes( ths.parent().prev().find(".quiz-answer").val().toLowerCase().trim() )) {
                                                 if ( ths.parent().prev().find(".quiz-answer").hasClass("shake") ) {
                                                     ths.parent().prev().find(".quiz-answer").removeClass("shake")
                                                 }
@@ -1389,7 +1392,7 @@ $(function(){
                                         </div>
                                         <div class="d-flex justify-content-center hak")>0/2</div>
                                         <div class="d-flex justify-content-center mb-2 mt-1">
-                                            <input type="text" class="quiz-answer mr-1" placeholder="Min. 2 harf" onClick="this.setSelectionRange(0, this.value.length)">
+                                            <input type="text" class="quiz-answer mr-1" placeholder="Min. 2 harf">
                                             <div class="quiz-result"></div>
                                         </div>
                                         <div class="d-flex justify-content-center">
@@ -1439,8 +1442,8 @@ $(function(){
                                         var no = parseInt($("a.active").text())
                                         let ths = $(this)
                                         var tr = tr_list[no-1]
-                                        if (ths.parent().prev().find(".quiz-answer").val().length >= 2) {
-                                            if (tr.includes( ths.parent().prev().find(".quiz-answer").val().toLowerCase() )) {
+                                        if (ths.parent().prev().find(".quiz-answer").val().trim().length >= 2) {
+                                            if (tr.includes( ths.parent().prev().find(".quiz-answer").val().toLowerCase().trim() )) {
                                                 if ( ths.parent().prev().find(".quiz-answer").hasClass("shake") ) {
                                                     ths.parent().prev().find(".quiz-answer").removeClass("shake")
                                                 }
@@ -1824,7 +1827,7 @@ $(function(){
                     },
                     success: function(data) {
                         stopNotif()
-                        $(".notif").html("Kelime eklendi!").addClass("notif-show")
+                        $(".notif").addClass("notif-show").append(`<div class="notif-timer"></div>`).find("span").html("Kelime eklendi!")
                         notifHide()
                         ths.toggleClass("btn-before btn-after")
                         ths.find("span").html("Kelime Eklendi")
@@ -1842,7 +1845,7 @@ $(function(){
                      },
                      success: function(data) {
                         stopNotif()
-                        $(".notif").html("Kelime silindi!").addClass("notif-show")
+                        $(".notif").addClass("notif-show").append(`<div class="notif-timer"></div>`).find("span").html("Kelime silindi!")
                         notifHide()
                         ths.toggleClass("btn-after btn-before")
                         ths.find("span").html("Kelimeyi Ekle")
