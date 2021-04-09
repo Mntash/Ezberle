@@ -978,7 +978,7 @@ header {
 .ul-db,
 .ul-unlearned,
 .ul-learned {
-    padding-left: revert;
+    padding-left: 4rem;
     margin-top:3.8rem;
     font-weight:700
 }
