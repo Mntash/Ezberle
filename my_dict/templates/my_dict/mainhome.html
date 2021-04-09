@@ -1,0 +1,138 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %} Ezberle {% endblock %}
+
+{% block content %}
+
+<div class="main_home_container text-center">
+
+<div class="main_home_sect bg-oldlace d-flex justify-content-center flex-wrap">
+    <div><img class="main_home_img img-lace" src="{% static 'img/ana sayfa.png' %}" alt="Ana Sayfa"></div>
+    <div>
+        <h2><b>Ezberle nedir?</b></h2>
+        <p style="font-weight:700">Ezberle bir online İngilizce-Türkçe sözlüğü hizmetidir.</p>
+        <span class="red-bot-border">Ezberle size şu hizmetleri sunar:</span>
+        <ul>
+            <li>4 Farklı siteden her gün günlük kelimeleri Türkçeleriyle ve telaffuzlarıyla beraber
+                Ana Sayfa'da görüntüleyebilir ve kelime listenize kaydedebilirsiniz.</li>
+            <li>Listelerinizdeki kelimelerden oluşan rastgele maksimum 10'ar kelime (yenile butonuyla beraber)
+                Ana Sayfa'da görüntülenir.</li>
+            <li>3 farklı listeden her gün birer kez quiz olabilirsiniz.</li>
+        </ul>
+    </div>
+</div>
+<div class="main_home_sect bg-teal d-flex justify-content-center flex-wrap">
+    <div>
+        <h2><b class="ired_before bg-ired">Günlük Quiz</b></h2>
+        <p>Her gün 1 defaya mahsus listelerinize eklediğiniz kelimelerden ve "Biliyor muydun?"
+           listesindeki kelimelerden quiz olabilirsiniz.
+        </p>
+        <span class="red-bot-border">Günlük Quiz ile yapabilecekleriniz:</span>
+        <ul>
+            <li>"Öğreneceklerim", "Öğrendiklerim" ve "Biliyor muydun?" listelerinden her gün quiz olarak
+                kelime bilginizi sınayabilirsiniz.</li>
+            <li>Her bir soruyu yanıtladıktan sonra sorunun yanıtlarını anlık olarak görüp öğrenebilirsiniz.</li>
+            <li>Quiz sonunda genel bir doğru yanlış tablosuyla neleri doğru neleri yanlış yaptığınızı görüp
+                dilerseniz kelimeyi "Hatırlatıcıya" ekleyebilirsiniz.</li>
+        </ul>
+    </div>
+    <div class="order"><img class="main_home_img img-teal" src="{% static 'img/quiz.png' %}" alt="Günlük Quiz"></div>
+</div>
+<div class="main_home_sect bg-oldlace d-flex justify-content-center flex-wrap">
+    <div><img class="main_home_img img-lace" src="{% static 'img/hatırlatıcı.png' %}" alt="Hatırlatıcı"></div>
+    <div>
+        <h2><b class="ired_before bg-pgrod">Hatırlatıcı</b></h2>
+        <p></p>
+        <span class="red-bot-border">Hatırlatıcı sizler için:</span>
+        <ul>
+            <li>Quiz sonlarında hatırlatıcıya kaydettiğiniz kelimelerin,</li>
+            <li>"Öğreneceklerim", "Öğrendiklerim" ve "Biliyor muydun?" listelerinden olduğunuz
+                son quizin sonuçlarının kayıtlarını tutar.</li>
+        </ul>
+    </div>
+</div>
+<div class="main_home_sect bg-teal d-flex justify-content-center flex-wrap">
+    <div>
+        <h2><b class="ired_before bg-ired">Sözlük</b></h2>
+        <span class="red-bot-border">Sözlük ile:</span>
+        <ul>
+            <li>İngilizce ve Türkçe kelimeler aratabilirsiniz.</li>
+            <li>Arama sonucunda kelimenin öteki dile tercümesiyle beraber
+                eğer varsa içinde bulunduğu kalıpları, içinde geçtiği örnek cümleleri ve
+                eş ve zıt anlamlılarını görebilirsiniz.</li>
+            <li>Sonuçlara göre arattığınız kelimeyi 3 taneye kadar seçtiğiniz Türkçesiyle birlikte
+                kelime listelerinize kaydedebilirsiniz (yalnızca İngilizce kelimeler).</li>
+            <li>Arama geçmişinde ise arattığınız son 20 kelimeyi bulabilirsiniz.</li>
+        </ul>
+    </div>
+    <div class="order"><img class="main_home_img img-teal" src="{% static 'img/sözlük.png' %}" alt="Sözlük"></div>
+</div>
+<div class="main_home_sect bg-oldlace d-flex justify-content-center flex-wrap">
+    <div><img class="main_home_img img-lace" src="{% static 'img/kelime listesi.png' %}" alt="Kelime Listesi"></div>
+    <div>
+        <h2><b class="ired_before bg-pgrod">Kelime Listesi</b></h2>
+
+        <span class="red-bot-border">Kelime listelerinizde:</span>
+        <ul>
+            <li>Kaydettiğiniz İngilizce kelimeleri kendi eklediğiniz Türkçeleriyle beraber görüntüleyebilirsiniz.</li>
+            <li>Kelimelerinizi "unuttum" ve "ezberledim" butonlarıyla iki liste arasında geçiş yaptırabilirsiniz.</li>
+            <li>Kelimelerinizi favorilere ekleyip sonrasında tek bir tıkla görüntüleyebilirsiniz.</li>
+            <li>Kelimelerinizi listeye kaydettikten sonra o kelimeyle tekrar karşılaşırsanız "görüldü" butonuna tıklayıp
+                kelimenin günlük hayattaki kullanım sıklığını görebilirsiniz.</li>
+            <li>Dilerseniz iki listeye de manuel olarak kelime ekleyebilirsiniz.</li>
+        </ul>
+    </div>
+</div>
+
+<div class="footer">© 2021 // Bu site Mustafa Taş tarafından geliştirilmiştir. </div>
+
+</div>
+
+<script>
+$(function(){
+    $(this).scrollTop(0)
+    window.onscroll = function() {animateDivs()}
+    function animateDivs() {
+        var slide = window.matchMedia("(min-width:992px)")
+        if (document.body.scrollTop > 100 || document.documentElement.scrollTop > 100) {
+            $(".scroll2top").css("display", "block")
+            if (document.body.scrollTop > 130 || document.documentElement.scrollTop > 130) {
+                function mediaAnimation(slide) {
+                    if (slide.matches) {
+                        $(".main_home_sect").eq(2).css("transform", "translate(0)").css("opacity", "1")
+                    }
+                }
+                mediaAnimation(slide)
+                slide.addListener(mediaAnimation)
+                if (document.body.scrollTop > 550 || document.documentElement.scrollTop > 550) {
+                    function mediaAnimation(slide) {
+                        if (slide.matches) {
+                            $(".main_home_sect").eq(3).css("transform", "translate(0)").css("opacity", "1")
+                        }
+                    }
+                    mediaAnimation(slide)
+                    slide.addListener(mediaAnimation)
+                    if (document.body.scrollTop > 990 || document.documentElement.scrollTop > 990) {
+                        function mediaAnimation(slide) {
+                            if (slide.matches) {
+                                $(".main_home_sect").eq(4).css("transform", "translate(0)").css("opacity", "1")
+                            }
+                        }
+                        mediaAnimation(slide)
+                        slide.addListener(mediaAnimation)
+                    }
+                }
+            }
+        } else {
+            $(".scroll2top").css("display", "none")
+        }
+    }
+})
+</script>
+
+
+
+
+
+
+{% endblock %}

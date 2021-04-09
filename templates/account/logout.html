@@ -14,7 +14,13 @@
   {% if redirect_field_value %}
   <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}"/>
   {% endif %}
-  <button class="btn btn-primary rounded" type="submit">{% trans 'Sign Out' %}</button>
+  <button onclick="goBack()" class="login-btn btn-secondary p-2">Önceki Sayfaya Dön</button>
+  <button class="login-btn btn-before" type="submit">Çıkış Yap</button>
 </form>
-
+<script>
+  function goBack() {
+    event.preventDefault()
+    history.back()
+  }
+</script>
 {% endblock %}

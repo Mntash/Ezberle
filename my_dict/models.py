@@ -38,6 +38,7 @@ class WordEn(models.Model):
     is_seen = models.BooleanField(default=False)
     is_starred = models.BooleanField(default=False)
     is_in_reminder_list = models.BooleanField(default=False)
+    is_new_in_reminder_list = models.BooleanField(default=False)
 
     memorize_tracker = FieldTracker(fields=['is_learned'])
 
@@ -91,6 +92,7 @@ class QuizRecorder(models.Model):
     is_db = models.BooleanField(default=False)
     is_learned = models.BooleanField(default=False)
     is_correct = models.BooleanField(default=False)
+    create_time = models.DateTimeField(auto_now=True)
 
 
 class WordDb(models.Model):

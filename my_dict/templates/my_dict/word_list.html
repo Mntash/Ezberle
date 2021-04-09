@@ -359,6 +359,16 @@
 <script>
 
 $(function(){
+    scroll = $(".scroll2top")
+    window.onscroll = function() {scrollFunction()}
+    function scrollFunction() {
+      if (document.body.scrollTop > 100 || document.documentElement.scrollTop > 100) {
+        scroll.css("display", "block")
+      } else {
+        scroll.css("display", "none")
+      }
+    }
+
     $("#show-fav").click(function(){
         if ($(this).is(':checked')) {
             window.location.pathname = "/kelime_listesi/q=$favorites"

@@ -36,6 +36,8 @@ def home(request):
         unlearned_words = [word["english"] for word in
                            WordEn.objects.filter(user=request.user, is_learned=False).values()]
         learned_words = [word["english"] for word in WordEn.objects.filter(user=request.user, is_learned=True).values()]
+        if WordEn.objects.filter(user=request.user, is_new_in_reminder_list=True):
+            data['show_reminder_notif'] = True
 
         random_ = random.sample(db_words, k=10)
         data['random_db'] = random_
@@ -68,14 +70,6 @@ def home(request):
         if Profile.objects.get(user_id=request.user.id).is_quiz_learned_finished:
             data['is_quiz_l_finished'] = True
 
-        pre_reminder_count = Profile.objects.get(user_id=request.user.id).reminder_count
-        new_reminder_count = len(WordEn.objects.filter(user=request.user, is_in_reminder_list=True))
-        prof = Profile.objects.get(user_id=request.user.id)
-        prof.reminder_count = new_reminder_count
-        data['reminder_count'] = new_reminder_count
-        prof.save()
-        if new_reminder_count > pre_reminder_count:
-            data['show_reminder_notif'] = True
         data['open_reminder_daily'] = Profile.objects.get(user_id=request.user.id).open_reminder_daily
     return render(request, 'my_dict/home.html', context=data)
 
@@ -155,13 +149,7 @@ def dictionary(request):
         if request.method == "GET":
             word = request.GET.get('q')
             dictionary_search(request, word)
-        pre_reminder_count = Profile.objects.get(user_id=request.user.id).reminder_count
-        new_reminder_count = len(WordEn.objects.filter(user=request.user, is_in_reminder_list=True))
-        prof = Profile.objects.get(user_id=request.user.id)
-        prof.reminder_count = new_reminder_count
-        data['reminder_count'] = new_reminder_count
-        prof.save()
-        if new_reminder_count > pre_reminder_count:
+        if WordEn.objects.filter(user=request.user, is_new_in_reminder_list=True):
             data['show_reminder_notif'] = True
 
     return render(request, 'my_dict/dictionary.html', context=data)
@@ -521,13 +509,7 @@ def dictionary_search(request, word):
         if word:
             if WordEn.objects.filter(user=request.user, english=word).exists():
                 data['word_exists'] = True
-        pre_reminder_count = Profile.objects.get(user_id=request.user.id).reminder_count
-        new_reminder_count = len(WordEn.objects.filter(user=request.user, is_in_reminder_list=True))
-        prof = Profile.objects.get(user_id=request.user.id)
-        prof.reminder_count = new_reminder_count
-        data['reminder_count'] = new_reminder_count
-        prof.save()
-        if new_reminder_count > pre_reminder_count:
+        if WordEn.objects.filter(user=request.user, is_new_in_reminder_list=True):
             data['show_reminder_notif'] = True
 
     return render(request, 'my_dict/dictionary.html', context=data)
@@ -587,13 +569,7 @@ def my_word_list(request):
         'learned_count': len(l_words),
     }
 
-    pre_reminder_count = Profile.objects.get(user_id=request.user.id).reminder_count
-    new_reminder_count = len(WordEn.objects.filter(user=request.user, is_in_reminder_list=True))
-    prof = Profile.objects.get(user_id=request.user.id)
-    prof.reminder_count = new_reminder_count
-    data['reminder_count'] = new_reminder_count
-    prof.save()
-    if new_reminder_count > pre_reminder_count:
+    if WordEn.objects.filter(user=request.user, is_new_in_reminder_list=True):
         data['show_reminder_notif'] = True
 
     return render(request, 'my_dict/word_list.html', context=data)
@@ -628,6 +604,9 @@ def my_word_list_search(request, word):
         'l_pg_count': len(word_l),
         'word': word
     }
+
+    if WordEn.objects.filter(user=request.user, is_new_in_reminder_list=True):
+        data['show_reminder_notif'] = True
 
     return render(request, 'my_dict/word_list.html', context=data)
 
@@ -721,6 +700,7 @@ def reminder_cd(request):
         if request.GET.get("add 2 reminder"):
             obj = WordEn.objects.get(user=request.user, english=word)
             obj.is_in_reminder_list = True
+            obj.is_new_in_reminder_list = True
             obj.save()
         elif request.GET.get("remove from reminder"):
             obj = WordEn.objects.get(user=request.user, english=word)
@@ -761,6 +741,7 @@ def get_reminder_list(request):
     quiz_db = []
     quiz_unl = []
     quiz_l = []
+    new_in_reminder_list = []
     if request.method == "GET":
         words = WordEn.objects.filter(user=request.user, is_in_reminder_list=True)
         for word in words:
@@ -770,7 +751,8 @@ def get_reminder_list(request):
             quiz_db.append(
                 {
                   'english': obj.english,
-                  'is_correct': obj.is_correct
+                  'is_correct': obj.is_correct,
+                  'create_time': obj.create_time.strftime('%d/%m/%Y')
                 }
             )
         obj_unl = QuizRecorder.objects.filter(user=request.user, is_learned=False)
@@ -778,7 +760,8 @@ def get_reminder_list(request):
             quiz_unl.append(
                 {
                   'english': obj.english,
-                  'is_correct': obj.is_correct
+                  'is_correct': obj.is_correct,
+                  'create_time': obj.create_time.strftime('%d/%m/%Y')
                 }
             )
         obj_l = QuizRecorder.objects.filter(user=request.user, is_learned=True)
@@ -786,12 +769,21 @@ def get_reminder_list(request):
             quiz_l.append(
                 {
                   'english': obj.english,
-                  'is_correct': obj.is_correct
+                  'is_correct': obj.is_correct,
+                  'create_time': obj.create_time.strftime('%d/%m/%Y')
                 }
             )
+        new_in_reminder = WordEn.objects.filter(user=request.user, is_new_in_reminder_list=True)
+        if new_in_reminder:
+            for word in new_in_reminder:
+                new_in_reminder_list.append(word.english)
+                obj = WordEn.objects.get(user=request.user, english=word, is_new_in_reminder_list=True)
+                obj.is_new_in_reminder_list = False
+                obj.save()
 
     data = {
         'reminder_list': reminder_list,
+        'new_in_reminder_list': new_in_reminder_list,
         'quiz_db': quiz_db,
         'quiz_unl': quiz_unl,
         'quiz_l': quiz_l
@@ -907,8 +899,8 @@ def search_word(word, opt):
             return None
 
 
-def ev(request):
-    return render(request, 'my_dict/ev.html', context={})
+def main_home(request):
+    return render(request, 'my_dict/mainhome.html', context={})
 
 
 def ajax_word_info(request):

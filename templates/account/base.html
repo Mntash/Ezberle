@@ -67,7 +67,7 @@
 </header>
 
 <button onclick="topFunction()" class="scroll2top" title="Yukarı çık"><i class="fas fa-arrow-circle-up"></i></button>
-
+<div class="container container-media">
 <div class="auth-form col-sm-8 col-md-6 text-center">
 {% block content %}
 {% endblock %}
@@ -75,8 +75,9 @@
 {% block extra_body %}
 {% endblock %}
 </div>
+  </div>
 <script>
-  scroll = $(".scroll2top")
+    scroll = $(".scroll2top")
     window.onscroll = function() {scrollFunction()}
     function scrollFunction() {
       if (document.body.scrollTop > 100 || document.documentElement.scrollTop > 100) {

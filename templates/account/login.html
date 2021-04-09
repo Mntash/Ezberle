@@ -43,6 +43,9 @@
         <input id="remember" type="checkbox">
         <span class="checkbox"></span>
     </label>
+    {% if redirect_field_value %}
+      <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}" />
+      {% endif %}
     <button type="submit" class="btn-before my-3 login-btn">Giriş Yap</button>
     <a href="/accounts/password/reset">Şifremi Unuttum</a>
 </form>

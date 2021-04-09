@@ -2,7 +2,7 @@
     ===Global===========
     ===General==========
     ===Header===========
-    ===Ev===============
+    ===Main Home========
     ===Home page========
     ===Dictionary=======
     ===Word List========
@@ -37,7 +37,7 @@
     --clr-primary: #008080; /* teal */
     --clr-secondary: #fdf5e6; /* oldlace */
     --clr-ired: #cd5c5c; /* indianred */
-    --clr-gwhite: ghostwhite;  /* aliceblue */
+    --clr-gwhite: #f8f8ff;  /* aliceblue */
 }
 
 body {
@@ -170,7 +170,7 @@ tr {
     top: 0;
     left: 0;
     background: var(--clr-ired);
-    padding:5px;
+    padding:3px;
     border-radius:10px;
     -webkit-box-shadow: 0 0 4px #000;
             box-shadow: 0 0 4px #000;
@@ -568,6 +568,20 @@ label.checkbox input[disabled=disabled] + span {
     padding-top:48px
 }
 
+.wrapper {
+    height:100%
+}
+
+.new > span {
+    margin-left:4.5rem
+}
+
+.new::before {
+    content: 'Yeni!';
+    color: var(--clr-secondary);
+    position:absolute
+}
+
 /* ---general--- */
 
 /*
@@ -733,23 +747,23 @@ header {
 
 /*
     =====================
-    ======ev=============
+    ======Main Home=============
     =====================
 */
 
-.home-sect {
+.main_home_sect {
     width:100%;
     min-height:400px;
     font-size: 1.6rem;
 }
 
-.home-sect div {
+.main_home_sect div {
     -ms-flex-item-align:center;
         -ms-grid-row-align:center;
         align-self:center
 }
 
-.home-img {
+.main_home_img {
   width: 100%;
   height: auto;
 }
@@ -787,19 +801,19 @@ header {
     color: var(--clr-primary)
 }
 
-.ev-container {
+.main_home_container {
     margin-top:48px
 }
 
-.ev-container .home-sect:nth-child(3),
-.ev-container .home-sect:nth-child(4),
-.ev-container .home-sect:nth-child(5) {
+.main_home_container .main_home_sect:nth-child(3),
+.main_home_container .main_home_sect:nth-child(4),
+.main_home_container .main_home_sect:nth-child(5) {
     -webkit-transition:all 1.2s;
     -o-transition:all 1.2s;
     transition:all 1.2s;
 }
 
-.ev-container h2 {
+.main_home_container h2 {
     margin-bottom:2.5rem
 }
 
@@ -807,14 +821,32 @@ header {
     border-bottom:2px solid var(--clr-ired);
 }
 
-.ry-bs {
-    -webkit-box-shadow:1px 1px 0 1px var(--clr-ired),
-               2px 2px 0 2px palegoldenrod;
-            box-shadow:1px 1px 0 1px var(--clr-ired),
-               2px 2px 0 2px palegoldenrod
+.ired_before {
+    position: relative;
+    font-style: italic;
+    z-index: 0;
 }
 
-/* ---ev---  */
+.bg-ired::before {
+    background:var(--clr-ired)
+}
+
+.bg-pgrod::before {
+    background:palegoldenrod
+}
+
+.ired_before::before {
+    content: '';
+    height: 10px;
+    position: absolute;
+    z-index: -1;
+    left: 1px;
+    bottom: 0;
+    transform: rotate(1deg);
+    width: 100%;
+}
+
+/* ---main home---  */
 
 /*
     =====================
@@ -946,7 +978,6 @@ header {
 .ul-db,
 .ul-unlearned,
 .ul-learned {
-    list-style: revert;
     padding-left: revert;
     margin-top:3.8rem;
     font-weight:700
@@ -1484,7 +1515,7 @@ header {
 }
 
 .notif-timer {
-    background: indianred;
+    background: var(--clr-ired);
     height: 4px;
     border-radius:5px;
     position: absolute;
@@ -1901,8 +1932,8 @@ cb-dict {
 }
 
 .ui-menu-item-wrapper:hover {
-    background: rgba(0, 0, 0, 0.5);
-    color:#fff
+    background: rgba(0, 0, 0, 0.5) !important;
+    color:#fff !important
 }
 
 .add-btn {
@@ -2681,7 +2712,6 @@ label[for="show-fav"] span {
     margin:auto;
     background:var(--clr-secondary);
     border:thick double var(--clr-ired);
-    margin-top:48px;
     border-radius:7px;
     padding:30px;
 }
@@ -2851,6 +2881,24 @@ label[for="remember"] span {
     }
 }
 
+@media (max-width:330px) {
+    .new {
+        background:linear-gradient(90deg, rgba(205,92,92,1) 25%, rgba(248,248,255,1) 25%) !important
+    }
+}
+
+@media (min-width:330px) and (max-width:440px) {
+    .new {
+        background:linear-gradient(90deg, rgba(205,92,92,1) 20%, rgba(248,248,255,1) 20%) !important
+    }
+}
+
+@media (min-width:380px) and (max-width:576px) {
+    .new > span {
+        margin-left:6.3rem
+    }
+}
+
 @media (max-width: 349px) {
     .tooltip-content {
         width:195px
@@ -2941,6 +2989,12 @@ label[for="remember"] span {
         -webkit-transform: translateX(-5px);
             -ms-transform: translateX(-5px);
                 transform: translateX(-5px)
+    }
+}
+
+@media (min-width:440px) {
+    .new {
+        background:linear-gradient(90deg, rgba(205,92,92,1) 15%, rgba(248,248,255,1) 15%) !important
     }
 }
 
@@ -3037,10 +3091,10 @@ label[for="remember"] span {
     .reminder-modal {
         width: 95% !important
     }
-    .home-sect {
+    .main_home_sect {
         padding:3rem 3.5rem
     }
-    .home-sect div {
+    .main_home_sect div {
         width:100%;
     }
 }
@@ -3077,10 +3131,10 @@ label[for="remember"] span {
         right: 44px;
         top: 9px;
     }
-    .home-sect {
+    .main_home_sect {
         padding:3rem 9rem
     }
-    .home-sect div {
+    .main_home_sect div {
         width:100%;
     }
 }
@@ -3129,36 +3183,36 @@ label[for="remember"] span {
         height: 10%;
         top: 8px;
     }
-    .home-sect {
+    .main_home_sect {
         padding:3rem 18.5rem
     }
-    .home-sect div {
+    .main_home_sect div {
         width:100%;
     }
 }
 
 @media (min-width:992px) {
-    .ev-container .home-sect:nth-child(3),
-    .ev-container .home-sect:nth-child(5) {
+    .main_home_sect {
+        padding:3rem 3.5rem;
+    }
+    .main_home_sect div {
+        width:45%;
+    }
+    .main_home_sect div:first-child {
+        margin-right:6rem
+    }
+    .main_home_container .main_home_sect:nth-child(3),
+    .main_home_container .main_home_sect:nth-child(5) {
         opacity:0;
         -webkit-transform:translate(-1300px);
             -ms-transform:translate(-1300px);
                 transform:translate(-1300px)
     }
-    .ev-container .home-sect:nth-child(4) {
+    .main_home_container .main_home_sect:nth-child(4) {
         opacity:0;
         -webkit-transform:translate(1300px);
             -ms-transform:translate(1300px);
                 transform:translate(1300px)
-    }
-    .home-sect {
-        padding:3rem 3.5rem;
-    }
-    .home-sect div {
-        width:45%;
-    }
-    .home-sect div:first-child {
-        margin-right:6rem
     }
 }
 
@@ -3178,10 +3232,10 @@ label[for="remember"] span {
     .mb-7 {
         margin-bottom:7.2rem
     }
-    .home-sect div:first-child {
+    .main_home_sect div:first-child {
         margin-bottom:3rem
     }
-    .o {
+    .order {
         -webkit-box-ordinal-group:0;
             -ms-flex-order:-1;
                 order:-1;

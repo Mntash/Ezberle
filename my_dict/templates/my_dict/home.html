@@ -600,6 +600,15 @@
 </div>
 <script>
 $(function(){
+    scroll = $(".scroll2top")
+    window.onscroll = function() {scrollFunction()}
+    function scrollFunction() {
+      if (document.body.scrollTop > 100 || document.documentElement.scrollTop > 100) {
+        scroll.css("display", "block")
+      } else {
+        scroll.css("display", "none")
+      }
+    }
 
     $(".object-content").click(function(){
         if ( $(this).attr("data-target") == "#quiz-unl" )
@@ -1040,7 +1049,7 @@ $(function(){
                                             <div>Türkçeleri:</div>
                                             <div><ul></ul></div>
                                         </div>
-                                        <div class="quiz-finish-div">
+                                        <div class="quiz-finish-div d-flex justify-content-end">
                                             <button class="btn-danger-custom quiz-finish quiz-finish-unl" data-toggle="confirmation">Quiz'i bitir</button>
                                         </div>`)
                                     })
@@ -1403,7 +1412,7 @@ $(function(){
                                             <div>Türkçeleri:</div>
                                             <div><ul></ul></div>
                                         </div>
-                                        <div class="quiz-finish-div">
+                                        <div class="quiz-finish-div d-flex justify-content-end">
                                             <button class="btn-danger-custom quiz-finish quiz-finish-l" data-toggle="confirmation">Quiz'i bitir</button>
                                         </div>`)
                                     })

@@ -21,7 +21,7 @@
 <body>
 <header class="fixed-top">
   <div class="icon-bar">
-      <a href="{% url 'home' %}">
+      <a href="/">
           <div class="brand-logo">
             <span>Ez</span>
             <span class="span-ber">ber</span>
@@ -36,33 +36,33 @@
               <div class="bar"></div>
           </label>
       </div>
-    {% if request.path == '/' %}
+    {% if '/anasayfa' in request.path %}
       <a class="aktif" href="{% url 'home' %}"><i class="fa fa-home"></i><span class="brand d-none">Ana Sayfa</span></a>
     {% else %}
       <a href="{% url 'home' %}"><i class="fa fa-home"></i><span class="brand d-none">Ana Sayfa</span></a>
     {% endif %}
-    {% if 'sözlük' in request.path %}
+    {% if '/sözlük' in request.path %}
       <a class="aktif" href="{% url 'dictionary' %}"><i class="fa fa-search"></i><span class="brand d-none">Sözlük</span></a>
     {% else %}
       <a href="{% url 'dictionary' %}"><i class="fa fa-search"></i><span class="brand d-none">Sözlük</span></a>
     {% endif %}
-    {% if 'kelime_listesi' in request.path %}
+    {% if '/kelime_listesi' in request.path %}
       <a class="aktif" href="{% url 'word-list' %}"><i class="fas fa-clipboard-list"></i><span class="brand d-none">Liste</span></a>
     {% else %}
       <a href="{% url 'word-list' %}"><i class="fas fa-clipboard-list"></i><span class="brand d-none">Liste</span></a>
     {% endif %}
   {% if user.is_authenticated %}
-    {% if 'accounts/logout' in request.path %}
+    {% if '/accounts/logout' in request.path %}
       <a class="aktif" href="{% url 'account_logout' %}"><i class="fas fa-sign-out-alt"></i><span class="brand d-none">Çıkış Yap</span></a>
     {% else %}
       <a href="{% url 'account_logout' %}"><i class="fas fa-sign-out-alt"></i><span class="brand d-none">Çıkış Yap</span></a>
     {% endif %}
   {% else %}
-    {% if 'accounts/login' in request.path %}
+    {% if '/accounts/login' in request.path %}
       <a class="aktif" href="{% url 'account_login' %}"><i class="fas fa-sign-in-alt"></i><span class="brand d-none">Giriş Yap</span></a>
-    {% elif 'accounts/password' in request.path %}
+    {% elif '/accounts/password' in request.path %}
       <a class="aktif" href="{% url 'account_login' %}"><i class="fas fa-sign-in-alt"></i><span class="brand d-none">Giriş Yap</span></a>
-    {% elif 'accounts/signup/' in request.path %}
+    {% elif '/accounts/signup/' in request.path %}
       <a class="aktif" href="{% url 'account_login' %}"><i class="fas fa-sign-in-alt"></i><span class="brand d-none">Giriş Yap</span></a>
     {% else %}
       <a href="{% url 'account_login' %}"><i class="fas fa-sign-in-alt"></i><span class="brand d-none">Giriş Yap</span></a>
@@ -76,10 +76,11 @@
 {% block content %}
 {% endblock %}
 <script>
+$(function(){
     $(document).on("click", "a.dropdown-item", function() {
         var ths = $(this)
         var text = ths.parent().parent().prev().text()
-        if (ths.find("span").html() == "Hatırlatıcıya ekle") {
+        if (ths.find("span").html() === "Hatırlatıcıya ekle") {
             $.ajax({
                 type:"GET",
                 url: "{% url 'reminder' %}",
@@ -92,10 +93,10 @@
                     stopNotif()
                     $(".notif").addClass("notif-show").append(`<div class="notif-timer"></div>`).find("span").html("Hatırlatıcıya eklendi!")
                     notifHide()
-                    ths.html("Hatırlatıcıdan kaldır")
+                    ths.find("span").html("Hatırlatıcıdan kaldır")
                 }
             })
-        } else if (ths.find("span").html() == "Hatırlatıcıdan kaldır") {
+        } else if (ths.find("span").html() === "Hatırlatıcıdan kaldır") {
             $.ajax({
                 type:"GET",
                 url: "{% url 'reminder' %}",
@@ -112,7 +113,7 @@
                     if ( typeof attr !== typeof undefined && attr !== false ) {
                         ths.parent().parent().parent().remove()
                     } else {
-                        ths.html("Hatırlatıcıya ekle")
+                        ths.find("span").html("Hatırlatıcıya ekle")
                     }
                 }
             })
@@ -160,6 +161,7 @@
             var ths = $(this)
             if ( !(ths.hasClass("reminder-modal")) ) {
                 word_list = []
+                new_words_reminder = []
                 quiz_db_list = []
                 quiz_unl_list = []
                 quiz_l_list = []
@@ -173,6 +175,10 @@
                     dataType: 'json',
                     success: function(data) {
                         list = data.reminder_list
+                        new_words = data.new_in_reminder_list
+                        new_words.map(function(i){
+                            new_words_reminder.push(i)
+                        })
                         list.map(function(i){
                             word_list.push(i)
                         })
@@ -249,31 +255,59 @@
                                 </div>`)
                                 if (word_list.length > 0) {
                                     word_list.map(function(i){
-                                        $("#kelimeler").find($(".modal-list"))
-                                                       .append(`<li>
-                                                                  <span>${i}</span>
-                                                                  <div class="dropdown">
-                                                                      <button class="btn-dd"
-                                                                              type="button" id="dropdownReminder" data-toggle="dropdown"
-                                                                              aria-haspopup="true" aria-expanded="false">
-                                                                        <img src="{% static 'img/menu.png' %}" alt="Menu">
-                                                                      </button>
-                                                                      <div class="dropdown-menu" data-reminder="true" aria-labelledby="dropdownReminder">
-                                                                        <a target="_blank" class="dropdown-item" href="/sözlük/q=${i}">
-                                                                            <i class="fa fa-search"></i>
-                                                                            Sözlükte arat
-                                                                        </a>
-                                                                        <a target="_blank" class="dropdown-item" href="/kelime_listesi/q=${i}">
-                                                                            <i class="fas fa-clipboard-list"></i>
-                                                                            Listende görüntüle
-                                                                        </a>
-                                                                        <a class="dropdown-item" href="#!">
-                                                                            <i class="fas fa-bell"></i>
-                                                                            <span>Hatırlatıcıdan kaldır</span>
-                                                                        </a>
-                                                                      </div>
-                                                                  </div>
-                                                                </li>`)
+                                        if (new_words_reminder.includes(i)) {
+                                            $("#kelimeler").find($(".modal-list"))
+                                               .append(`<li class="new">
+                                                  <span>${i}</span>
+                                                  <div class="dropdown">
+                                                      <button class="btn-dd"
+                                                              type="button" id="dropdownReminder" data-toggle="dropdown"
+                                                              aria-haspopup="true" aria-expanded="false">
+                                                        <img src="{% static 'img/menu.png' %}" alt="Menu">
+                                                      </button>
+                                                      <div class="dropdown-menu" data-reminder="true" aria-labelledby="dropdownReminder">
+                                                        <a target="_blank" class="dropdown-item" href="/sözlük/q=${i}">
+                                                            <i class="fa fa-search"></i>
+                                                            <span>Sözlükte arat</span>
+                                                        </a>
+                                                        <a target="_blank" class="dropdown-item" href="/kelime_listesi/q=${i}">
+                                                            <i class="fas fa-clipboard-list"></i>
+                                                            <span>Listende görüntüle</span>
+                                                        </a>
+                                                        <a class="dropdown-item" href="#!">
+                                                            <i class="fas fa-bell"></i>
+                                                            <span>Hatırlatıcıdan kaldır</span>
+                                                        </a>
+                                                      </div>
+                                                  </div>
+                                               </li>`)
+                                        } else {
+                                            $("#kelimeler").find($(".modal-list"))
+                                               .append(`<li>
+                                                  <span>${i}</span>
+                                                  <div class="dropdown">
+                                                      <button class="btn-dd"
+                                                              type="button" id="dropdownReminder" data-toggle="dropdown"
+                                                              aria-haspopup="true" aria-expanded="false">
+                                                        <img src="{% static 'img/menu.png' %}" alt="Menu">
+                                                      </button>
+                                                      <div class="dropdown-menu" data-reminder="true" aria-labelledby="dropdownReminder">
+                                                        <a target="_blank" class="dropdown-item" href="/sözlük/q=${i}">
+                                                            <i class="fa fa-search"></i>
+                                                            <span>Sözlükte arat</span>
+                                                        </a>
+                                                        <a target="_blank" class="dropdown-item" href="/kelime_listesi/q=${i}">
+                                                            <i class="fas fa-clipboard-list"></i>
+                                                            <span>Listende görüntüle</span>
+                                                        </a>
+                                                        <a class="dropdown-item" href="#!">
+                                                            <i class="fas fa-bell"></i>
+                                                            <span>Hatırlatıcıdan kaldır</span>
+                                                        </a>
+                                                      </div>
+                                                  </div>
+                                               </li>`)
+                                        }
                                     })
                                 } else {
                                     $("#kelimeler").find($(".modal-list"))
@@ -281,8 +315,8 @@
                                                                   <span>Hatırlatıcıya kelime kaydettiğinde burada gösterilir.</span>
                                                                 </li>`)
                                 }
-
                                 if (quiz_unl_list.length > 0) {
+                                    $(".quiz-1").prepend(`<h6 class="d-flex justify-content-end mt-2">Son olduğun quiz'in tarihi: ${quiz_unl_list[0]['create_time']}</h6>`)
                                     quiz_unl_list.map(function(i){
                                         if (i.is_correct) {
                                             $(".quiz-1").find("ul").append(`<li>
@@ -296,11 +330,11 @@
                                                                               <div class="dropdown-menu" data-reminder="true" aria-labelledby="dropdownReminder">
                                                                                 <a target="_blank" class="dropdown-item" href="/sözlük/q=${i.english}">
                                                                                     <i class="fa fa-search"></i>
-                                                                                    Sözlükte arat
+                                                                                    <span>Sözlükte arat</span>
                                                                                 </a>
                                                                                 <a target="_blank" class="dropdown-item" href="/kelime_listesi/q=${i.english}">
                                                                                     <i class="fas fa-clipboard-list"></i>
-                                                                                    Listende görüntüle
+                                                                                    <span>Listende görüntüle</span>
                                                                                 </a>
                                                                               </div>
                                                                           </div>
@@ -317,11 +351,11 @@
                                                                               <div class="dropdown-menu" data-reminder="true" aria-labelledby="dropdownReminder">
                                                                                 <a target="_blank" class="dropdown-item" href="/sözlük/q=${i.english}">
                                                                                     <i class="fa fa-search"></i>
-                                                                                    Sözlükte arat
+                                                                                    <span>Sözlükte arat</span>
                                                                                 </a>
                                                                                 <a target="_blank" class="dropdown-item" href="/kelime_listesi/q=${i.english}">
                                                                                     <i class="fas fa-clipboard-list"></i>
-                                                                                    Listende görüntüle
+                                                                                    <span>Listende görüntüle</span>
                                                                                 </a>
                                                                               </div>
                                                                           </div>
@@ -336,6 +370,7 @@
                                 }
 
                                 if (quiz_l.length > 0) {
+                                    $(".quiz-2").prepend(`<h6 class="d-flex justify-content-end mt-2">Son olduğun quiz'in tarihi: ${quiz_l_list['create_time']}</h6>`)
                                     quiz_l_list.map(function(i){
                                         if (i.is_correct) {
                                             $(".quiz-2").find("ul").append(`<li>
@@ -349,11 +384,11 @@
                                                                               <div class="dropdown-menu" data-reminder="true" aria-labelledby="dropdownReminder">
                                                                                 <a target="_blank" class="dropdown-item" href="/sözlük/q=${i.english}">
                                                                                     <i class="fa fa-search"></i>
-                                                                                    Sözlükte arat
+                                                                                    <span>Sözlükte arat</span>
                                                                                 </a>
                                                                                 <a target="_blank" class="dropdown-item" href="/kelime_listesi/q=${i.english}">
                                                                                     <i class="fas fa-clipboard-list"></i>
-                                                                                    Listende görüntüle
+                                                                                    <span>Listende görüntüle</span>
                                                                                 </a>
                                                                               </div>
                                                                           </div>
@@ -370,11 +405,11 @@
                                                                               <div class="dropdown-menu" data-reminder="true" aria-labelledby="dropdownReminder">
                                                                                 <a target="_blank" class="dropdown-item" href="/sözlük/q=${i.english}">
                                                                                     <i class="fa fa-search"></i>
-                                                                                    Sözlükte arat
+                                                                                    <span>Sözlükte arat</span>
                                                                                 </a>
                                                                                 <a target="_blank" class="dropdown-item" href="/kelime_listesi/q=${i.english}">
                                                                                     <i class="fas fa-clipboard-list"></i>
-                                                                                    Listende görüntüle
+                                                                                    <span>Listende görüntüle</span>
                                                                                 </a>
                                                                               </div>
                                                                           </div>
@@ -386,8 +421,8 @@
                                                                         <span>"Öğrendiğim Kelimeler" listesinden olduğun son quizin sonuçları burada gösterilir.</span>
                                                                     </li>`)
                                 }
-
                                 if (quiz_db.length > 0) {
+                                    $(".quiz-3").prepend(`<h6 class="d-flex justify-content-end mt-2">Son olduğun quiz'in tarihi: ${quiz_db_list[0]['create_time']}</h6>`)
                                     quiz_db_list.map(function(i){
                                         if (i.is_correct) {
                                             $(".quiz-3").find("ul").append(`<li>
@@ -480,7 +515,7 @@
                 y = Math.round(oRect.y + window.scrollY) + "px"
             }
             if ( !($(".ajaxWordInfo").length) ) {
-                sel.toString() !== '' &&
+                sel.toString().trim() !== '' &&
                 $(`<div class='ajaxWordInfo'></div>`).appendTo($(this))
                 $(`<div class='ajaxWordInfo'>
                     <div class="ajaxWordDiv"></div>
@@ -489,135 +524,126 @@
                 selection_text = sel
             }
         }
-
     });
 
     $(document).on("click", ".ajaxWordBtn", function(){
-        ths = $(this)
-        ths.fadeOut("500")
-        setTimeout(function(){
-            $(".ajaxWordInfo").append(`<div class="sk-chase">
-                                          <div class="sk-chase-dot"></div>
-                                          <div class="sk-chase-dot"></div>
-                                          <div class="sk-chase-dot"></div>
-                                          <div class="sk-chase-dot"></div>
-                                          <div class="sk-chase-dot"></div>
-                                          <div class="sk-chase-dot"></div>
-                                        </div>`)
-        }, 500)
-        $.ajax({
-            type:"GET",
-            url: "{% url 'ajax-word-info' %}",
-            data: {
-                'selection': selection_text.toString().trim(),
-            },
-            dataType: 'json',
-            success: function(data) {
-                if (!('success' in data)) {
-                    $(".ajaxWordInfo").prepend('<div class="drag"></div>')
-                    $(".sk-chase").remove()
-                    $(".ajaxWordInfo").css("left", `${parseInt(x)+width-Math.abs(left)}px`).css("padding", "5px").draggable({ zIndex: 300, cursor: 'move', containment:$(".wrapper"), handle: '.drag' })
-                    $(".ajaxWordDiv").addClass("p-3").css("width", "292px").css("height", "300px").append(`<table class="awdt">
-                                                                                             <tr>
-                                                                                                <th>Kelime</th>
-                                                                                                <th>Hece</th>
-                                                                                                <th>Telaffuz</th>
-                                                                                                <th>Dinle</th>
-                                                                                             </tr>
-                                                                                             <tr>
-                                                                                                <td>${data.word}</td>
-                                                                                                <td>${data.syllables}</td>
-                                                                                                <td>${data.pronunciation}</td>
-                                                                                                <td class="audio"></td>
-                                                                                             </tr>
-                                                                                           </table>`)
-                    if (data.audio != "None") {
-                        $("td.audio").append(`
-                                            <i title="Dinle" class="material-icons">volume_up</i>
-                                            <audio id="ajax_audio" src="${data.audio}"></audio>
-                                            `)
-                    } else { $("td.audio").append(`
-                                                <i title="Ses mevcut değil" class="material-icons">volume_off</i>
-                                                <audio src=""></audio>
+        if(!event.detail || event.detail == 1) {
+            ths = $(this)
+            ths.fadeOut("500")
+            setTimeout(function(){
+                $(".ajaxWordInfo").append(`<div class="sk-chase">
+                                              <div class="sk-chase-dot"></div>
+                                              <div class="sk-chase-dot"></div>
+                                              <div class="sk-chase-dot"></div>
+                                              <div class="sk-chase-dot"></div>
+                                              <div class="sk-chase-dot"></div>
+                                              <div class="sk-chase-dot"></div>
+                                            </div>`)
+            }, 500)
+            $.ajax({
+                type:"GET",
+                url: "{% url 'ajax-word-info' %}",
+                data: {
+                    'selection': selection_text.toString().trim(),
+                },
+                dataType: 'json',
+                success: function(data) {
+                    if (!('success' in data)) {
+                        $(".ajaxWordInfo").prepend('<div class="drag"></div>')
+                        $(".sk-chase").remove()
+                        $(".ajaxWordInfo").css("left", `${parseInt(x)+width-Math.abs(left)}px`).css("padding", "5px").draggable({ zIndex: 300, cursor: 'move', containment:$(".wrapper"), handle: '.drag' })
+                        $(".ajaxWordDiv").addClass("p-3").css("width", "292px").css("height", "300px").append(`<table class="awdt">
+                                                                                                 <tr>
+                                                                                                    <th>Kelime</th>
+                                                                                                    <th>Hece</th>
+                                                                                                    <th>Telaffuz</th>
+                                                                                                    <th>Dinle</th>
+                                                                                                 </tr>
+                                                                                                 <tr>
+                                                                                                    <td>${data.word}</td>
+                                                                                                    <td>${data.syllables}</td>
+                                                                                                    <td>${data.pronunciation}</td>
+                                                                                                    <td class="audio"></td>
+                                                                                                 </tr>
+                                                                                               </table>`)
+                        if (data.audio != "None") {
+                            $("td.audio").append(`
+                                                <i title="Dinle" class="material-icons">volume_up</i>
+                                                <audio id="ajax_audio" src="${data.audio}"></audio>
                                                 `)
-                    }
-                    if (data.tr != "None") {
-                        $(".ajaxWordDiv").append(`<div>
-                                                    <strong>Türkçeleri:</strong>
-                                                    <ul id="ajaxTrUl"></ul>
-                                                 </div>`)
-                        data.tr.map(function(i){
-                            $("#ajaxTrUl").append(`<li>${i}</li>`)
+                        } else { $("td.audio").append(`
+                                                    <i title="Ses mevcut değil" class="material-icons">volume_off</i>
+                                                    <audio src=""></audio>
+                                                    `)
+                        }
+                        if (data.tr != "None") {
+                            $(".ajaxWordDiv").append(`<div>
+                                                        <strong>Türkçeleri:</strong>
+                                                        <ul id="ajaxTrUl"></ul>
+                                                     </div>`)
+                            data.tr.map(function(i){
+                                $("#ajaxTrUl").append(`<li>${i}</li>`)
+                            })
+                        }
+                        data.all_results.map(function(i){
+                            no = data.all_results.indexOf(i)
+                            $(".ajaxWordDiv").append(`
+                                <div data-ajax-id="${no}"></div>
+                            `)
+                            if (i["definition"]) {
+                                $(`div[data-ajax-id=${no}]`).append(`<div>
+                                                                        <strong>Tanım:</strong> <br>
+                                                                        ${i["definition"]}
+                                                                    </div>`)
+                            }
+                            if (i["partOfSpeech"]) {
+                                $(`div[data-ajax-id=${no}]`).append(`<div>
+                                                                        <strong>Sözcük türü:</strong> <br>
+                                                                        ${i["partOfSpeech"]}
+                                                                    </div>`)
+                            }
+                            if (i["synonyms"]) {
+                                $(`div[data-ajax-id=${no}]`).append(`<div>
+                                                                        <strong>Eş anlamlılar:</strong>
+                                                                        <div class="d-flex flex-wrap" data-syn-id="${no}">
+                                                                        </div>
+                                                                    </div>`)
+                                i["synonyms"].map(function(x){
+                                    $(`div[data-syn-id=${no}]`).append(`<a href="/sözlük/q=${x}" target="_blank">${x}</a>`)
+                                })
+                            }
+                            if (i["antonyms"]) {
+                                $(`div[data-ajax-id=${no}]`).append(`<div>
+                                                                        <strong>Zıt anlamlılar:</strong>
+                                                                        <div class="d-flex flex-wrap" data-anto-id="${no}">
+                                                                        </div>
+                                                                    </div>`)
+                                i["antonyms"].map(function(x){
+                                    $(`div[data-anto-id=${no}]`).append(`<a href="/sözlük/q=${x}" target="_blank">${x}</a>`)
+                                })
+                            }
+                            if (i["examples"]) {
+                                $(`div[data-ajax-id=${no}]`).append(`<div>
+                                                                        <strong>Örnek Cümleler:</strong>
+                                                                        <ul data-ex-id="${no}">
+                                                                        </ul>
+                                                                    </div>`)
+                                i["examples"].map(function(x){
+                                    $(`ul[data-ex-id=${no}]`).append(`<li>${x}</li>`)
+                                })
+                            }
                         })
+                    } else {
+                        stopNotif()
+                        $(".notif").addClass("notif-show").append(`<div class="notif-timer"></div>`).find("span").html("Kelime hakkında sonuç bulunamadı!")
+                        notifHide()
+                        $(".sk-chase").remove()
+                        $(".ajaxWordInfo").append(`<button class='ajaxWordBtn'><i class='fab fa-readme oldlace'></i></button>`)
                     }
-                    data.all_results.map(function(i){
-                        no = data.all_results.indexOf(i)
-                        $(".ajaxWordDiv").append(`
-                            <div data-ajax-id="${no}"></div>
-                        `)
-                        if (i["definition"]) {
-                            $(`div[data-ajax-id=${no}]`).append(`<div>
-                                                                    <strong>Tanım:</strong> <br>
-                                                                    ${i["definition"]}
-                                                                </div>`)
-                        }
-                        if (i["partOfSpeech"]) {
-                            $(`div[data-ajax-id=${no}]`).append(`<div>
-                                                                    <strong>Sözcük türü:</strong> <br>
-                                                                    ${i["partOfSpeech"]}
-                                                                </div>`)
-                        }
-                        if (i["synonyms"]) {
-                            $(`div[data-ajax-id=${no}]`).append(`<div>
-                                                                    <strong>Eş anlamlılar:</strong>
-                                                                    <div class="d-flex flex-wrap" data-syn-id="${no}">
-                                                                    </div>
-                                                                </div>`)
-                            i["synonyms"].map(function(x){
-                                $(`div[data-syn-id=${no}]`).append(`<a href="/sözlük/q=${x}" target="_blank">${x}</a>`)
-                            })
-                        }
-                        if (i["antonyms"]) {
-                            $(`div[data-ajax-id=${no}]`).append(`<div>
-                                                                    <strong>Zıt anlamlılar:</strong>
-                                                                    <div class="d-flex flex-wrap" data-anto-id="${no}">
-                                                                    </div>
-                                                                </div>`)
-                            i["antonyms"].map(function(x){
-                                $(`div[data-anto-id=${no}]`).append(`<a href="/sözlük/q=${x}" target="_blank">${x}</a>`)
-                            })
-                        }
-                        if (i["examples"]) {
-                            $(`div[data-ajax-id=${no}]`).append(`<div>
-                                                                    <strong>Örnek Cümleler:</strong>
-                                                                    <ul data-ex-id="${no}">
-                                                                    </ul>
-                                                                </div>`)
-                            i["examples"].map(function(x){
-                                $(`ul[data-ex-id=${no}]`).append(`<li>${x}</li>`)
-                            })
-                        }
-                    })
-                } else {
-                    stopNotif()
-                    $(".notif").addClass("notif-show").append(`<div class="notif-timer"></div>`).find("span").html("Kelime hakkında sonuç bulunamadı!")
-                    notifHide()
-                    $(".sk-chase").remove()
-                    $(".ajaxWordInfo").append(`<button class='ajaxWordBtn'><i class='fab fa-readme oldlace'></i></button>`)
                 }
-            }
-        })
+            })
+        }
     })
-
-    scroll = $(".scroll2top")
-    window.onscroll = function() {scrollFunction()}
-    function scrollFunction() {
-      if (document.body.scrollTop > 100 || document.documentElement.scrollTop > 100) {
-        scroll.css("display", "block")
-      } else {
-        scroll.css("display", "none")
-      }
-    }
 
     $(".menu").click(function() {
         $(".icon-bar").children().slice(2,6).toggleClass("d-none")
@@ -657,6 +683,8 @@
     var header = window.matchMedia("(max-width:576px)")
     mediaHeader(header)
     header.addListener(mediaHeader)
+
+})
 </script>
 </body>
 </html>
