@@ -195,14 +195,18 @@
 
     <div class="col-lg-3 col-sm-6 text-center mb-sm-2 mb-2">
         <div class="card card-shadow">
-            <div><a href="https://en.wiktionary.org/" target="_blank"><img class="card-img-top mx-auto" src="{% static 'img/wiktionary.svg' %}" alt="Wiktionary"></a></div>
+            <div>
+              <a href="https://www.vocabulary.com/" target="_blank">
+                <img class="card-img-top mx-auto" src="{% static 'img/vocabulary.png' %}" alt="Vocabulary">
+              </a>
+            </div>
             <div class="card-body home-card">
-                <a class="wotd" id="word_4" href="{% url 'dictionary-search' word_wiki.english %}" target="_blank">
-                    {{ word_wiki.english }}
+                <a class="wotd" id="word_4" href="{% url 'dictionary-search' word_vocab.english %}" target="_blank">
+                    {{ word_vocab.english }}
                 </a>
-                {% if word_wiki.turkish.all %}
+                {% if word_vocab.turkish.all %}
                     <ul class="wotd-tr-list">
-                    {% for tr in word_wiki.turkish.all %}
+                    {% for tr in word_vocab.turkish.all %}
                         <li>
                             {{ tr }}
                         </li>
@@ -214,13 +218,13 @@
                     </ul>
                 {% endif %}
                 <div class="home-card-footer">
-                {% if word_wiki.audio is not None %}
+                {% if word_vocab.audio is not None %}
                     <div>
                         <span class="audio">
                             <i title="Dinle" data-id="4" class="material-icons">volume_up</i>
                         </span>
                     </div>
-                    <audio id="au-4" src="{{word_wiki.audio}}"></audio>
+                    <audio id="au-4" src="{{word_vocab.audio}}"></audio>
                 {% else %}
                     <div>
                         <span class="audio">
@@ -229,9 +233,9 @@
                     </div>
                     <audio src=""></audio>
                 {% endif %}
-                {% if word_wiki.turkish.all %}
+                {% if word_vocab.turkish.all %}
                     {% if user.is_authenticated %}
-                        {% if wiki_exists %}
+                        {% if vocab_exists %}
                             <div><button data-id="4" class="add-btn-home btn-after"><span>Kelime Eklendi</span></button></div>
                         {% else %}
                             <div><button data-id="4" class="add-btn-home btn-before"><span>Kelimeyi Ekle</span></button></div>
@@ -241,7 +245,7 @@
                     {% endif %}
                 {% else %}
                     {% if user.is_authenticated %}
-                        {% if wiki_exists %}
+                        {% if vocab_exists %}
                             <div><button data-id="4" class="add-btn-home btn-after disabled not-allowed" disabled><span>Kelime Eklendi</span></button></div>
                         {% else %}
                             <div><button data-id="4" class="add-btn-home btn-before disabled not-allowed" disabled><span>Kelimeyi Ekle</span></button></div>
@@ -457,7 +461,16 @@
               Not:
               <ul>
                 <li>
-                  Sorulacak olan kelimeler "Biliyor muydun?" listesinden rastgele seçilecektir.
+                  Sorulacak olan kelimeler "Biliyor Muydun?" listesinden rastgele olarak seçilecektir.
+                </li>
+                <li>
+                  Her soruyu çözmek için 2 hakkın mevcut.
+                </li>
+                <li>Sorular arasında geçiş yapmak serbesttir ve istediğin soruda quiz'i bitirebilirsin.
+                    Ancak quiz'i bitirdiğinde tüm yanıtlanmamış sorular yanlış olarak değerlendirilecektir.
+                </li>
+                <li>
+                  Bu quiz günde 1 defaya mahsustur ve her gün öğlen 12:00'de sıfırlanır.
                 </li>
               </ul>
             </div>
@@ -491,9 +504,19 @@
               Not:
               <ul>
                 <li>
-                  Sorulacak olan kelimeler "öğreneceğim kelimeler" listesinden rastgele olarak seçilecektir.
+                  Sorulacak olan kelimeler "Öğreneceğim Kelimeler" listesinden rastgele olarak seçilecektir.
                   Bu yüzden listende gerektiği kadar kelime olduğundan emin ol.
-                  Listende şu an <span id="count_unl"></span> adet kelime var.
+                  Listende şu an <span id="count_unl"></span> tane kelime var.
+                </li>
+                <li>
+                  Soruların cevapları listenize "kendi eklediğiniz" Türkçelerden oluşacaktır.
+                  Bu yüzden vereceğiniz cevap doğru olsa bile listeye kaydetmediğiniz Türkçeleri girmemeye dikkat edin.
+                </li>
+                <li>
+                  Her soruyu çözmek için 2 hakkın mevcut.
+                </li>
+                <li>Sorular arasında geçiş yapmak serbesttir ve istediğin soruda quiz'i bitirebilirsin.
+                    Ancak quiz'i bitirdiğinde tüm yanıtlanmamış sorular yanlış olarak değerlendirilecektir.
                 </li>
                 <li>
                   Bu quiz günde 1 defaya mahsustur ve her gün öğlen 12:00'de sıfırlanır.
@@ -530,16 +553,19 @@
               Not:
               <ul>
                 <li>
-                  Sorulacak olan kelimeler "öğrendiğim kelimeler" listesinden rastgele olarak seçilecektir.
+                  Sorulacak olan kelimeler "Öğrendiğim Kelimeler" listesinden rastgele olarak seçilecektir.
                   Bu yüzden listende gerektiği kadar kelime olduğundan emin ol.
-                  Listende şu an <span id="count_l"></span> adet kelime var.
+                  Listende şu an <span id="count_l"></span> tane kelime var.
                 </li>
                 <li>
-                  Vereceğin cevaplar kelimeyi listeye kaydettiğin Türkçe kelimelerden olmak zorundadır. Aksi halde
-                  Türkçesi doğru olsa dahi kabul edilmez.
+                  Soruların cevapları listenize "kendi eklediğiniz" Türkçelerden oluşacaktır.
+                  Bu yüzden vereceğiniz cevap doğru olsa bile listeye kaydetmediğiniz Türkçeleri girmemeye dikkat edin.
                 </li>
                 <li>
                   Her soruyu çözmek için 2 hakkın mevcut.
+                </li>
+                <li>Sorular arasında geçiş yapmak serbesttir ve istediğin soruda quiz'i bitirebilirsin.
+                    Ancak quiz'i bitirdiğinde tüm yanıtlanmamış sorular yanlış olarak değerlendirilecektir.
                 </li>
                 <li>
                   Bu quiz günde 1 defaya mahsustur ve her gün öğlen 12:00'de sıfırlanır.
@@ -1864,6 +1890,18 @@ $(function(){
         }
     })
 
+    var timeoutId;
+
+    function notifHide() {
+        timeoutId = setTimeout(function(){
+            $(".notif").removeClass("notif-show").find("div").remove()
+        }, 3000)
+    }
+
+    function stopNotif() {
+        $(document).find(".notif-timer").remove()
+        clearTimeout(timeoutId)
+    }
 
 })
 </script>

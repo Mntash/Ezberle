@@ -768,16 +768,6 @@ $(function(){
 
     $(".del").click(function() {
         var wordId = $(this).parent().attr('data-id')
-        $(".li" + wordId).remove()
-        if ($(this).hasClass("del-unl")) {
-            count_unl -= 1
-            $(".count-unl").html(count_unl)
-        }
-        else if ($(this).hasClass("del-l")) {
-            count_l -= 1
-            $(".count-l").html(count_l)
-        }
-
         $.ajax({
             type:"GET",
             url: "{% url 'del-word' %}",
@@ -787,7 +777,16 @@ $(function(){
             },
             dataType: 'json',
             success: function(data) {
-                    stopNotif()
+                $(".li" + wordId).remove()
+                if ($(this).hasClass("del-unl")) {
+                    count_unl -= 1
+                    $(".count-unl").html(count_unl)
+                }
+                else if ($(this).hasClass("del-l")) {
+                    count_l -= 1
+                    $(".count-l").html(count_l)
+                }
+                stopNotif()
                 $(".notif").addClass("notif-show").append(`<div class="notif-timer"></div>`).find("span").html("Kelime silindi!")
                 notifHide()
             }
@@ -798,7 +797,18 @@ $(function(){
             $(this).next()[0].play()
     })
 
+    var timeoutId;
 
+    function notifHide() {
+        timeoutId = setTimeout(function(){
+            $(".notif").removeClass("notif-show").find("div").remove()
+        }, 3000)
+    }
+
+    function stopNotif() {
+        $(document).find(".notif-timer").remove()
+        clearTimeout(timeoutId)
+    }
 
 
 

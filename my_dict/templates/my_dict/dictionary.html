@@ -506,6 +506,18 @@ $(function(){
         }
     })
 
+    var timeoutId;
+
+    function notifHide() {
+        timeoutId = setTimeout(function(){
+            $(".notif").removeClass("notif-show").find("div").remove()
+        }, 3000)
+    }
+
+    function stopNotif() {
+        $(document).find(".notif-timer").remove()
+        clearTimeout(timeoutId)
+    }
 })
 </script>
 

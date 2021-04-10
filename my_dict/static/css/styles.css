@@ -101,6 +101,10 @@ tbody {
     width:100%
 }
 
+input:focus::-webkit-input-placeholder {
+    opacity: 0
+}
+
 tr {
     width:100%
 }
@@ -1276,6 +1280,7 @@ header {
     -webkit-transition:all .8s, background 0s, border 0s;
     -o-transition:all .8s, background 0s, border 0s;
     transition:all .8s, background 0s, border 0s;
+    z-index:9999
 }
 
 .reminder-modal {

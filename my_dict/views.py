@@ -21,13 +21,13 @@ def home(request):
     word_mer = WotdEn.objects.get(website="Merriam")
     word_ox = WotdEn.objects.get(website="Oxford")
     word_dict = WotdEn.objects.get(website="Dictionary")
-    word_wiki = WotdEn.objects.get(website="Wiktionary")
+    word_vocab = WotdEn.objects.get(website="Vocabulary")
 
     data = {
         'word_mer': word_mer,
         'word_ox': word_ox,
         'word_dict': word_dict,
-        'word_wiki': word_wiki,
+        'word_vocab': word_vocab,
     }
 
     if request.user.is_authenticated:
@@ -60,8 +60,8 @@ def home(request):
             data['ox_exists'] = True
         if WordEn.objects.filter(user=request.user, english=word_dict.english).exists():
             data['dict_exists'] = True
-        if WordEn.objects.filter(user=request.user, english=word_wiki.english).exists():
-            data['wiki_exists'] = True
+        if WordEn.objects.filter(user=request.user, english=word_vocab.english).exists():
+            data['vocab_exists'] = True
 
         if Profile.objects.get(user_id=request.user.id).is_quiz_db_finished:
             data['is_quiz_db_finished'] = True
