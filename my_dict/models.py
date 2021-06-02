@@ -172,7 +172,7 @@ class ShopProducts(models.Model):
 
 
 class ProductTracker(models.Model):
-    uuid = models.UUIDField(default=uuid.uuid4, unique=True)
+    uuid = models.UUIDField(default=uuid.uuid4, primary_key=True)
     profile = models.ForeignKey(Profile, on_delete=models.CASCADE)
     text = models.TextField(default="")
     type = models.CharField(max_length=30, default="")
