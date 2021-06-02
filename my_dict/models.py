@@ -160,7 +160,7 @@ class ShopProducts(models.Model):
         ("bg-img", 'Arka plan resim'),
         ("rights", 'Haklar')
     ]
-    uuid = models.UUIDField(default=uuid.uuid4, unique=True)
+    uuid = models.UUIDField(default=uuid.uuid4, primary_key=True)
     text = models.TextField()
     price = models.IntegerField(default=0)
     type = models.CharField(max_length=15, choices=product_types, default='Renk')
