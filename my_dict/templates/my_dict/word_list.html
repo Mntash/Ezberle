@@ -45,9 +45,8 @@
                                 <i title="Görüldü" class="material-icons tick-seen cadet">done_all</i>
                                 {% endif %}
                                 <i title="Ezberledim" class="material-icons tick-learn memorize">check_box</i>
-                                <button data-toggle="collapse" data-target=".tr{{word.id}}" class="eye">
-                                    <i title="Türkçelerini göster" class="material-icons">remove_red_eye</i>
-                                </button>
+                                <i data-toggle="collapse" data-target=".tr{{word.id}}" title="Türkçelerini göster"
+                                   class="material-icons eye">remove_red_eye</i>
                                 {% if not word.is_starred %}
                                 <i title="Favorilere ekle" class="material-icons star">star_border</i>
                                 {% else %}
@@ -172,7 +171,8 @@
                                 {% endif %}
                                 <i title="Unuttum" class="material-icons tick-unlearn memorize">undo</i>
                                 {% if word.turkish %}
-                                <button data-toggle="collapse" data-target=".tr{{word.id}}" class="eye"><i title="Türkçelerini göster" class="material-icons">remove_red_eye</i></button>
+                                <i data-toggle="collapse" data-target=".tr{{word.id}}" title="Türkçelerini göster"
+                                   class="material-icons eye">remove_red_eye</i>
                                 {% endif %}
                                 {% if not word.is_starred %}
                                 <i title="Favorilere ekle" class="material-icons star">star_border</i>
@@ -341,25 +341,11 @@
   </div>
 </div>
 
-{% if show_reminder_notif %}
-<div class="reminder">
-    <img src="{% static 'img/reminder-1.svg' %}" alt="Hatırlatıcı">
-</div>
-{% else %}
-<div class="reminder">
-    <img src="{% static 'img/reminder.svg' %}" alt="Hatırlatıcı">
-</div>
-{% endif %}
-
-<div class="notif">
-    <span></span>
-</div>
-
 </div>
 <script>
 
 $(function(){
-    scroll = $(".scroll2top")
+    scroll = $(".scroll_top")
     window.onscroll = function() {scrollFunction()}
     function scrollFunction() {
       if (document.body.scrollTop > 100 || document.documentElement.scrollTop > 100) {
@@ -426,6 +412,14 @@ $(function(){
                                 $("#add-title-unl").before($("#err-mng"))
                                 $(".err-mng").removeClass("d-none")
                             }
+                            $.ajax({
+                                type:"GET",
+                                url: "{% url 'prg-tracker' %}",
+                                data:{
+                                   "ach_no": [2, 8],
+                                   "up_or_down": 1,
+                                }
+                            })
                         }
                    })
                 } else {
@@ -465,6 +459,14 @@ $(function(){
                                 $("#add-title-l").before($("#err-mng"))
                                 $(".err-mng").removeClass("d-none")
                             }
+                            $.ajax({
+                                type:"GET",
+                                url: "{% url 'prg-tracker' %}",
+                                data:{
+                                   "ach_no": [1, 5],
+                                   "up_or_down": 1,
+                                }
+                            })
                         }
                     })
                 } else {
@@ -635,7 +637,6 @@ $(function(){
     $(".tick-seen").click(function() {
         var ths = $(this)
         var wordId = ths.parent().attr('data-id')
-
         if (ths.hasClass("cadet")) {
             $.ajax({
                 type:"GET",
@@ -696,6 +697,14 @@ $(function(){
                         ths.toggleClass("tick-learn tick-unlearn")
                         ths.siblings().last().children().first().toggleClass("del-unl del-l")
                     }
+                    $.ajax({
+                        type:"GET",
+                        url: "{% url 'prg-tracker' %}",
+                        data:{
+                           "ach_no": [1, 5],
+                           "up_or_down": 1,
+                        }
+                    })
                 }
             })
             count_unl -= 1
@@ -720,6 +729,14 @@ $(function(){
                         ths.toggleClass("tick-unlearn tick-learn")
                         ths.parent().siblings().last().children().first().toggleClass("del-l del-unl")
                     }
+                    $.ajax({
+                        type:"GET",
+                        url: "{% url 'prg-tracker' %}",
+                        data:{
+                           "ach_no": [1, 5],
+                           "up_or_down": 0,
+                        }
+                    })
                 }
             })
             count_unl += 1

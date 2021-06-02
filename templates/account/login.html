@@ -38,14 +38,17 @@
     <label for="id_email" class=" requiredField">E-posta*:</label>
     <div class="w-100"><input class="login-input" type="email" name="login" placeholder="E-posta Adresi..." id="id_email" required></div>
     <label for="id_password" class="requiredField">Şifre*:</label>
-    <div class="w-100"><input class="login-input" type="password" name="password" placeholder="Kullanıcı Şifresi..." id="id_password" required></div>
-    <label class="custom-cb" for="remember">Beni Hatırla:
-        <input id="remember" type="checkbox">
+    <div class="w-100">
+        <input class="login-input" type="password" name="password" placeholder="Kullanıcı Şifresi..." id="id_password" required>
+    </div>
+    <i class="fas fa-eye show-psw"></i>
+    <label class="custom-cb" for="id_remember">Beni Hatırla:
+        <input id="id_remember" name="remember" type="checkbox">
         <span class="checkbox"></span>
     </label>
     {% if redirect_field_value %}
       <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}" />
-      {% endif %}
+    {% endif %}
     <button type="submit" class="btn-before my-3 login-btn">Giriş Yap</button>
     <a href="/accounts/password/reset">Şifremi Unuttum</a>
 </form>
@@ -55,4 +58,21 @@
     {% include "socialaccount/snippets/provider_list.html" with process="login" %}
   </ul>
 </div>
+
+<script>
+$(function(){
+    $(".show-psw").click(function(){
+        var ths = $(this)
+        var psw = $(this).before().find("input")
+        if (ths.hasClass("fa-eye")) {
+            ths.toggleClass("fa-eye fa-eye-slash")
+            $("[name='password']").get(0).type = "text"
+        } else {
+            ths.toggleClass("fa-eye-slash fa-eye")
+            $("[name='password']").get(0).type = "password"
+        }
+    })
+})
+</script>
+
 {% endblock %}

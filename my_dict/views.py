@@ -12,6 +12,7 @@ from django.contrib.auth.decorators import login_required
 import datetime
 from django.core.paginator import Paginator
 import json
+from .forms import FeedbackForm
 
 tureng_url = 'https://tureng.com/tr/turkce-ingilizce/{}'
 saurus_url = 'https://www.thesaurus.com/browse/{}'
@@ -63,12 +64,12 @@ def home(request):
         if WordEn.objects.filter(user=request.user, english=word_vocab.english).exists():
             data['vocab_exists'] = True
 
-        if Profile.objects.get(user_id=request.user.id).is_quiz_db_finished:
-            data['is_quiz_db_finished'] = True
-        if Profile.objects.get(user_id=request.user.id).is_quiz_unlearned_finished:
-            data['is_quiz_unl_finished'] = True
-        if Profile.objects.get(user_id=request.user.id).is_quiz_learned_finished:
-            data['is_quiz_l_finished'] = True
+        if Profile.objects.get(user_id=request.user.id).quiz_db_rights:
+            data['quiz_db_rights'] = True
+        if Profile.objects.get(user_id=request.user.id).quiz_unl_rights:
+            data['quiz_unl_rights'] = True
+        if Profile.objects.get(user_id=request.user.id).quiz_l_rights:
+            data['quiz_l_rights'] = True
 
         data['open_reminder_daily'] = Profile.objects.get(user_id=request.user.id).open_reminder_daily
     return render(request, 'my_dict/home.html', context=data)
@@ -112,9 +113,7 @@ def quiz_and_refresh(request):
                 random_ = random.sample(unlearned_words, k=number)
                 random_unlearned = random_
                 for word in random_:
-                    obj = WordEn.objects.get(user=request.user, english=word)
-                    tr = [word["turkish"] for word in obj.turkish.all().values()]
-                    tr_list.append(tr)
+                    tr_list.append(search_word(word, 1))
         elif request.GET.get('random-learned'):
             if request.GET.get('random-learned') == "refresh":
                 if len(learned_words) < 10:
@@ -128,9 +127,7 @@ def quiz_and_refresh(request):
                 random_ = random.sample(learned_words, k=number)
                 random_learned = random_
                 for word in random_:
-                    obj = WordEn.objects.get(user=request.user, english=word)
-                    tr = [word["turkish"] for word in obj.turkish.all().values()]
-                    tr_list.append(tr)
+                    tr_list.append(search_word(word, 1))
 
     data = {
         'random_db': random_db,
@@ -434,10 +431,11 @@ def dictionary_search(request, word):
                                     for row in data_2_rows:
                                         if not row.attrs:
                                             tds = row.find_all('td')
-                                            category = tds[1].text.strip()
-                                            turkish = tds[2].text.strip()
-                                            english = " ".join(tds[3].text.split()[:-1])
-                                            data_2.append([category, turkish, english])
+                                            if '(' not in tds[1].text or tds[2].text:
+                                                category = tds[1].text.strip()
+                                                turkish = tds[2].text.strip()
+                                                english = " ".join(tds[3].text.split()[:-1])
+                                                data_2.append([category, turkish, english])
                 else:
                     is_english = False
                     for row in rows:
@@ -454,11 +452,12 @@ def dictionary_search(request, word):
                                 for row in data_2_rows:
                                     if not row.attrs:
                                         tds = row.find_all('td')
-                                        category = tds[1].text.strip()
-                                        turkish = tds[2].text.strip()
-                                        english = " ".join(tds[3].text.split()[:-1])
-                                        data_2.append([category, turkish, english])
-            else:  # is_turkish
+                                        if '(' not in tds[1].text or tds[2].text:
+                                            category = tds[1].text.strip()
+                                            turkish = tds[2].text.strip()
+                                            english = " ".join(tds[3].text.split()[:-1])
+                                            data_2.append([category, turkish, english])
+            else:
                 is_english = False
                 for row in rows:
                     if not row.attrs:
@@ -722,15 +721,15 @@ def complete_quiz(request):
     if request.method == "POST":
         if request.POST.get('quiz-db'):
             obj = Profile.objects.get(user_id=request.user.id)
-            obj.is_quiz_db_finished = True
+            obj.quiz_db_rights -= 1
             obj.save()
         elif request.POST.get('quiz-unl'):
             obj = Profile.objects.get(user_id=request.user.id)
-            obj.is_quiz_unlearned_finished = True
+            obj.quiz_unl_rights -= 1
             obj.save()
         if request.POST.get('quiz-l'):
             obj = Profile.objects.get(user_id=request.user.id)
-            obj.is_quiz_learned_finished = True
+            obj.quiz_l_rights -= 1
             obj.save()
 
     return HttpResponse('')
@@ -837,16 +836,22 @@ def save_quiz(request):
     return HttpResponse("")
 
 
-def get_word_count(request):
+def get_word_count_and_quiz_rights(request):
     if request.method == "GET":
+        prof = Profile.objects.get(user=request.user)
         if request.GET.get('count_unl'):
-            obj_unl = WordEn.objects.filter(user=request.user, is_learned=False)
-            count_unl = len(obj_unl)
-            return JsonResponse(data={'count_unl': count_unl})
-        if request.GET.get('count_l'):
-            obj_l = WordEn.objects.filter(user=request.user, is_learned=True)
-            count_l = len(obj_l)
-            return JsonResponse(data={'count_l': count_l})
+            obj = WordEn.objects.filter(user=request.user, is_learned=False)
+            quiz_rights = prof.quiz_unl_rights
+            count = len(obj)
+            return JsonResponse(data={'count_unl': count, 'quiz_rights': quiz_rights})
+        elif request.GET.get('count_l'):
+            obj = WordEn.objects.filter(user=request.user, is_learned=True)
+            quiz_rights = prof.quiz_l_rights
+            count = len(obj)
+            return JsonResponse(data={'count_l': count, 'quiz_rights': quiz_rights})
+        elif request.GET.get('count_db'):
+            quiz_rights = prof.quiz_db_rights
+            return JsonResponse(data={'quiz_rights': quiz_rights})
 
 
 def search_word(word, opt):
@@ -900,7 +905,13 @@ def search_word(word, opt):
 
 
 def main_home(request):
-    return render(request, 'my_dict/mainhome.html', context={})
+    form = FeedbackForm(request.POST or None)
+    if form.is_valid():
+        form.save()
+    context = {
+        'form': form
+    }
+    return render(request, 'my_dict/mainhome.html', context)
 
 
 def ajax_word_info(request):
@@ -933,7 +944,10 @@ def ajax_word_info(request):
             else:
                 data['syllables'] = "—"
             if json.loads(response.text).get('pronunciation'):
-                data['pronunciation'] = json.loads(response.text)['pronunciation']['all']
+                try:
+                    data['pronunciation'] = json.loads(response.text)['pronunciation']['all']
+                except TypeError:
+                    data['pronunciation'] = json.loads(response.text)['pronunciation']
             else:
                 data['pronunciation'] = "—"
             if json.loads(response.text).get('results'):
@@ -978,6 +992,307 @@ def ajax_word_info(request):
     return HttpResponse("")
 
 
-def cron(request):
+def get_achievs(request):
+    data = {}
     if request.method == "GET":
-        return JsonResponse(data={'ok': 'ok'})
+        if request.user.is_authenticated:
+            achievements = AchievementDetail.objects.all().order_by("achiev_no")
+            shop_products = ShopProducts.objects.all().order_by("type")
+            prof = Profile.objects.get(user=request.user)
+            achievement_tracker = AchievementTracker.objects.filter(profile=prof.id).order_by('achiev_no')
+            ach_tracker_list = []
+            ach_list = []
+            pdt_list = []
+            for i in range(16):
+                prg_current = achievement_tracker[i].progress_current
+                prg_star = achievement_tracker[i].progress_star
+                if achievements[i].is_daily:
+                    ach_list.append({
+                        "ach_text": achievements[i].text,
+                        "ach_coin": achievements[i].coin_value,
+                        "ach_prg_max": achievements[i].progress_max,
+                        "ach_daily": True,
+                    })
+                    if achievement_tracker[i].progress_star == 1:
+                        ach_tracker_list.append({
+                            "prg_current": achievements[i].progress_max,
+                            "prg_percentage": 100,
+                            "prg_star": prg_star
+                        })
+                    else:
+                        ach_tracker_list.append({
+                            "prg_current": prg_current,
+                            "prg_percentage": round(percentage_calc(prg_current, achievements[i].progress_max), 1),
+                            "prg_star": prg_star
+                        })
+                else:
+                    if i == 4 or i == 7 or i == 10 or i == 13:
+                        if achievement_tracker[i].progress_star == 0:
+                            ach_list.append({
+                                "ach_text": achievements[i].text,
+                                "ach_coin": achievements[i].coin_value,
+                                "ach_prg_max": achievements[i].progress_max,
+                                "ach_daily": False,
+                            })
+                            ach_tracker_list.append({
+                                "prg_current": achievement_tracker[i].progress_current,
+                                "prg_percentage": round(percentage_calc(achievement_tracker[i].progress_current, achievements[i].progress_max), 1),
+                                "prg_star": achievement_tracker[i].progress_star
+                            })
+                        elif achievement_tracker[i].progress_star == 1:
+                            ach_list.append({
+                                "ach_text": achievements[i+1].text,
+                                "ach_coin": achievements[i+1].coin_value,
+                                "ach_prg_max": achievements[i+1].progress_max,
+                                "ach_daily": False,
+                            })
+                            ach_tracker_list.append({
+                                "prg_current": achievement_tracker[i+1].progress_current,
+                                "prg_percentage": round(percentage_calc(achievement_tracker[i+1].progress_current, achievements[i+1].progress_max), 1),
+                                "prg_star": achievement_tracker[i].progress_star
+                            })
+                        elif achievement_tracker[i].progress_star >= 2:
+                            ach_list.append({
+                                "ach_text": achievements[i+2].text,
+                                "ach_coin": achievements[i+2].coin_value,
+                                "ach_prg_max": achievements[i+2].progress_max,
+                                "ach_daily": False,
+                            })
+                            if achievement_tracker[i].progress_star == 2:
+                                ach_tracker_list.append({
+                                    "prg_current": achievement_tracker[i+2].progress_current,
+                                    "prg_percentage": round(percentage_calc(achievement_tracker[i+2].progress_current, achievements[i+2].progress_max), 1),
+                                    "prg_star": achievement_tracker[i].progress_star
+                                })
+                            else:
+                                ach_tracker_list.append({
+                                    "prg_current": achievement_tracker[i+2].progress_current,
+                                    "prg_percentage": 100,
+                                    "prg_star": achievement_tracker[i].progress_star
+                                })
+            for pdt in shop_products:
+                pdt_list.append({
+                    "pdt_text": pdt.text,
+                    "pdt_price": pdt.price,
+                    "pdt_type": pdt.type,
+                    "pdt_color": pdt.color,
+                    "pdt_bg_img": json.dumps(str(pdt.background_image)),
+                    "pdt_id": pdt.id,
+                    "is_purchased": ProductTracker.objects.filter(profile=prof.id, text=pdt.text).exists()
+                })
+            data["pdt_list"] = pdt_list
+            data["ach_list"] = ach_list
+            data["ach_tracker_list"] = ach_tracker_list
+            data["acc_coin"] = prof.coin
+
+    return JsonResponse(data)
+
+
+def prg_tracker(request):
+    if request.method == "GET":
+        ach_no_list = request.GET.getlist("ach_no[]")
+        prof = Profile.objects.get(user=request.user)
+        if "up_or_down" in request.GET:
+            up_or_down = int(request.GET.get("up_or_down"))
+            for ach_no in ach_no_list:
+                if int(ach_no) <= 4:
+                    obj = AchievementTracker.objects.get(profile=prof.id, achiev_no=int(ach_no))
+                    if up_or_down:
+                        obj.progress_current += 1
+                        obj.save()
+                    else:
+                        if obj.progress_current > 0:
+                            obj.progress_current -= 1
+                            obj.save()
+                else:
+                    obj = AchievementTracker.objects.get(profile=prof.id, achiev_no=int(ach_no))
+                    if obj.progress_star == 0:
+                        if up_or_down:
+                            obj.progress_current += 1
+                            obj.save()
+                        else:
+                            if obj.progress_current > 0:
+                                obj.progress_current -= 1
+                                obj.save()
+                    elif obj.progress_star == 1:
+                        obj = AchievementTracker.objects.get(profile=prof.id, achiev_no=int(ach_no)+1)
+                        if obj.progress_star == 0:
+                            if up_or_down:
+                                obj.progress_current += 1
+                                obj.save()
+                            else:
+                                if obj.progress_current > 0:
+                                    obj.progress_current -= 1
+                                    obj.save()
+                    elif obj.progress_star == 2:
+                        obj = AchievementTracker.objects.get(profile=prof.id, achiev_no=int(ach_no)+2)
+                        if obj.progress_star == 0:
+                            if up_or_down:
+                                obj.progress_current += 1
+                                obj.save()
+                            else:
+                                if obj.progress_current > 0:
+                                    obj.progress_current -= 1
+                                    obj.save()
+        elif "prg_star" in request.GET:
+            for ach_no in ach_no_list:
+                obj = AchievementTracker.objects.get(profile=prof.id, achiev_no=int(ach_no))
+                ach = AchievementDetail.objects.get(achiev_no=int(ach_no))
+                ach_next = AchievementDetail.objects.get(achiev_no=int(ach_no)+1)
+                prof.coin += ach.coin_value
+                prof.save()
+                obj.progress_star += 1
+                obj.save()
+                return JsonResponse(
+                    data={
+                        'prg_max': ach_next.progress_max,
+                        'ach_text': ach_next.text,
+                        'next_coin_value': ach_next.coin_value,
+                        'coin_value': ach.coin_value,
+                        'cur_balance': prof.coin
+                    })
+
+    return HttpResponse("")
+
+
+def percentage_calc(n1, n2):
+    return 100 / n2 * n1
+
+
+def shop_purchase(request):
+    if request.method == "POST":
+        pdt_id = request.POST.get("pdt_id")
+        pdt = ShopProducts.objects.get(id=pdt_id)
+        prof = Profile.objects.get(user=request.user)
+        if prof.coin - int(pdt.price) >= 0:
+            if not ProductTracker.objects.filter(profile=prof, text=pdt.text).exists():
+                if pdt.type == "bg-img":
+                    image = str(pdt.background_image).split("my_dict/")[1]
+                    obj = ProductTracker.objects.create(
+                        profile=prof, text=pdt.text, type=pdt.type, color=pdt.color, background_image=image
+                    )
+                    obj.save()
+                elif pdt.type == "rights":
+                    image = ""
+                    obj = ProductTracker.objects.create(
+                        profile=prof, text=pdt.text, type=pdt.type, color=pdt.color, background_image=image
+                    )
+                    obj.save()
+                    if pdt.text == "Biliyor muydun?":
+                        prof.quiz_db_rights += 1
+                    elif pdt.text == "Öğreneceklerim":
+                        prof.quiz_unl_rights += 1
+                    elif pdt.text == "Öğrendiklerim":
+                        prof.quiz_l_rights += 1
+                elif pdt.type == "clr":
+                    image = ""
+                    obj = ProductTracker.objects.create(
+                        profile=prof, text=pdt.text, type=pdt.type, color=pdt.color, background_image=image
+                    )
+                    obj.save()
+                prof.coin = prof.coin - int(pdt.price)
+                prof.save()
+                return JsonResponse(data={
+                    "is_purchased": True,
+                    "pdt_price": int(pdt.price),
+                    "cur_balance": prof.coin
+                })
+            else:
+                return JsonResponse(data={})
+        else:
+            return JsonResponse(data={
+                "gap": int(pdt.price) - prof.coin,
+                "is_purchased": False
+            })
+
+
+def get_customization(request):
+    if request.method == "GET":
+        prof = Profile.objects.get(user=request.user)
+        product_tracker = ProductTracker.objects.filter(profile=prof.id)
+        owned_colors = []
+        owned_bg_imgs = []
+        data = {}
+        for pdt in product_tracker:
+            if pdt.type == "clr":
+                owned_colors.append({
+                    "owned_pdt_text": pdt.text,
+                    "pdt_id": pdt.id
+                })
+            elif pdt.type == "bg-img":
+                owned_bg_imgs.append({
+                    "owned_pdt_text": pdt.text,
+                    "pdt_id": pdt.id
+                })
+        data["owned_colors"] = owned_colors
+        data["owned_bg_imgs"] = owned_bg_imgs
+        return JsonResponse(data=data)
+
+
+def customization(request):
+    if request.method == "POST":
+        prof = Profile.objects.get(user=request.user)
+        if request.POST.get("custom_navbar_color"):
+            pdt_id = request.POST.get("pdt_id")
+            pdt = ProductTracker.objects.get(id=pdt_id)
+            prof.custom_navbar_color = pdt.color
+            prof.save()
+            data = {
+                "pdt_color": pdt.color
+            }
+            return JsonResponse(data=data)
+        elif request.POST.get("custom_background_color"):
+            pdt_id = request.POST.get("pdt_id")
+            pdt = ProductTracker.objects.get(id=pdt_id)
+            prof.custom_background_color = pdt.color
+            prof.custom_background_image = ""
+            prof.save()
+            data = {
+                "pdt_color": pdt.color
+            }
+            return JsonResponse(data=data)
+        elif request.POST.get("custom_background_image"):
+            pdt_id = request.POST.get("pdt_id")
+            pdt = ProductTracker.objects.get(id=pdt_id)
+            prof.custom_background_image = f"url(http://127.0.0.1:8000/static/img/{str(pdt.background_image).split('img/')[1]})"
+            prof.custom_background_color = ""
+            prof.save()
+            data = {
+                "pdt_image": json.dumps(str(pdt.background_image)).split("img/")[1].rstrip('\n"')
+            }
+            return JsonResponse(data=data)
+        elif request.POST.get("custom_bg_navbar"):
+            prof.custom_background_image = ""
+            prof.custom_background_color = "#008080"
+            prof.custom_navbar_color = "#008080"
+            prof.save()
+            return JsonResponse(data={})
+
+
+def cron_job(request):
+    if request.method == "GET":
+        return HttpResponse("")
+
+
+def shop_preview(request):
+    if request.method == "GET":
+        pdt_id = request.GET.get("pdt_id")
+        pdt = ShopProducts.objects.get(id=pdt_id)
+        data = {}
+        if pdt.color:
+            data["pdt_color"] = pdt.color
+        elif pdt.background_image:
+            pdt_bg_img = json.dumps(str(pdt.background_image)).split("img/")[1].rstrip('\n"')
+            data["pdt_bg_img"] = pdt_bg_img
+
+        return JsonResponse(data=data)
+
+
+def save_feedback(request):
+    if request.method == 'POST':
+        name = request.POST.get("name")
+        lastname = request.POST.get("lastname")
+        feedback = request.POST.get("feedback")
+        obj = Feedback(isim=name, soyisim=lastname, mesaj=feedback)
+        obj.save()
+        return JsonResponse(data={})

@@ -12,61 +12,65 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css" integrity="sha512-+4zCK9k+qNFUR5X+cKL9EIR+ZOhtIloNl9GIKS57V1MyNsYpYcUrUeQc9vNfzsWfV28IaLL3i96P9sdNyeRssA==" crossorigin="anonymous" />
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
   </head>
-  <body>
-    {% block body %}
+{% if user.profile.custom_background %}
+<body style="background: {{user.profile.custom_background}} !important">
+{% else %}
+<body style="background: teal !important">
+{% endif %}
+{% block body %}
 <header class="fixed-top">
   <div class="icon-bar">
-      <a href="{% url 'home' %}">
+      <a href="/" style="background: {{user.profile.custom_navbar_color}}">
           <div class="brand-logo">
             <span>Ez</span>
-            <span class="span-ber">ber</span>
+            <span class="ber" style="color: {{user.profile.custom_navbar_color}}">ber</span>
             <span>le</span>
           </div>
       </a>
-      <div id="menu">
-          <input type="checkbox" id="hi">
+      <input type="checkbox" id="hi">
+      <div id="menu" style="background: {{user.profile.custom_navbar_color}}">
           <label class="menu" for="hi">
               <div class="bar"></div>
               <div class="bar"></div>
               <div class="bar"></div>
           </label>
       </div>
-    {% if request.path == '/' %}
-      <a class="aktif" href="{% url 'home' %}"><i class="fa fa-home"></i><span class="brand d-none">Ana Sayfa</span></a>
+      {% if '/anasayfa' in request.path %}
+        <a class="aktif" href="{% url 'home' %}" style="background: {{user.profile.custom_navbar_color}}"><i class="fa fa-home"></i><span class="brand">Ana Sayfa</span></a>
+      {% else %}
+        <a href="{% url 'home' %}" style="background: {{user.profile.custom_navbar_color}}"><i class="fa fa-home"></i><span class="brand">Ana Sayfa</span></a>
+      {% endif %}
+      {% if '/sözlük' in request.path %}
+        <a class="aktif" href="{% url 'dictionary' %}" style="background: {{user.profile.custom_navbar_color}}"><i class="fa fa-search"></i><span class="brand">Sözlük</span></a>
+      {% else %}
+        <a href="{% url 'dictionary' %}" style="background: {{user.profile.custom_navbar_color}}"><i class="fa fa-search"></i><span class="brand">Sözlük</span></a>
+      {% endif %}
+      {% if '/kelime_listesi' in request.path %}
+        <a class="aktif" href="{% url 'word-list' %}" style="background: {{user.profile.custom_navbar_color}}"><i class="fas fa-clipboard-list"></i><span class="brand">Liste</span></a>
+      {% else %}
+        <a href="{% url 'word-list' %}" style="background: {{user.profile.custom_navbar_color}}"><i class="fas fa-clipboard-list"></i><span class="brand">Liste</span></a>
+      {% endif %}
+    {% if user.is_authenticated %}
+      {% if '/accounts/logout' in request.path %}
+        <a class="aktif" href="{% url 'account_logout' %}" style="background: {{user.profile.custom_navbar_color}}"><i class="fas fa-sign-out-alt"></i><span class="brand">Çıkış Yap</span></a>
+      {% else %}
+        <a href="{% url 'account_logout' %}" style="background: {{user.profile.custom_navbar_color}}"><i class="fas fa-sign-out-alt"></i><span class="brand">Çıkış Yap</span></a>
+      {% endif %}
     {% else %}
-      <a href="{% url 'home' %}"><i class="fa fa-home"></i><span class="brand d-none">Ana Sayfa</span></a>
+      {% if '/accounts/login' in request.path %}
+        <a class="aktif" href="{% url 'account_login' %}" style="background: {{user.profile.custom_navbar_color}}"><i class="fas fa-sign-in-alt"></i><span class="brand">Giriş Yap</span></a>
+      {% elif '/accounts/password' in request.path %}
+        <a class="aktif" href="{% url 'account_login' %}" style="background: {{user.profile.custom_navbar_color}}"><i class="fas fa-sign-in-alt"></i><span class="brand">Giriş Yap</span></a>
+      {% elif '/accounts/signup/' in request.path %}
+        <a class="aktif" href="{% url 'account_login' %}" style="background: {{user.profile.custom_navbar_color}}"><i class="fas fa-sign-in-alt"></i><span class="brand">Giriş Yap</span></a>
+      {% else %}
+        <a href="{% url 'account_login' %}" style="background: {{user.profile.custom_navbar_color}}"><i class="fas fa-sign-in-alt"></i><span class="brand">Giriş Yap</span></a>
+      {% endif %}
     {% endif %}
-    {% if 'sözlük' in request.path %}
-      <a class="aktif" href="{% url 'dictionary' %}"><i class="fa fa-search"></i><span class="brand d-none">Sözlük</span></a>
-    {% else %}
-      <a href="{% url 'dictionary' %}"><i class="fa fa-search"></i><span class="brand d-none">Sözlük</span></a>
-    {% endif %}
-    {% if 'kelime_listesi' in request.path %}
-      <a class="aktif" href="{% url 'word-list' %}"><i class="fas fa-clipboard-list"></i><span class="brand d-none">Liste</span></a>
-    {% else %}
-      <a href="{% url 'word-list' %}"><i class="fas fa-clipboard-list"></i><span class="brand d-none">Liste</span></a>
-    {% endif %}
-  {% if user.is_authenticated %}
-    {% if 'accounts/logout' in request.path %}
-      <a class="aktif" href="{% url 'account_logout' %}"><i class="fas fa-sign-out-alt"></i><span class="brand d-none">Çıkış Yap</span></a>
-    {% else %}
-      <a href="{% url 'account_logout' %}"><i class="fas fa-sign-out-alt"></i><span class="brand d-none">Çıkış Yap</span></a>
-    {% endif %}
-  {% else %}
-    {% if 'accounts/login' in request.path %}
-      <a class="aktif" href="{% url 'account_login' %}"><i class="fas fa-sign-in-alt"></i><span class="brand d-none">Giriş Yap</span></a>
-    {% elif 'accounts/password' in request.path %}
-      <a class="aktif" href="{% url 'account_login' %}"><i class="fas fa-sign-in-alt"></i><span class="brand d-none">Giriş Yap</span></a>
-    {% elif 'accounts/signup/' in request.path %}
-      <a class="aktif" href="{% url 'account_login' %}"><i class="fas fa-sign-in-alt"></i><span class="brand d-none">Giriş Yap</span></a>
-    {% else %}
-      <a href="{% url 'account_login' %}"><i class="fas fa-sign-in-alt"></i><span class="brand d-none">Giriş Yap</span></a>
-    {% endif %}
-  {% endif %}
   </div>
 </header>
 
-<button onclick="topFunction()" class="scroll2top" title="Yukarı çık"><i class="fas fa-arrow-circle-up"></i></button>
+<button class="scroll_top" title="Yukarı çık"><i class="fas fa-arrow-circle-up"></i></button>
 <div class="container container-media">
 <div class="auth-form col-sm-8 col-md-6 text-center">
 {% block content %}
@@ -77,7 +81,7 @@
 </div>
   </div>
 <script>
-    scroll = $(".scroll2top")
+    scroll = $(".scroll_top")
     window.onscroll = function() {scrollFunction()}
     function scrollFunction() {
       if (document.body.scrollTop > 100 || document.documentElement.scrollTop > 100) {
@@ -90,46 +94,6 @@
     function topFunction() {
       document.body.scrollTop = 0
       document.documentElement.scrollTop = 0
-    }
-
-    $(".menu").click(function() {
-        $(".icon-bar").children().slice(2,6).toggleClass("d-none")
-        if ( ($(".brand").hasClass("d-none")) ) {
-            $(".brand").removeClass("d-none")
-        }
-        if ( $(".brand").css("display", "none") ) {
-            $(".brand").css("display", "")
-        }
-    })
-
-    function mediaHeader(x) {
-      if (x.matches) {
-        $(".icon-bar").children().slice(0,2).css("width", "50%")
-        $(".icon-bar").children().slice(2,6).css("width", "100%")
-        $("#menu").removeClass("d-none")
-        $(".icon-bar").children().slice(2,6).addClass("d-none")
-      } else {
-        if ( !($(".brand").hasClass("d-none")) ) {
-            $(".brand").addClass("d-none")
-        }
-        $(".icon-bar").children().css("width", "20%")
-        $("#menu").addClass("d-none")
-        $(".icon-bar").children().slice(2,6).removeClass("d-none")
-        $('#hi').prop('checked', false);
-      }
-    }
-
-    $(".icon-bar a").hover(function() {
-        if ( $(".brand").hasClass("d-none") ) {
-            $(this).children(".brand").fadeToggle().toggleClass("d-none")
-        } else if ( $(this).children(".brand").css("display", "none") ) {
-            $(this).children(".brand").css("display", "")
-        }
-    })
-
-    var header = window.matchMedia("(max-width:576px)")
-    mediaHeader(header)
-    header.addListener(mediaHeader)
 
 </script>
   </body>

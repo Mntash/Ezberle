@@ -4,15 +4,20 @@ from model_utils import FieldTracker
 from django.utils import timezone
 from django.db.models.signals import post_save
 from django.dispatch import receiver
+import uuid
 
 
 class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
-    is_quiz_db_finished = models.BooleanField(default=False)
-    is_quiz_unlearned_finished = models.BooleanField(default=False)
-    is_quiz_learned_finished = models.BooleanField(default=False)
+    quiz_db_rights = models.PositiveIntegerField(default=1)
+    quiz_unl_rights = models.PositiveIntegerField(default=1)
+    quiz_l_rights = models.PositiveIntegerField(default=1)
     open_reminder_daily = models.BooleanField(default=False)
     reminder_count = models.IntegerField(default=0)
+    coin = models.IntegerField(default=0)
+    custom_navbar_color = models.CharField(max_length=100, null=True, blank=True, default="teal")
+    custom_background_color = models.CharField(max_length=100, null=True, blank=True, default="teal")
+    custom_background_image = models.CharField(max_length=100, null=True, blank=True)
 
     def __str__(self):
         return self.user.username
@@ -68,6 +73,9 @@ class Search(models.Model):
     def __str__(self):
         return self.search
 
+    class Meta:
+        verbose_name_plural = "Aramalar"
+
 
 class WotdEn(models.Model):
     english = models.CharField(max_length=100, null=True)
@@ -102,3 +110,83 @@ class WordDb(models.Model):
     def __str__(self):
         return self.english
 
+
+class Achievements(models.Model):
+    text = models.TextField(max_length=250)
+
+    def __str__(self):
+        return self.text
+
+    class Meta:
+        verbose_name_plural = "Başarılar"
+
+
+class AchievementDetail(models.Model):
+    ach_original = models.ForeignKey(Achievements, on_delete=models.CASCADE, related_name="details")
+    text = models.TextField(max_length=250)
+    coin_value = models.IntegerField(default=0)
+    is_daily = models.BooleanField(default=False)
+    achiev_no = models.IntegerField(default=0)
+    progress_max = models.IntegerField(default=0)
+
+    def __str__(self):
+        return self.text
+
+
+class AchievementTracker(models.Model):
+    profile = models.ForeignKey(Profile, on_delete=models.CASCADE, null=True)
+    achiev_no = models.IntegerField(default=0)
+    progress_current = models.PositiveIntegerField(default=0)
+    progress_star = models.IntegerField(default=0)
+
+    def __str__(self):
+        return f"{self.profile} - {self.achiev_no}"
+
+
+def create_achievement_tracker(sender, **kwargs):
+    profile = kwargs["instance"]
+    if kwargs["created"]:
+        for x in range(1, 14):
+            obj = AchievementTracker(profile=profile, achiev_no=x)
+            obj.save()
+
+
+post_save.connect(create_achievement_tracker, sender=Profile)
+
+
+class ShopProducts(models.Model):
+    product_types = [
+        ("clr", 'Renk'),
+        ("bg-img", 'Arka plan resim'),
+        ("rights", 'Haklar')
+    ]
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4)
+    text = models.TextField()
+    price = models.IntegerField(default=0)
+    type = models.CharField(max_length=15, choices=product_types, default='Renk')
+    color = models.CharField(max_length=30, null=True, blank=True)
+    background_image = models.ImageField(null=True, blank=True, upload_to='my_dict/static/img')
+
+    def __str__(self):
+        return self.text
+
+
+class ProductTracker(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4)
+    profile = models.ForeignKey(Profile, on_delete=models.CASCADE)
+    text = models.TextField(default="")
+    type = models.CharField(max_length=30, default="")
+    color = models.CharField(max_length=30, null=True, blank=True)
+    background_image = models.CharField(max_length=100, null=True, blank=True)
+
+    def __str__(self):
+        return f"{self.profile} --- {self.text}"
+
+
+class Feedback(models.Model):
+    isim = models.CharField(max_length=25)
+    soyisim = models.CharField(max_length=25)
+    mesaj = models.TextField(max_length=2500)
+
+    def __str__(self):
+        return f"{self.isim} {self.soyisim} --- {self.mesaj}"

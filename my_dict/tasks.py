@@ -1,5 +1,5 @@
 from django.utils import timezone
-from .models import WotdEn, Profile, WordDb
+from .models import WotdEn, Profile, ProductTracker
 from bs4 import BeautifulSoup
 import requests
 import lxml
@@ -9,10 +9,24 @@ import cchardet
 def reset_quiz():
     profiles = Profile.objects.all()
     for p in profiles:
-        p.is_quiz_db_finished = False
-        p.is_quiz_unlearned_finished = False
-        p.is_quiz_learned_finished = False
-        p.save()
+        if ProductTracker.objects.filter(profile=p.id, text="Biliyor muydun?"):
+            p.quiz_db_rights = 2
+            p.save()
+        else:
+            p.quiz_db_rights = 1
+            p.save()
+        if ProductTracker.objects.filter(profile=p.id, text="Öğreneceklerim"):
+            p.quiz_unl_rights = 2
+            p.save()
+        else:
+            p.quiz_unl_rights = 1
+            p.save()
+        if ProductTracker.objects.filter(profile=p.id, text="Öğrendiklerim"):
+            p.quiz_l_rights = 2
+            p.save()
+        else:
+            p.quiz_l_rights = 1
+            p.save()
 
 
 def word_of_the_day():

@@ -6,6 +6,9 @@
     <link rel="icon" href="{% static 'favicon.ico' %}">
     <title>{% block title %}{% endblock %}</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Audiowide&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <link rel="preconnect" href="https://fonts.gstatic.com">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css" integrity="sha512-+4zCK9k+qNFUR5X+cKL9EIR+ZOhtIloNl9GIKS57V1MyNsYpYcUrUeQc9vNfzsWfV28IaLL3i96P9sdNyeRssA==" crossorigin="anonymous" />
@@ -18,60 +21,86 @@
     <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
 </head>
-<body>
+{% if user.profile.custom_background_color %}
+    <body style="background-color: {{user.profile.custom_background_color}} !important">
+{% elif user.profile.custom_background_image %}
+    <body style="background-image: {{user.profile.custom_background_image}} !important">
+{% endif %}
 <header class="fixed-top">
   <div class="icon-bar">
-      <a href="/">
+      <a href="/" style="background: {{user.profile.custom_navbar_color}}">
           <div class="brand-logo">
             <span>Ez</span>
-            <span class="span-ber">ber</span>
+            <span class="ber" style="color: {{user.profile.custom_navbar_color}}">ber</span>
             <span>le</span>
           </div>
       </a>
-      <div id="menu">
-          <input type="checkbox" id="hi">
+      <input type="checkbox" id="hi">
+      <div id="menu" style="background: {{user.profile.custom_navbar_color}}">
           <label class="menu" for="hi">
               <div class="bar"></div>
               <div class="bar"></div>
               <div class="bar"></div>
           </label>
       </div>
-    {% if '/anasayfa' in request.path %}
-      <a class="aktif" href="{% url 'home' %}"><i class="fa fa-home"></i><span class="brand d-none">Ana Sayfa</span></a>
+      {% if '/anasayfa' in request.path %}
+        <a class="aktif" href="{% url 'home' %}" style="background: {{user.profile.custom_navbar_color}}"><i class="fa fa-home"></i><span class="brand">Ana Sayfa</span></a>
+      {% else %}
+        <a href="{% url 'home' %}" style="background: {{user.profile.custom_navbar_color}}"><i class="fa fa-home"></i><span class="brand">Ana Sayfa</span></a>
+      {% endif %}
+      {% if '/sözlük' in request.path %}
+        <a class="aktif" href="{% url 'dictionary' %}" style="background: {{user.profile.custom_navbar_color}}"><i class="fa fa-search"></i><span class="brand">Sözlük</span></a>
+      {% else %}
+        <a href="{% url 'dictionary' %}" style="background: {{user.profile.custom_navbar_color}}"><i class="fa fa-search"></i><span class="brand">Sözlük</span></a>
+      {% endif %}
+      {% if '/kelime_listesi' in request.path %}
+        <a class="aktif" href="{% url 'word-list' %}" style="background: {{user.profile.custom_navbar_color}}"><i class="fas fa-clipboard-list"></i><span class="brand">Liste</span></a>
+      {% else %}
+        <a href="{% url 'word-list' %}" style="background: {{user.profile.custom_navbar_color}}"><i class="fas fa-clipboard-list"></i><span class="brand">Liste</span></a>
+      {% endif %}
+    {% if user.is_authenticated %}
+      {% if '/accounts/logout' in request.path %}
+        <a class="aktif" href="{% url 'account_logout' %}" style="background: {{user.profile.custom_navbar_color}}"><i class="fas fa-sign-out-alt"></i><span class="brand">Çıkış Yap</span></a>
+      {% else %}
+        <a href="{% url 'account_logout' %}" style="background: {{user.profile.custom_navbar_color}}"><i class="fas fa-sign-out-alt"></i><span class="brand">Çıkış Yap</span></a>
+      {% endif %}
     {% else %}
-      <a href="{% url 'home' %}"><i class="fa fa-home"></i><span class="brand d-none">Ana Sayfa</span></a>
+      {% if '/accounts/login' in request.path %}
+        <a class="aktif" href="{% url 'account_login' %}" style="background: {{user.profile.custom_navbar_color}}"><i class="fas fa-sign-in-alt"></i><span class="brand">Giriş Yap</span></a>
+      {% elif '/accounts/password' in request.path %}
+        <a class="aktif" href="{% url 'account_login' %}" style="background: {{user.profile.custom_navbar_color}}"><i class="fas fa-sign-in-alt"></i><span class="brand">Giriş Yap</span></a>
+      {% elif '/accounts/signup/' in request.path %}
+        <a class="aktif" href="{% url 'account_login' %}" style="background: {{user.profile.custom_navbar_color}}"><i class="fas fa-sign-in-alt"></i><span class="brand">Giriş Yap</span></a>
+      {% else %}
+        <a href="{% url 'account_login' %}" style="background: {{user.profile.custom_navbar_color}}"><i class="fas fa-sign-in-alt"></i><span class="brand">Giriş Yap</span></a>
+      {% endif %}
     {% endif %}
-    {% if '/sözlük' in request.path %}
-      <a class="aktif" href="{% url 'dictionary' %}"><i class="fa fa-search"></i><span class="brand d-none">Sözlük</span></a>
-    {% else %}
-      <a href="{% url 'dictionary' %}"><i class="fa fa-search"></i><span class="brand d-none">Sözlük</span></a>
-    {% endif %}
-    {% if '/kelime_listesi' in request.path %}
-      <a class="aktif" href="{% url 'word-list' %}"><i class="fas fa-clipboard-list"></i><span class="brand d-none">Liste</span></a>
-    {% else %}
-      <a href="{% url 'word-list' %}"><i class="fas fa-clipboard-list"></i><span class="brand d-none">Liste</span></a>
-    {% endif %}
-  {% if user.is_authenticated %}
-    {% if '/accounts/logout' in request.path %}
-      <a class="aktif" href="{% url 'account_logout' %}"><i class="fas fa-sign-out-alt"></i><span class="brand d-none">Çıkış Yap</span></a>
-    {% else %}
-      <a href="{% url 'account_logout' %}"><i class="fas fa-sign-out-alt"></i><span class="brand d-none">Çıkış Yap</span></a>
-    {% endif %}
-  {% else %}
-    {% if '/accounts/login' in request.path %}
-      <a class="aktif" href="{% url 'account_login' %}"><i class="fas fa-sign-in-alt"></i><span class="brand d-none">Giriş Yap</span></a>
-    {% elif '/accounts/password' in request.path %}
-      <a class="aktif" href="{% url 'account_login' %}"><i class="fas fa-sign-in-alt"></i><span class="brand d-none">Giriş Yap</span></a>
-    {% elif '/accounts/signup/' in request.path %}
-      <a class="aktif" href="{% url 'account_login' %}"><i class="fas fa-sign-in-alt"></i><span class="brand d-none">Giriş Yap</span></a>
-    {% else %}
-      <a href="{% url 'account_login' %}"><i class="fas fa-sign-in-alt"></i><span class="brand d-none">Giriş Yap</span></a>
-    {% endif %}
-  {% endif %}
   </div>
 </header>
 
-<button class="scroll2top" title="Yukarı çık"><i class="fas fa-arrow-circle-up"></i></button>
+<div class="customization">
+    <img src="{% static 'img/customization.png' %}" alt="Kişiselleştirme">
+</div>
+
+<div class="achievs">
+    <img src="{% static 'img/award.png' %}" alt="Başarılar">
+</div>
+
+{% if show_reminder_notif %}
+<div class="reminder">
+    <img src="{% static 'img/reminder-1.svg' %}" alt="Hatırlatıcı">
+</div>
+{% else %}
+<div class="reminder">
+    <img src="{% static 'img/reminder.svg' %}" alt="Hatırlatıcı">
+</div>
+{% endif %}
+
+<div class="notif">
+    <span></span>
+</div>
+
+<button class="scroll_top" title="Yukarı çık"><i class="fas fa-arrow-circle-up"></i></button>
 
 {% block content %}
 {% endblock %}
@@ -120,6 +149,848 @@ $(function(){
         }
     })
 
+    function closeCustomization() {
+        if ($('.customization').hasClass("customization-modal")) {
+            $(document).click(function(e) {
+                if ( $(e.target).closest('.customization').length === 0 && !($(e.target).hasClass("fixed-top")) ) {
+                    $(".times-customization").click()
+                }
+            })
+        }
+    }
+
+    $(document).click(function(){
+        closeCustomization()
+    })
+
+    $(".customization").click(function(){
+        if (is_authenticated == "True") {
+            var ths = $(this)
+            if ( !(ths.hasClass("customization-modal")) ) {
+                owned_colors = []
+                owned_bg_imgs = []
+                $.ajax({
+                    type:"GET",
+                    url: "{% url 'get-customization' %}",
+                    data: {
+                        'get-customization': "get-customization",
+                    },
+                    async:false,
+                    dataType: 'json',
+                    success: function(data) {
+                        data_owned_colors = data.owned_colors
+                        data_owned_bg_imgs = data.owned_bg_imgs
+                        data_owned_colors.map(function(obj, i){
+                            owned_colors.push({
+                                "pdt_text": obj.owned_pdt_text,
+                                "pdt_id": obj.pdt_id
+                            })
+                        })
+                        data_owned_bg_imgs.map(function(obj, i){
+                            owned_bg_imgs.push({
+                                "pdt_text": obj.owned_pdt_text,
+                                "pdt_id": obj.pdt_id
+                            })
+                        })
+                    }
+                })
+                ths.addClass("customization-modal py-4 px-sm-4 px-2").find("img").remove()
+                setTimeout(function(){
+                    ths.append(`
+                        <div class="title-customization">
+                            <span>Kişiselleştirme</span>
+                            <img src="{% static 'img/customization.png' %}" alt="Kişiselleştirme">
+                        </div>
+                        <div class="modal-body modal-body-customization">
+                        <div role="tabpanel">
+                            <ul class="nav nav-tabs">
+                                <li>
+                                    <a class="nav-link active" data-toggle="tab" href=".customization-tab">
+                                        <img src="{% static 'img/customization.png' %}" alt="Kişiselleştirme">
+                                    </a>
+                                </li>
+                            </ul>
+                            <div class="tab-content">
+                                <div class="customization-tab tab-pane active m-2">
+                                    <div class="d-flex justify-content-end">
+                                      <div>
+                                        <button class="return_to_def custom_def">Varsayılan ayarlara dön</button>
+                                      </div>
+                                    </div>
+                                    <div class="customizationAccordion">
+                                      <div>Renkler</div>
+                                      <div class="accordionArrows">&#11167;</div>
+                                    </div>
+                                    <ul class="color-list"></ul>
+                                    <div class="customizationAccordion">
+                                      <div>Arka planlar</div>
+                                      <div class="accordionArrows">&#11167;</div>
+                                    </div>
+                                    <ul class="bg-img-list"></ul>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="times times-customization"><span>&times;</span></div>
+                    `)
+                    owned_colors.map(function(obj, i){
+                        $("ul.color-list").append(`
+                            <li>
+                                <div>${obj.pdt_text}</div>
+                                <div class="d-flex" style="margin-left:10px" data-id="${obj.pdt_id}">
+                                    <button class="customBtnApply custom_btn_navbar">menü</button>
+                                    <button class="customBtnApply custom_btn_bg_clr">arka plan</button>
+                                </div>
+                            </li>
+                        `)
+                    })
+                    owned_bg_imgs.map(function(obj, i){
+                        $("ul.bg-img-list").append(`
+                            <li>
+                                <div>${obj.pdt_text}</div>
+                                <div class="d-flex" style="margin-left:10px" data-id="${obj.pdt_id}">
+                                    <button class="customBtnApply custom_btn_bg_img">uygula</button>
+                                </div>
+                            </li>
+                        `)
+                    })
+                }, 700)
+            }
+        } else {
+            $("#loginModal").modal()
+        }
+    })
+
+    $(document).on("click", ".accordionArrows", function(){
+        var ths = $(this)
+        if (ths.parent().hasClass("active")) {
+            ths.html("&#11167;")
+            ths.parent().next().toggle("slide", { direction: "up" })
+            ths.parent().removeClass("active")
+        } else {
+            ths.html("&#11165;")
+            ths.parent().next().toggle("slide", { direction: "up" })
+            ths.parent().addClass("active")
+        }
+    })
+
+    function closeAchievs() {
+        if ($('.achievs').hasClass("achievs-modal")) {
+            $(document).click(function(e) {
+                if ( $(e.target).closest('.achievs').length === 0 && !($(e.target).hasClass("fixed-top")) ) {
+                    $(".times-achievs").click()
+                }
+            })
+        }
+    }
+
+    $(document).click(function(){
+        closeAchievs()
+    })
+
+    $(".achievs").click(function(){
+        if (is_authenticated == "True") {
+            var ths = $(this)
+            if ( !(ths.hasClass("achievs-modal")) ) {
+                ach_list = []
+                ach_tracker_list = []
+                pdt_list = []
+                acc_coin = 0
+                $.ajax({
+                    type:"GET",
+                    url: "{% url 'get-achievs' %}",
+                    async:false,
+                    data: {
+                        'get-achievs': "get-achievs",
+                    },
+                    dataType: 'json',
+                    success: function(data) {
+                        acc_coin = data.acc_coin
+                        data.ach_list.map(function(i){
+                            ach_list.push({
+                                "ach_text": i.ach_text,
+                                "ach_coin": i.ach_coin,
+                                "ach_daily": i.ach_daily,
+                                "ach_prg_max": i.ach_prg_max
+                            })
+                        })
+                        data.ach_tracker_list.map(function(i){
+                            ach_tracker_list.push({
+                                "prg_current": i.prg_current,
+                                "prg_percentage": i.prg_percentage,
+                                "prg_star": i.prg_star
+                            })
+                        })
+                        data.pdt_list.map(function(i){
+                            pdt_list.push({
+                                "pdt_text": i.pdt_text,
+                                "pdt_price": i.pdt_price,
+                                "pdt_type": i.pdt_type,
+                                "pdt_color": i.pdt_color,
+                                "pdt_bg_img": i.pdt_bg_img,
+                                "pdt_id": i.pdt_id,
+                                "is_purchased": i.is_purchased
+                            })
+                        })
+                    }
+                })
+                ths.addClass("achievs-modal py-4 px-sm-4 px-2").find("img").remove()
+                setTimeout(function(){
+                    ths.append(`
+                                <div class="title-achievs">
+                                    <span>Başarılar</span>
+                                    <img src="{% static 'img/award.png' %}" alt="Başarılar">
+                                </div>
+                                <div class="modal-body modal-body-achievs">
+                                <div role="tabpanel">
+                                    <ul class="nav nav-tabs">
+                                        <li>
+                                            <a class="nav-link active" data-toggle="tab" href=".achievs-tab">
+                                                <i class="fas fa-trophy"></i>
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a class="nav-link" data-toggle="tab" href=".shop-tab">
+                                                <i class="fas fa-shopping-cart"></i>
+                                            </a>
+                                        </li>
+                                    </ul>
+                                    <div class="tab-content">
+                                        <input style="position:absolute;left:-20px" id="achievs-tp-cb" type="checkbox">
+                                        <div class="achievs-tab tab-pane active">
+                                        <div class="achievs-daily text-center achievs-da-show">
+                                            <span>GÜNLÜK BAŞARILAR</span>
+                                            <div class="achievements-table">
+                                                <div>
+                                                  <div class="goal-sect">
+                                                    <div><div class="goal-text"></div></div>
+                                                    <div>
+                                                      İlerleme
+                                                      <div class="progress-bar-custom" data-prg-id="1">
+                                                        <div>
+                                                          <span class="prg_cur"></span>/<span class="prg_max"></span>
+                                                        </div>
+                                                      </div>
+                                                    </div>
+                                                  </div>
+                                                  <div class="stars">
+                                                    <div>
+                                                      <img src="{% static '/img/coin.png' %}" width="21px" height="21px" alt="Ezber Coin">
+                                                      <span class="coin_value"></span>
+                                                    </div>
+                                                    <div>
+                                                      <div class="star-wrapper" data-ach-no="1">
+                                                        <img src="{% static 'img/star.png' %}" width="30px" height="30px" alt="Yıldız">
+                                                      </div>
+                                                    </div>
+                                                  </div>
+                                                </div>
+                                                <div>
+                                                  <div class="goal-sect">
+                                                    <div><div class="goal-text"></div></div>
+                                                    <div>
+                                                      İlerleme
+                                                      <div class="progress-bar-custom" data-prg-id="2">
+                                                        <div>
+                                                          <span class="prg_cur"></span>/<span class="prg_max"></span>
+                                                        </div>
+                                                      </div>
+                                                    </div>
+                                                  </div>
+                                                  <div class="stars">
+                                                    <div>
+                                                      <img src="{% static '/img/coin.png' %}" width="21px" height="21px" alt="Ezber Coin">
+                                                      <span class="coin_value"></span>
+                                                    </div>
+                                                    <div>
+                                                      <div class="star-wrapper" data-ach-no="2">
+                                                        <img src="{% static 'img/star.png' %}" width="30px" height="30px" alt="Yıldız">
+                                                      </div>
+                                                    </div>
+                                                  </div>
+                                                </div>
+                                                <div>
+                                                  <div class="goal-sect">
+                                                    <div><div class="goal-text"></div></div>
+                                                    <div>
+                                                      İlerleme
+                                                      <div class="progress-bar-custom" data-prg-id="3">
+                                                        <div>
+                                                          <span class="prg_cur"></span>/<span class="prg_max"></span>
+                                                        </div>
+                                                      </div>
+                                                    </div>
+                                                  </div>
+                                                  <div class="stars">
+                                                    <div>
+                                                      <img src="{% static '/img/coin.png' %}" width="21px" height="21px" alt="Ezber Coin">
+                                                      <span class="coin_value"></span>
+                                                    </div>
+                                                    <div>
+                                                      <div class="star-wrapper" data-ach-no="3">
+                                                        <img src="{% static 'img/star.png' %}" width="30px" height="30px" alt="Yıldız">
+                                                      </div>
+                                                    </div>
+                                                  </div>
+                                                </div>
+                                                <div>
+                                                  <div class="goal-sect">
+                                                    <div><div class="goal-text"></div></div>
+                                                    <div>
+                                                      İlerleme
+                                                      <div class="progress-bar-custom" data-prg-id="4">
+                                                        <div>
+                                                          <span class="prg_cur"></span>/<span class="prg_max"></span>
+                                                        </div>
+                                                      </div>
+                                                    </div>
+                                                  </div>
+                                                  <div class="stars">
+                                                    <div>
+                                                      <img src="{% static '/img/coin.png' %}" width="21px" height="21px" alt="Ezber Coin">
+                                                      <span class="coin_value"></span>
+                                                    </div>
+                                                    <div>
+                                                      <div class="star-wrapper" data-ach-no="4">
+                                                        <img src="{% static 'img/star.png' %}" width="30px" height="30px" alt="Yıldız">
+                                                      </div>
+                                                    </div>
+                                                  </div>
+                                                </div>
+                                            </div>
+                                            <div class="achievs-tp">
+                                                <label for="achievs-tp-cb">
+                                                  <div><span style="cursor:pointer">Genel Başarılar</span></div>
+                                                  <i class="fas fa-long-arrow-alt-right"></i>
+                                                </label>
+                                            </div>
+                                        </div>
+                                        <div class="achievs-general achievs-ga-dis translate-right">
+                                            <span>GENEL BAŞARILAR</span>
+                                            <div class="achievements-table">
+                                                <div>
+                                                  <div class="goal-sect">
+                                                    <div><div class="goal-text"></div></div>
+                                                    <div>
+                                                      İlerleme
+                                                      <div class="progress-bar-custom" data-prg-id="5">
+                                                        <div>
+                                                          <span class="prg_cur"></span>/<span class="prg_max"></span>
+                                                        </div>
+                                                      </div>
+                                                    </div>
+                                                  </div>
+                                                  <div class="stars">
+                                                    <div>
+                                                      <img src="{% static '/img/coin.png' %}" width="21px" height="21px" alt="Ezber Coin">
+                                                      <span class="coin_value"></span>
+                                                    </div>
+                                                    <div>
+                                                      <div class="star-wrapper" data-ach-no="5">
+                                                        <img src="{% static 'img/star.png' %}" width="30px" height="30px" alt="Yıldız">
+                                                      </div>
+                                                      <div class="star-wrapper" data-ach-no="5">
+                                                        <img src="{% static 'img/star.png' %}" width="30px" height="30px" alt="Yıldız">
+                                                      </div>
+                                                      <div class="star-wrapper" data-ach-no="5">
+                                                        <img src="{% static 'img/star.png' %}" width="30px" height="30px" alt="Yıldız">
+                                                      </div>
+                                                    </div>
+                                                  </div>
+                                                </div>
+                                                <div>
+                                                  <div class="goal-sect">
+                                                    <div><div class="goal-text"></div></div>
+                                                    <div>
+                                                      İlerleme
+                                                      <div class="progress-bar-custom" data-prg-id="6">
+                                                        <div>
+                                                          <span class="prg_cur"></span>/<span class="prg_max"></span>
+                                                        </div>
+                                                      </div>
+                                                    </div>
+                                                  </div>
+                                                  <div class="stars">
+                                                    <div>
+                                                      <img src="{% static '/img/coin.png' %}" width="21px" height="21px" alt="Ezber Coin">
+                                                      <span class="coin_value"></span>
+                                                    </div>
+                                                    <div>
+                                                      <div class="star-wrapper" data-ach-no="8">
+                                                        <img src="{% static 'img/star.png' %}" width="30px" height="30px" alt="Yıldız">
+                                                      </div>
+                                                      <div class="star-wrapper" data-ach-no="8">
+                                                        <img src="{% static 'img/star.png' %}" width="30px" height="30px" alt="Yıldız">
+                                                      </div>
+                                                      <div class="star-wrapper" data-ach-no="8">
+                                                        <img src="{% static 'img/star.png' %}" width="30px" height="30px" alt="Yıldız">
+                                                      </div>
+                                                    </div>
+                                                  </div>
+                                                </div>
+                                                <div>
+                                                  <div class="goal-sect">
+                                                    <div><div class="goal-text"></div></div>
+                                                    <div>
+                                                      İlerleme
+                                                      <div class="progress-bar-custom" data-prg-id="7">
+                                                        <div>
+                                                          <span class="prg_cur"></span>/<span class="prg_max"></span>
+                                                        </div>
+                                                      </div>
+                                                    </div>
+                                                  </div>
+                                                  <div class="stars">
+                                                    <div>
+                                                      <img src="{% static '/img/coin.png' %}" width="21px" height="21px" alt="Ezber Coin">
+                                                      <span class="coin_value"></span>
+                                                    </div>
+                                                    <div>
+                                                      <div class="star-wrapper" data-ach-no="11">
+                                                        <img src="{% static 'img/star.png' %}" width="30px" height="30px" alt="Yıldız">
+                                                        <div></div>
+                                                      </div>
+                                                      <div class="star-wrapper" data-ach-no="11">
+                                                        <img src="{% static 'img/star.png' %}" width="30px" height="30px" alt="Yıldız">
+                                                      </div>
+                                                      <div class="star-wrapper" data-ach-no="11">
+                                                        <img src="{% static 'img/star.png' %}" width="30px" height="30px" alt="Yıldız">
+                                                      </div>
+                                                    </div>
+                                                  </div>
+                                                </div>
+                                                <div>
+                                                  <div class="goal-sect">
+                                                    <div><div class="goal-text"></div></div>
+                                                    <div>
+                                                      İlerleme
+                                                      <div class="progress-bar-custom" data-prg-id="8">
+                                                        <div>
+                                                          <span class="prg_cur"></span>/<span class="prg_max"></span>
+                                                        </div>
+                                                      </div>
+                                                    </div>
+                                                  </div>
+                                                  <div class="stars">
+                                                    <div>
+                                                      <img src="{% static '/img/coin.png' %}" width="21px" height="21px" alt="Ezber Coin">
+                                                      <span class="coin_value"></span>
+                                                    </div>
+                                                    <div>
+                                                      <div class="star-wrapper" data-ach-no="14">
+                                                        <img src="{% static 'img/star.png' %}" width="30px" height="30px" alt="Yıldız">
+                                                      </div>
+                                                      <div class="star-wrapper" data-ach-no="14">
+                                                        <img src="{% static 'img/star.png' %}" width="30px" height="30px" alt="Yıldız">
+                                                      </div>
+                                                      <div class="star-wrapper" data-ach-no="14">
+                                                        <img src="{% static 'img/star.png' %}" width="30px" height="30px" alt="Yıldız">
+                                                      </div>
+                                                    </div>
+                                                  </div>
+                                                </div>
+                                            </div>
+                                            <div class="achievs-tp">
+                                                <label for="achievs-tp-cb">
+                                                  <div><span style="cursor:pointer">Günlük Başarılar</span></div>
+                                                  <i class="fas fa-long-arrow-alt-left"></i>
+                                                </label>
+                                            </div>
+                                        </div>
+                                        </div>
+                                        <div class="shop-tab tab-pane text-center">
+                                            <div class="shop-panel row"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="balance-wrapper">
+                                  <div class="balance">
+                                    <img src="/static/img/coin.png" width="21px" height="21px" alt="Ezber Coin">
+                                    <span></span>
+                                  </div>
+                                </div>
+                                <div class="rem-tt">
+                                    <i class="fas fa-question-circle"></i>
+                                    <div class="tooltip-content">
+                                        <div><i class="fas fa-trophy"></i>Günlük ve Genel Başarılar</div>
+                                        <div>
+                                          <i class="fas fa-shopping-cart"></i>
+                                            Ezber coin'leri harcayarak özellik açabileceğin mağaza
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="times times-achievs"><span>&times;</span></div>
+                                </div>`)
+                    prg_max_list = []
+                    ach_list.map(function(obj, i){
+                        $(".goal-text").eq(i).html(obj.ach_text)
+                        $(".stars span").eq(i).html(obj.ach_coin)
+                        $(".progress-bar-custom").eq(i).find("span").eq(1).html(obj.ach_prg_max)
+                        prg_max_list.push(obj.ach_prg_max)
+                    })
+                    $(".balance span").html(acc_coin)
+                    $(".achievs-daily").after(`<style></style>`)
+                    ach_tracker_list.map(function(obj, i){
+                      $("style").append(`[data-prg-id="${i+1}"]::before {
+                                             width: ${obj.prg_percentage}%
+                                        }`)
+                      $(".progress-bar-custom").eq(i).find("span").eq(0).html(obj.prg_current)
+                      if (i < 4) {
+                        if (obj.prg_star === 0) {
+                          $("img[alt='Yıldız']").eq(i).addClass("gscale-on")
+                          if (obj.prg_current >= prg_max_list[i]) {
+                            $("img[alt='Yıldız']").eq(i).parent().addClass("collect")
+                          }
+                        }
+                      } else if (i === 4) {
+                        if (obj.prg_star === 0) {
+                          $("img[alt='Yıldız']").eq(i).addClass("gscale-on")
+                          $("img[alt='Yıldız']").eq(i+1).addClass("gscale-on")
+                          $("img[alt='Yıldız']").eq(i+2).addClass("gscale-on")
+                          if (obj.prg_current >= prg_max_list[i]) {
+                            $("img[alt='Yıldız']").eq(i).parent().addClass("collect")
+                          }
+                        } else if (obj.prg_star === 1) {
+                          $("img[alt='Yıldız']").eq(i+1).addClass("gscale-on")
+                          $("img[alt='Yıldız']").eq(i+2).addClass("gscale-on")
+                          if (obj.prg_current >= prg_max_list[i]) {
+                            $("img[alt='Yıldız']").eq(i+1).parent().addClass("collect")
+                          }
+                        } else if (obj.prg_star === 2) {
+                          $("img[alt='Yıldız']").eq(i+2).addClass("gscale-on")
+                          if (obj.prg_current >= prg_max_list[i]) {
+                            $("img[alt='Yıldız']").eq(i+2).parent().addClass("collect")
+                          }
+                        }
+                      } else if (i === 5) {
+                        if (obj.prg_star === 0) {
+                          $("img[alt='Yıldız']").eq(i+2).addClass("gscale-on")
+                          $("img[alt='Yıldız']").eq(i+3).addClass("gscale-on")
+                          $("img[alt='Yıldız']").eq(i+4).addClass("gscale-on")
+                          if (obj.prg_current >= prg_max_list[i]) {
+                            $("img[alt='Yıldız']").eq(i+2).parent().addClass("collect")
+                          }
+                        } else if (obj.prg_star === 1) {
+                          $("img[alt='Yıldız']").eq(i+3).addClass("gscale-on")
+                          $("img[alt='Yıldız']").eq(i+4).addClass("gscale-on")
+                          if (obj.prg_current >= prg_max_list[i]) {
+                            $("img[alt='Yıldız']").eq(i+3).parent().addClass("collect")
+                          }
+                        } else if (obj.prg_star === 2) {
+                          $("img[alt='Yıldız']").eq(i+4).addClass("gscale-on")
+                          if (obj.prg_current >= prg_max_list[i]) {
+                            $("img[alt='Yıldız']").eq(i+4).parent().addClass("collect")
+                          }
+                        }
+                      } else if (i === 6) {
+                        if (obj.prg_star === 0) {
+                          $("img[alt='Yıldız']").eq(i+4).addClass("gscale-on")
+                          $("img[alt='Yıldız']").eq(i+5).addClass("gscale-on")
+                          $("img[alt='Yıldız']").eq(i+6).addClass("gscale-on")
+                          if (obj.prg_current >= prg_max_list[i]) {
+                            $("img[alt='Yıldız']").eq(i+4).parent().addClass("collect")
+                          }
+                        } else if (obj.prg_star === 1) {
+                          $("img[alt='Yıldız']").eq(i+5).addClass("gscale-on")
+                          $("img[alt='Yıldız']").eq(i+6).addClass("gscale-on")
+                          if (obj.prg_current >= prg_max_list[i]) {
+                            $("img[alt='Yıldız']").eq(i+5).parent().addClass("collect")
+                          }
+                        } else if (obj.prg_star === 2) {
+                          $("img[alt='Yıldız']").eq(i+6).addClass("gscale-on")
+                          if (obj.prg_current >= prg_max_list[i]) {
+                            $("img[alt='Yıldız']").eq(i+6).parent().addClass("collect")
+                          }
+                        }
+                      } else if (i === 7) {
+                        if (obj.prg_star === 0) {
+                          $("img[alt='Yıldız']").eq(i+6).addClass("gscale-on")
+                          $("img[alt='Yıldız']").eq(i+7).addClass("gscale-on")
+                          $("img[alt='Yıldız']").eq(i+8).addClass("gscale-on")
+                          if (obj.prg_current >= prg_max_list[i]) {
+                            $("img[alt='Yıldız']").eq(i+6).parent().addClass("collect")
+                          }
+                        } else if (obj.prg_star === 1) {
+                          $("img[alt='Yıldız']").eq(i+7).addClass("gscale-on")
+                          $("img[alt='Yıldız']").eq(i+8).addClass("gscale-on")
+                          if (obj.prg_current >= prg_max_list[i]) {
+                            $("img[alt='Yıldız']").eq(i+7).parent().addClass("collect")
+                          }
+                        } else if (obj.prg_star === 2) {
+                          $("img[alt='Yıldız']").eq(i+8).addClass("gscale-on")
+                          if (obj.prg_current >= prg_max_list[i]) {
+                            $("img[alt='Yıldız']").eq(i+8).parent().addClass("collect")
+                          }
+                        }
+                      }
+                    })
+                    pdt_list.map(function(obj, i){
+                        $(".shop-panel").append(`<div class="shop_pdt col-sm-4 col-12" data-id="${obj.pdt_id}">
+                                                    <div class="pdt-text">${obj.pdt_text}</div>
+                                                    <div class="pdt-price">
+                                                      <img src="/static/img/coin.png" width="21px" height="21px" alt="Ezber Coin">
+                                                      ${obj.pdt_price}
+                                                    </div>
+                                                    <div class="pdt-footer"></div>
+                                                </div>`)
+                        if (obj.pdt_type === "clr") {
+                            $(".shop_pdt").eq(i).addClass("shop_pdt_clr")
+                            $(".pdt-footer").eq(i).prepend(`<button class="pdt-pv">ön izle</button>`)
+                            $(".pdt-text").eq(i).html(`
+                                <span style='color:${obj.pdt_color}'>${obj.pdt_text}</span>
+                                rengini satın al
+                            `)
+                        } else if (obj.pdt_type === "bg-img") {
+                            $(".shop_pdt").eq(i).addClass("shop_pdt_bg")
+                            $(".pdt-footer").eq(i).prepend(`<button class="pdt-pv">ön izle</button>`)
+                            $(".pdt-text").eq(i).html(`
+                                <span style="color:#2e3039">${obj.pdt_text}</span>
+                                arka plan resmini satın al
+                            `)
+                        } else if (obj.pdt_type === "rights") {
+                            $(".shop_pdt").eq(i).addClass("shop_pdt_rights")
+                            $(".pdt-text").eq(i).html(`
+                                <span style="color:#2e3039">${obj.pdt_text}</span>
+                                quiz'ine ekstra 1 hak satın al
+                            `)
+                        }
+                        if (obj.is_purchased) {
+                            $(".pdt-footer").eq(i).append(`<button class="pdt-buy purchased"></button>`)
+                        } else {
+                            $(".pdt-footer").eq(i).append(`<button class="pdt-buy"></button>`)
+                        }
+                    })
+                }, 700)
+            }
+        } else {
+            $("#loginModal").modal()
+        }
+    })
+
+    $(document).on("click", ".return_to_def", function(){
+        if ($(this).hasClass("custom_def")) {
+            $.ajax({
+                type:"POST",
+                url: "{% url 'customization' %}",
+                data:{
+                    "custom_bg_navbar": 1,
+                    'csrfmiddlewaretoken' : '{{csrf_token}}'
+                },
+                success: function(data) {
+                    $(".icon-bar a").css("cssText", "background: #008080")
+                    $("#menu").css("cssText", "background: #008080")
+                    $(".ber").css("cssText", "color: #008080")
+                    $("body").css("cssText", "background-color: #008080")
+                }
+            })
+        }
+    })
+
+    $(document).on("click", ".pdt-buy:not(.purchased)", function(){
+        var pdt_id = $(this).parent().parent().attr("data-id")
+        var ths = $(this)
+        $.ajax({
+            type:"POST",
+            url: "{% url 'shop-purchase' %}",
+            data: {
+                "pdt_id": pdt_id,
+                "csrfmiddlewaretoken" : "{{csrf_token}}"
+            },
+            dataType: 'json',
+            success: function(data){
+                if (data.is_purchased) {
+                    stopNotif()
+                    $(".notif").addClass("notif-show").append(`<div class="notif-timer"></div>`).find("span")
+                    .html("Satın alma başarılı!")
+                    notifHide()
+                    $(`<div class='coin-inc'>-${data.pdt_price}</div>`).appendTo(".balance-wrapper").addClass("coin-inc-anim")
+                    setTimeout(function(){
+                        $(".coin-inc").eq(0).remove()
+                        $(".balance span").html(data.cur_balance)
+                    }, 500)
+                    ths.addClass("purchased")
+                } else {
+                    stopNotif()
+                    $(".notif").addClass("notif-show").append(`<div class="notif-timer"></div>`).find("span")
+                    .html(`Satın alma başarısız. <br> ${data.gap} coin'e daha ihtiyacın var!`)
+                    notifHide()
+                }
+            }
+        })
+    })
+
+    $(document).on("click", ".customBtnApply", function(){
+        var pdt_id = $(this).parent().attr("data-id")
+        if (pdt_id) {
+            if ($(this).hasClass("custom_btn_navbar")) {
+                $.ajax({
+                    type:"POST",
+                    url: "{% url 'customization' %}",
+                    data:{
+                       "pdt_id": pdt_id,
+                       "custom_navbar_color": 1,
+                       'csrfmiddlewaretoken' : '{{csrf_token}}'
+                    },
+                    success: function(data) {
+                        $(".icon-bar a").css("cssText", `background: ${data.pdt_color}`)
+                        $("#menu").css("cssText", `background: ${data.pdt_color}`)
+                        $(".ber").css("cssText", `color: ${data.pdt_color}`)
+                    }
+                })
+            } else if ($(this).hasClass("custom_btn_bg_clr")) {
+                $.ajax({
+                    type:"POST",
+                    url: "{% url 'customization' %}",
+                    data:{
+                       "pdt_id": pdt_id,
+                       "custom_background_color": 1,
+                       'csrfmiddlewaretoken' : '{{csrf_token}}'
+                    },
+                    success: function(data) {
+                        $("body").css("cssText", `background-color: ${data.pdt_color} !important`)
+                    }
+                })
+            } else if ($(this).hasClass("custom_btn_bg_img")) {
+                $.ajax({
+                    type:"POST",
+                    url: "{% url 'customization' %}",
+                    data:{
+                       "pdt_id": pdt_id,
+                       "custom_background_image": 1,
+                       'csrfmiddlewaretoken' : '{{csrf_token}}'
+                    },
+                    success: function(data) {
+                        $("body").css("cssText", `background-image: url(http://127.0.0.1:7000/static/img/${data.pdt_image}) !important`)
+                    }
+                })
+            }
+        }
+    })
+
+    $(document).on("click", ".pdt-pv", function(){
+        var pdt_id = $(this).parent().parent().attr("data-id")
+        $.ajax({
+            type:"GET",
+            url: "{% url 'shop-preview' %}",
+            data: {
+                "pdt_id": pdt_id
+            },
+            dataType: 'json',
+            success: function(data) {
+                if (data.pdt_color) {
+                    $("body").css("cssText", `background: ${data.pdt_color} !important`)
+                    $(".icon-bar a").css("cssText", `background: ${data.pdt_color}`)
+                    $("#menu").css("cssText", `background: ${data.pdt_color}`)
+                    $(".ber").css("cssText", `color: ${data.pdt_color}`)
+                } else if (data.pdt_bg_img) {
+                    $("body").css("cssText", `background-image: url(http://127.0.0.1:7000/static/img/${data.pdt_bg_img}) !important`)
+                }
+            }
+        })
+    })
+
+    $(document).on("click", "img[alt='Yıldız']", function(){
+        var ths = $(this)
+        if (ths.parent().hasClass("collect")) {
+            ach_no = parseInt(ths.parent().attr("data-ach-no"))
+            prg_max = 0
+            $.ajax({
+                type:"GET",
+                url: "{% url 'prg-tracker' %}",
+                data: {
+                    "ach_no": [ach_no],
+                    "prg_star": "",
+                },
+                async: false,
+                dataType: 'json',
+                statusCode: {
+                    200: function (data) {
+                        $(`<div class='coin-inc'>+${data.coin_value}</div>`).appendTo(".balance-wrapper").addClass("coin-inc-anim")
+                        setTimeout(function(){
+                            $(".coin-inc").eq(0).remove()
+                            $(".balance span").html(data.cur_balance)
+                            ths.parent().removeClass("collect")
+                        }, 500)
+                        var cur = ths.parent().parent().parent().prev().find(".prg_cur")
+                        var max = ths.parent().parent().parent().prev().find(".prg_max")
+                        var ach_text = ths.parent().parent().parent().prev().find(".goal-text")
+                        var coin_value = ths.parent().parent().prev().find(".coin_value")
+                        prg_max = data.prg_max
+                        ths.parent().addClass("star-collected star-collected-anim")
+                        if (ach_no > 4 && ths.parent().next().length) {
+                            cur.html("0")
+                            max.html(prg_max)
+                            ach_text.html(data.ach_text)
+                            coin_value.html(data.next_coin_value)
+                            if (ach_no === 5) {
+                             $("style").append(`[data-prg-id="5"]::before {
+                                                width: 0%
+                                              }`)
+                            } else if (ach_no === 8) {
+                             $("style").append(`[data-prg-id="6"]::before {
+                                                width: 0%
+                                              }`)
+                            } else if (ach_no === 11) {
+                             $("style").append(`[data-prg-id="7"]::before {
+                                                width: 0%
+                                              }`)
+                            } else if (ach_no === 14) {
+                             $("style").append(`[data-prg-id="8"]::before {
+                                                width: 0%
+                                              }`)
+                            }
+                        } else {
+                            var max = parseInt(ths.parent().parent().parent().prev().find(".prg_max").text())
+                            cur.html(max)
+                        }
+                        setTimeout(function(){
+                            ths.parent().removeClass("star-collected-anim")
+                        }, 1000)
+                    }
+                }
+            })
+        }
+    })
+
+    $(document).on('change', '#achievs-tp-cb', function(){
+        if(!event.detail || event.detail == 1) {
+            if ( !($("style").text().includes("animation")) ) {
+                $("style").append(`
+                  .achievs-da-show {
+                    animation: achievs-da-show 1.5s 1s both
+                  }
+                  .achievs-da-dis {
+                    animation: achievs-da-dis 1.5s both
+                  }
+                  .achievs-ga-show {
+                    animation: achievs-ga-show 1.5s 1s both
+                  }
+                  .achievs-ga-dis {
+                    animation: achievs-ga-dis 1.5s both
+                  }
+                `)
+            }
+            var daily = $(this).next().find(".achievs-daily")
+            var general = $(this).next().find(".achievs-general")
+            daily.toggleClass("achievs-da-show achievs-da-dis")
+            general.toggleClass("achievs-ga-dis achievs-ga-show")
+            setTimeout(function(){
+                general.removeClass("translate-right")
+            }, 2500)
+        }
+    })
+
+    $(document).on("click", "a[href='.achievs-tab']", function(){
+        $(".title-achievs").find("span").html("Başarılar")
+        .end().find("img").remove()
+        .end().append(`<img src="{% static 'img/award.png' %}" alt="Başarılar">`)
+    })
+
+    $(document).on("click", "a[href='.shop-tab']", function(){
+        $(".title-achievs").find("span").html("Market")
+        .end().find("img").remove()
+        .end().append(`<img src="{% static 'img/shopping-cart.png' %}" alt="Market">`)
+    })
+
     function openReminder() {
         if ( !($(".reminder").hasClass("reminder-modal")) ) {
             $(".reminder").click()
@@ -146,7 +1017,7 @@ $(function(){
         if ($('.reminder').hasClass("reminder-modal")) {
             $(document).click(function(e) {
                 if ( $(e.target).closest('.reminder').length === 0 && !($(e.target).hasClass("fixed-top")) ) {
-                    $(".times").click()
+                    $(".times-rem").click()
                 }
             })
         }
@@ -199,10 +1070,10 @@ $(function(){
                 ths.addClass("reminder-modal py-4 px-sm-4 px-2").find("img").remove()
                 setTimeout(function(){
                     ths.append(`
-                                <span class="title-reminder">
-                                    Hatırlatıcı
+                                <div class="title-reminder">
+                                    <span>Hatırlatıcı</span>
                                     <img src="{% static 'img/reminder.svg' %}" alt="Hatırlatıcı">
-                                </span>
+                                </div>
                                 <div class="modal-body modal-body-reminder">
                                 <div role="tabpanel">
                                     <ul class="nav nav-tabs">
@@ -251,7 +1122,7 @@ $(function(){
                                         <div><i class="material-icons">filter_3</i>En son olduğun "Biliyor muydun?" quizinin sonuçları</div>
                                     </div>
                                 </div>
-                                <div class="times"><span>&times;</span></div>
+                                <div class="times times-rem"><span>&times;</span></div>
                                 </div>`)
                                 if (word_list.length > 0) {
                                     word_list.map(function(i){
@@ -455,16 +1326,31 @@ $(function(){
 
     $(document).on("click", ".times", function(){
         var ths = $(this)
-        ths.parent().parent().find("span").remove()
-        ths.parent().parent().find("div[role]").remove()
-        ths.parent().parent().removeClass("reminder-modal py-4 px-sm-4 px-2")
-        ths.parent().parent().append(`<img src="{% static 'img/reminder.svg' %}" alt="Hatırlatıcı">`)
+        var gParent = ths.parent().parent()
         ths.prev().remove()
-        $(".modal-body-reminder").remove()
-        ths.remove()
+        gParent.find("div[role]").remove()
+        if (ths.hasClass("times-achievs")) {
+            gParent.find(".title-achievs").remove()
+            gParent.removeClass("achievs-modal py-4 px-sm-4 px-2")
+            gParent.append(`<img src="{% static 'img/award.png' %}" alt="Başarılar">`)
+            $(".modal-body-achievs").remove()
+            ths.remove()
+        } else if (ths.hasClass("times-rem")) {
+            gParent.find(".title-reminder").remove()
+            gParent.removeClass("reminder-modal py-4 px-sm-4 px-2")
+            gParent.append(`<img src="{% static 'img/reminder.svg' %}" alt="Hatırlatıcı">`)
+            $(".modal-body-reminder").remove()
+            ths.remove()
+        } else if (ths.hasClass("times-customization")) {
+            gParent.find(".title-customization").remove()
+            gParent.removeClass("customization-modal py-4 px-sm-4 px-2")
+            gParent.append(`<img src="{% static 'img/customization.png' %}" alt="Kişiselleştirme">`)
+            $(".modal-body-customization").remove()
+            ths.remove()
+        }
     })
 
-    $(".scroll2top").click(function(){
+    $(".scroll_top").click(function(){
         topFunction()
     })
 
@@ -487,12 +1373,14 @@ $(function(){
     }
 
     $(document).on("click", "i[title='Dinle']", function(){
-        $("#ajax_audio")[0].play()
+        if ($("#ajax_audio").length > 0) {
+            $("#ajax_audio")[0].play()
+        }
     })
 
     $(document).click(function(e) {
-        if ( $(e.target).closest('.ajaxWordInfo').length === 0 ) {
-            $(".ajaxWordInfo").eq(0).remove()
+        if ( $(e.target).closest('.ajax_word_info').length === 0 ) {
+            $(".ajax_word_info").eq(0).remove()
         }
     })
 
@@ -506,7 +1394,11 @@ $(function(){
             var y;
             if (window.getSelection) {
                 sel = window.getSelection();
-                oRange = sel.getRangeAt(0);
+                var oRange;
+                if (sel) {
+                    oRange = sel.getRangeAt(0);
+                }
+                console.log(oRange, sel.toString())
                 oRect = oRange.getBoundingClientRect();
                 width = Math.round( (Math.round(oRect.width) - 45)  / 2)
                 left = Math.round( (Math.round(oRect.width) - 302)  / 2)
@@ -514,24 +1406,24 @@ $(function(){
                 x = Math.round(oRect.x + window.scrollX) + "px"
                 y = Math.round(oRect.y + window.scrollY) + "px"
             }
-            if ( !($(".ajaxWordInfo").length) ) {
-                sel.toString().trim() !== '' &&
-                $(`<div class='ajaxWordInfo'></div>`).appendTo($(this))
-                $(`<div class='ajaxWordInfo'>
-                    <div class="ajaxWordDiv"></div>
-                    <button class="ajaxWordBtn"><i class="fab fa-readme oldlace"></i></button>
+            if ( !($(".ajax_word_info").length) ) {
+                sel.toString().split("volume")[0].trim() !== '' &&
+                $(`<div class='ajax_word_info'></div>`).appendTo($(this))
+                $(`<div class='ajax_word_info'>
+                    <div class="ajax_word_div"></div>
+                    <button class="ajax_word_btn"><i class="fab fa-readme oldlace"></i></button>
                 </div>`).css("top", `${parseInt(y)+height}px`).css("left", `${parseInt(x)+width}px`).appendTo($(this))
                 selection_text = sel
             }
         }
     });
 
-    $(document).on("click", ".ajaxWordBtn", function(){
+    $(document).on("click", ".ajax_word_btn", function(){
         if(!event.detail || event.detail == 1) {
             ths = $(this)
             ths.fadeOut("500")
             setTimeout(function(){
-                $(".ajaxWordInfo").append(`<div class="sk-chase">
+                $(".ajax_word_info").append(`<div class="sk-chase">
                                               <div class="sk-chase-dot"></div>
                                               <div class="sk-chase-dot"></div>
                                               <div class="sk-chase-dot"></div>
@@ -539,20 +1431,20 @@ $(function(){
                                               <div class="sk-chase-dot"></div>
                                               <div class="sk-chase-dot"></div>
                                             </div>`)
-            }, 500)
+            }, 600)
             $.ajax({
                 type:"GET",
                 url: "{% url 'ajax-word-info' %}",
                 data: {
-                    'selection': selection_text.toString().trim(),
+                    'selection': selection_text.toString().split("volume")[0].trim(),
                 },
                 dataType: 'json',
                 success: function(data) {
                     if (!('success' in data)) {
-                        $(".ajaxWordInfo").prepend('<div class="drag"></div>')
+                        $(".ajax_word_info").prepend('<div class="drag"></div>')
                         $(".sk-chase").remove()
-                        $(".ajaxWordInfo").css("left", `${parseInt(x)+width-Math.abs(left)}px`).css("padding", "5px").draggable({ zIndex: 300, cursor: 'move', containment:$(".wrapper"), handle: '.drag' })
-                        $(".ajaxWordDiv").addClass("p-3").css("width", "292px").css("height", "300px").append(`<table class="awdt">
+                        $(".ajax_word_info").css("left", `${parseInt(x)+width-Math.abs(left)}px`).css("padding", "5px").draggable({ zIndex: 300, cursor: 'move', containment:$(".wrapper"), handle: '.drag' })
+                        $(".ajax_word_div").addClass("p-3").css("width", "292px").css("height", "300px").append(`<table class="ajax_word_table">
                                                                                                  <tr>
                                                                                                     <th>Kelime</th>
                                                                                                     <th>Hece</th>
@@ -568,7 +1460,7 @@ $(function(){
                                                                                                </table>`)
                         if (data.audio != "None") {
                             $("td.audio").append(`
-                                                <i title="Dinle" class="material-icons">volume_up</i>
+                                                <i title="Dinle" class="fas fa-volume-up"></i>
                                                 <audio id="ajax_audio" src="${data.audio}"></audio>
                                                 `)
                         } else { $("td.audio").append(`
@@ -577,7 +1469,7 @@ $(function(){
                                                     `)
                         }
                         if (data.tr != "None") {
-                            $(".ajaxWordDiv").append(`<div>
+                            $(".ajax_word_div").append(`<div>
                                                         <strong>Türkçeleri:</strong>
                                                         <ul id="ajaxTrUl"></ul>
                                                      </div>`)
@@ -587,7 +1479,7 @@ $(function(){
                         }
                         data.all_results.map(function(i){
                             no = data.all_results.indexOf(i)
-                            $(".ajaxWordDiv").append(`
+                            $(".ajax_word_div").append(`
                                 <div data-ajax-id="${no}"></div>
                             `)
                             if (i["definition"]) {
@@ -604,7 +1496,7 @@ $(function(){
                             }
                             if (i["synonyms"]) {
                                 $(`div[data-ajax-id=${no}]`).append(`<div>
-                                                                        <strong>Eş anlamlılar:</strong>
+                                                                        <strong>Eş anlamlıları:</strong>
                                                                         <div class="d-flex flex-wrap" data-syn-id="${no}">
                                                                         </div>
                                                                     </div>`)
@@ -614,7 +1506,7 @@ $(function(){
                             }
                             if (i["antonyms"]) {
                                 $(`div[data-ajax-id=${no}]`).append(`<div>
-                                                                        <strong>Zıt anlamlılar:</strong>
+                                                                        <strong>Zıt anlamlıları:</strong>
                                                                         <div class="d-flex flex-wrap" data-anto-id="${no}">
                                                                         </div>
                                                                     </div>`)
@@ -637,52 +1529,16 @@ $(function(){
                         stopNotif()
                         $(".notif").addClass("notif-show").append(`<div class="notif-timer"></div>`).find("span").html("Kelime hakkında sonuç bulunamadı!")
                         notifHide()
-                        $(".sk-chase").remove()
-                        $(".ajaxWordInfo").append(`<button class='ajaxWordBtn'><i class='fab fa-readme oldlace'></i></button>`)
+                        setTimeout(function(){
+                            $(".sk-chase").remove()
+                            $(".ajax_word_btn").eq(0).remove()
+                            $(".ajax_word_info").append(`<button class='ajax_word_btn'><i class='fab fa-readme oldlace'></i></button>`)
+                        }, 200)
                     }
                 }
             })
         }
     })
-
-    $(".menu").click(function() {
-        $(".icon-bar").children().slice(2,6).toggleClass("d-none")
-        if ( ($(".brand").hasClass("d-none")) ) {
-            $(".brand").removeClass("d-none")
-        }
-        if ( $(".brand").css("display", "none") ) {
-            $(".brand").css("display", "")
-        }
-    })
-
-    function mediaHeader(x) {
-      if (x.matches) {
-        $(".icon-bar").children().slice(0,2).css("width", "50%")
-        $(".icon-bar").children().slice(2,6).css("width", "100%")
-        $("#menu").removeClass("d-none")
-        $(".icon-bar").children().slice(2,6).addClass("d-none")
-      } else {
-        if ( !($(".brand").hasClass("d-none")) ) {
-            $(".brand").addClass("d-none")
-        }
-        $(".icon-bar").children().css("width", "20%")
-        $("#menu").addClass("d-none")
-        $(".icon-bar").children().slice(2,6).removeClass("d-none")
-        $('#hi').prop('checked', false);
-      }
-    }
-
-    $(".icon-bar a").hover(function() {
-        if ( $(".brand").hasClass("d-none") ) {
-            $(this).children(".brand").fadeToggle().toggleClass("d-none")
-        } else if ( $(this).children(".brand").css("display", "none") ) {
-            $(this).children(".brand").css("display", "")
-        }
-    })
-
-    var header = window.matchMedia("(max-width:576px)")
-    mediaHeader(header)
-    header.addListener(mediaHeader)
 
 })
 </script>
