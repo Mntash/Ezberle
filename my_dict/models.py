@@ -160,7 +160,7 @@ class ShopProducts(models.Model):
         ("bg-img", 'Arka plan resim'),
         ("rights", 'Haklar')
     ]
-    id = models.UUIDField(default=uuid.uuid4, primary_key=True)
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     text = models.TextField()
     price = models.IntegerField(default=0)
     type = models.CharField(max_length=15, choices=product_types, default='Renk')
@@ -172,7 +172,7 @@ class ShopProducts(models.Model):
 
 
 class ProductTracker(models.Model):
-    id = models.UUIDField(default=uuid.uuid4, primary_key=True)
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     profile = models.ForeignKey(Profile, on_delete=models.CASCADE)
     text = models.TextField(default="")
     type = models.CharField(max_length=30, default="")
