@@ -8,6 +8,7 @@ admin.site.register(QuizRecorder)
 admin.site.register(WordDb)
 admin.site.register(Feedback)
 
+
 class ShopProductsAdmin(admin.ModelAdmin):
     list_filter = (
         ('type',)
