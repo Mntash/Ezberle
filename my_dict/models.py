@@ -146,7 +146,7 @@ class AchievementTracker(models.Model):
 def create_achievement_tracker(sender, **kwargs):
     profile = kwargs["instance"]
     if kwargs["created"]:
-        for x in range(1, 14):
+        for x in range(1, 17):
             obj = AchievementTracker(profile=profile, achiev_no=x)
             obj.save()
 
