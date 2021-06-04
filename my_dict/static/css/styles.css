@@ -1345,7 +1345,8 @@ label.checkbox input[disabled=disabled] + span {
     color: var(--clr-primary)
 }
 
-.modal-list li {
+.modal-list li,
+.custom_abs_li {
     list-style-position:inside;
     background: var(--clr-gwhite);
     border-radius: 20px;

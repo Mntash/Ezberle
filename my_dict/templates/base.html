@@ -232,27 +232,35 @@ $(function(){
                         </div>
                         <div class="times times-customization"><span>&times;</span></div>
                     `)
-                    owned_colors.map(function(obj, i){
-                        $("ul.color-list").append(`
-                            <li>
-                                <div>${obj.pdt_text}</div>
-                                <div class="d-flex" style="margin-left:10px" data-id="${obj.pdt_id}">
-                                    <button class="customBtnApply custom_btn_navbar">menü</button>
-                                    <button class="customBtnApply custom_btn_bg_clr">arka plan</button>
-                                </div>
-                            </li>
-                        `)
-                    })
-                    owned_bg_imgs.map(function(obj, i){
-                        $("ul.bg-img-list").append(`
-                            <li>
-                                <div>${obj.pdt_text}</div>
-                                <div class="d-flex" style="margin-left:10px" data-id="${obj.pdt_id}">
-                                    <button class="customBtnApply custom_btn_bg_img">uygula</button>
-                                </div>
-                            </li>
-                        `)
-                    })
+                    if (owned_colors.length) {
+                        owned_colors.map(function(obj, i){
+                            $("ul.color-list").append(`
+                                <li>
+                                    <div>${obj.pdt_text}</div>
+                                    <div class="d-flex" style="margin-left:10px" data-id="${obj.pdt_id}">
+                                        <button class="customBtnApply custom_btn_navbar">menü</button>
+                                        <button class="customBtnApply custom_btn_bg_clr">arka plan</button>
+                                    </div>
+                                </li>
+                            `)
+                        })
+                    } else {
+                        $("ul.color-list").append("<div class='custom_abs_li'>Marketten bir renk satın aldığında burada gösterilir.</div>")
+                    }
+                    if (owned_bg_imgs.length) {
+                        owned_bg_imgs.map(function(obj, i){
+                            $("ul.bg-img-list").append(`
+                                <li>
+                                    <div>${obj.pdt_text}</div>
+                                    <div class="d-flex" style="margin-left:10px" data-id="${obj.pdt_id}">
+                                        <button class="customBtnApply custom_btn_bg_img">uygula</button>
+                                    </div>
+                                </li>
+                            `)
+                        })
+                    } else {
+                        $("ul.bg-img-list").append("<div class='custom_abs_li'>Marketten bir resim satın aldığında burada gösterilir.</div>")
+                    }
                 }, 700)
             }
         } else {
