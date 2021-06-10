@@ -612,6 +612,14 @@ label.checkbox input[disabled=disabled] + span {
     transform:translate(-50%,-50%)
 }
 
+.center-h {
+    position:absolute;
+    left:50%;
+    -ms-transform:translate(-50%);
+    -webkit-transform:translate(-50%);
+    transform:translate(-50%)
+}
+
 /* ---general--- */
 
 /*
@@ -845,9 +853,7 @@ label.checkbox input[disabled=disabled] + span {
     margin-top:48px
 }
 
-.main_home_container .main_home_sect:nth-child(3),
-.main_home_container .main_home_sect:nth-child(4),
-.main_home_container .main_home_sect:nth-child(5) {
+.main_home_container .main_home_sect:not(:first-child, :nth-child(2)) {
     -webkit-transition:all 1.2s;
     -o-transition:all 1.2s;
     transition:all 1.2s;
@@ -927,12 +933,7 @@ label.checkbox input[disabled=disabled] + span {
 }
 
 .home-card-footer {
-    position:absolute;
     bottom:5px;
-    left:50%;
-    -webkit-transform:translate(-50%);
-        -ms-transform:translate(-50%);
-            transform:translate(-50%);
     width:100%
 }
 
@@ -1015,7 +1016,7 @@ label.checkbox input[disabled=disabled] + span {
 
 .wotd-tr-list {
     list-style: inside;
-    height: 95px;
+    height: 96px;
     overflow: auto;
     text-align: start;
     background: aliceblue;
@@ -1347,6 +1348,7 @@ label.checkbox input[disabled=disabled] + span {
 
 .modal-list li,
 .custom_abs_li {
+    min-height:43.4px;
     list-style-position:inside;
     background: var(--clr-gwhite);
     border-radius: 20px;
@@ -1526,13 +1528,6 @@ label.checkbox input[disabled=disabled] + span {
     background:var(--clr-secondary);
     -webkit-box-shadow:0 0 0 2px rgb(0%,50.2%,50.2%,0.2);
             box-shadow:0 0 0 2px rgb(0%,50.2%,50.2%,0.2)
-}
-
-.achievs:not(.achievs-modal) img[alt="Başarılar"] {
-    position: absolute;
-    left: 50%;
-    top: 50%;
-    transform: translate(-50%, -50%);
 }
 
 .achievs-modal {
@@ -2776,36 +2771,6 @@ img[alt="Geçmiş"] {
     font-weight:700
 }
 
-.search-words {
-    position:absolute;
-    left:50%;
-    -webkit-transform: translateX(-50%);
-        -ms-transform: translateX(-50%);
-            transform: translateX(-50%);
-    bottom:10px;
-    width:75%
-}
-
-.search-words::-webkit-input-placeholder {
-    color: #000
-}
-
-.search-words::-moz-placeholder {
-    color: #000
-}
-
-.search-words:-ms-input-placeholder {
-    color: #000
-}
-
-.search-words::-ms-input-placeholder {
-    color: #000
-}
-
-.search-words::placeholder {
-    color: #000
-}
-
 .fixed_search {
     position: fixed;
     bottom: 170px;
@@ -2928,7 +2893,7 @@ img[alt="Geçmiş"] {
     =====================
 */
 
-.tbl-words {
+.word-list {
     height:625px;
     font-size:1.6rem;
     background: var(--clr-secondary);
@@ -3846,14 +3811,13 @@ label[for="id_remember"] span {
     .main_home_sect div:first-child {
         margin-right:6rem
     }
-    .main_home_container .main_home_sect:nth-child(3),
-    .main_home_container .main_home_sect:nth-child(5) {
+    .main_home_container .main_home_sect:nth-child(odd):not(:first-child) {
         opacity:0;
         -webkit-transform:translate(-1300px);
             -ms-transform:translate(-1300px);
                 transform:translate(-1300px)
     }
-    .main_home_container .main_home_sect:nth-child(4) {
+    .main_home_container .main_home_sect:nth-child(even):not(:nth-child(2)) {
         opacity:0;
         -webkit-transform:translate(1300px);
             -ms-transform:translate(1300px);

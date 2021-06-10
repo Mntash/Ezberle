@@ -102,6 +102,14 @@ class QuizRecorder(models.Model):
     is_correct = models.BooleanField(default=False)
     create_time = models.DateTimeField(auto_now=True)
 
+    def __str__(self):
+        if self.is_db:
+            return f"{self.user} -- Database -- {self.english}"
+        if self.is_learned:
+            return f"{self.user} -- Öğrendiklerim -- {self.english}"
+        if not self.is_learned:
+            return f"{self.user} -- Öğreneceklerim -- {self.english}"
+
 
 class WordDb(models.Model):
     english = models.CharField(max_length=50)

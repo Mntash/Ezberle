@@ -90,17 +90,17 @@
 
 <div class="main_home_sect teal-bg oldlace d-flex justify-content-center flex-wrap">
     <div>
-        <h2><b class="ired_before bg-ired">Günlük Quiz</b></h2>
-        <p>Her gün en az 1 defa listelerinize eklediğiniz kelimelerden ve "Biliyor muydun?"
-           listesindeki kelimelerden quiz olabilirsiniz.
+        <h2><b class="ired_before bg-ired">Başarılar</b></h2>
+        <p>
+            Kişisel İngilizce öğreniminize teşvik olması amacıyla günlük ve genel olmak üzere, tamamlandığında markette
+            harcanabilecek ezber-coin'ler veren başarılar vardır.
         </p>
-        <span class="red-bot-border">Günlük Quiz ile yapabilecekleriniz:</span>
+        <span class="red-bot-border">Bu başarılar aşağıdaki hedefleri yerine getirdikçe tamamlanır:</span>
         <ul>
-            <li>"Öğreneceklerim", "Öğrendiklerim" ve "Biliyor muydun?" listelerinden her gün quiz olarak
-                kelime bilginizi sınayabilirsiniz.</li>
-            <li>Her bir soruyu yanıtladıktan sonra sorunun yanıtlarını anlık olarak görüp öğrenebilirsiniz.</li>
-            <li>Quiz sonunda genel bir doğru yanlış tablosuyla neleri doğru neleri yanlış yaptığınızı görüp
-                dilerseniz kelimeyi "Hatırlatıcıya" ekleyebilirsiniz.</li>
+            <li>Öğreneceklerim listenize kelime eklemek,</li>
+            <li>Kelime ezberlemek,</li>
+            <li>Günün kelimelerini eklemek,</li>
+            <li>Günlük Quiz tamamlamak.</li>
         </ul>
     </div>
     <div class="order"><img class="main_home_img img-teal" width="500" height="250" src="{% static 'img/quiz.png' %}" alt="Günlük Quiz"></div>
@@ -109,13 +109,13 @@
 <div class="main_home_sect oldlace-bg teal d-flex justify-content-center flex-wrap">
     <div><img class="main_home_img img-lace" width="500" height="250" src="{% static 'img/hatırlatıcı.png' %}" alt="Hatırlatıcı"></div>
     <div>
-        <h2><b class="ired_before bg-pgrod">Hatırlatıcı</b></h2>
+        <h2><b class="ired_before bg-pgrod">Market</b></h2>
         <p></p>
-        <span class="red-bot-border">Hatırlatıcı sizler için:</span>
+        <span class="red-bot-border">Markette aşağıdaki özellikleri satın alarak belli kişiselleştirmelere erişebilirsiniz:</span>
         <ul>
-            <li>Quiz sonlarında hatırlatıcıya kaydettiğiniz kelimelerin,</li>
-            <li>"Öğreneceklerim", "Öğrendiklerim" ve "Biliyor muydun?" listelerinden olduğunuz
-                son quizin sonuçlarının kayıtlarını tutar.</li>
+            <li>Menü ve arka plan renkleri,</li>
+            <li>Arka plan resimleri,</li>
+            <li>3 Quiz için de ek hak.</li>
         </ul>
     </div>
 </div>
@@ -245,32 +245,19 @@ $(function(){
         var slide = window.matchMedia("(min-width:992px)")
         if (document.body.scrollTop > 100 || document.documentElement.scrollTop > 100) {
             $(".scroll2top").css("display", "block")
-            if (document.body.scrollTop > 130 || document.documentElement.scrollTop > 130) {
-                function mediaAnimation(slide) {
-                    if (slide.matches) {
-                        $(".main_home_sect").eq(2).css("transform", "translate(0)").css("opacity", "1")
-                    }
-                }
-                mediaAnimation(slide)
-                slide.addListener(mediaAnimation)
-                if (document.body.scrollTop > 550 || document.documentElement.scrollTop > 550) {
-                    function mediaAnimation(slide) {
-                        if (slide.matches) {
-                            $(".main_home_sect").eq(3).css("transform", "translate(0)").css("opacity", "1")
-                        }
-                    }
-                    mediaAnimation(slide)
-                    slide.addListener(mediaAnimation)
-                    if (document.body.scrollTop > 990 || document.documentElement.scrollTop > 990) {
+            for (i=0;i<$(".main_home_sect").length-2;i++) {
+                function divAnimation(i) {
+                    if (document.body.scrollTop > 130+(i*440) || document.documentElement.scrollTop > 130+(i*440)) {
                         function mediaAnimation(slide) {
                             if (slide.matches) {
-                                $(".main_home_sect").eq(4).css("transform", "translate(0)").css("opacity", "1")
+                                $(".main_home_sect").eq(2+i).css("transform", "translate(0)").css("opacity", "1")
                             }
                         }
                         mediaAnimation(slide)
                         slide.addListener(mediaAnimation)
                     }
                 }
+                divAnimation(i)
             }
         } else {
             $(".scroll2top").css("display", "none")

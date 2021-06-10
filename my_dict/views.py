@@ -171,162 +171,20 @@ def dictionary_search(request, word):
         tables = soup_tur.find_all('table')
         table = soup_tur.find('table')
         rows = table.find_all('tr')[1:]
-        if table.find("th", class_="c2").text == "İngilizce":
-            if table.find_next_sibling('h2'):
-                if 'teriminin İngilizce Türkçe Sözlükte anlamları' in table.find_next_sibling('h2').text:
-                    h2 = table.find_next_sibling('h2')
-                    table_tr = h2.find_next_sibling('table')
-                    rows_table_tr = table_tr.find_all('tr')[1:]
-                    if len(rows_table_tr) > len(rows):
-                        is_english = False
-                        if soup_tur.find('audio', {'id': 'turengVoiceENTRENus'}):
-                            if soup_tur.find('audio', {'id': 'turengVoiceENTRENus'}).find('source'):
-                                audio_src = soup_tur.find('audio', {'id': 'turengVoiceENTRENus'}).find('source')['src']
-                                audio = audio_src
-                        for row in rows_table_tr:
-                            if not row.attrs:
-                                tds = row.find_all('td')
-                                category = tds[1].text.strip()
-                                turkish = tds[2].text.strip()
-                                english = " ".join(tds[3].text.split()[:-1])
-                                data.append([category, turkish, english])
-                        for tb in tables:
-                            if tb.find("th", class_="c2").text == "Türkçe":
-                                if 'teriminin diğer terimlerle kazandığı' in tb.find_previous().find_previous().text:
-                                    data_2_rows = tb.find_all('tr')[1:100]
-                                    for row in data_2_rows:
-                                        if not row.attrs:
-                                            tds = row.find_all('td')
-                                            category = tds[1].text.strip()
-                                            turkish = tds[2].text.strip()
-                                            english = " ".join(tds[3].text.split()[:-1])
-                                            data_2.append([category, turkish, english])
-                    else:
-                        if soup_tur.find('audio', {'id': 'turengVoiceENTRENus'}):
-                            if soup_tur.find('audio', {'id': 'turengVoiceENTRENus'}).find('source'):
-                                audio_src = soup_tur.find('audio', {'id': 'turengVoiceENTRENus'}).find('source')['src']
-                                audio = audio_src
-                        for row in rows:
-                            if not row.attrs:
-                                tds = row.find_all('td')
-                                category = tds[1].text.strip()
-                                english = " ".join(tds[2].text.split()[:-1])
-                                turkish = tds[3].text.strip()
-                                data.append([category, english, turkish])
-                        if word:
-                            if request.user.is_authenticated:
-                                if not Search.objects.filter(user=request.user, search=word).exists():
-                                    create_search = Search.objects.create(user=request.user, search=word)
-                                    create_search.save()
-                                else:
-                                    obj = Search.objects.get(user=request.user, search=word)
-                                    obj.create_time = datetime.datetime.now()
-                                    obj.save()
-                        for tb in tables:
-                            if tb.find("th", class_="c2").text == "İngilizce":
-                                if 'teriminin diğer terimlerle kazandığı' in tb.find_previous().find_previous().text:
-                                    data_2_rows = tb.find_all('tr')[1:100]
-                                    for row in data_2_rows:
-                                        if not row.attrs:
-                                            tds = row.find_all('td')
-                                            category = tds[1].text.strip()
-                                            english = " ".join(tds[2].text.split()[:-1])
-                                            turkish = tds[3].text.strip()
-                                            data_2.append([category, english, turkish])
-                        try:
-                            url_saur = saurus_url.format(word)
-                            html_saur = requests.get(url_saur).content
-                            soup_saur = BeautifulSoup(html_saur, 'lxml')
-                            h2_list = soup_saur.find_all('h2')
-                            for h2 in h2_list:
-                                if "other words" in h2.text:
-                                    synonyms = h2.parent.find_next_sibling().find_all('li')
-                                    for synonym in synonyms:
-                                        if synonym.find('a'):
-                                            text = synonym.find('a').text
-                                            synonym_list.append(text)
-                                elif "opposites" in h2.text:
-                                    antonyms = h2.parent.find_next_sibling().find_all('li')
-                                    for antonym in antonyms:
-                                        if antonym.find('a'):
-                                            text = antonym.find('a').text
-                                            antonym_list.append(text)
-                                elif "EXAMPLE SENTENCES" in h2.text:
-                                    examples = h2.next_siblings
-                                    for example in examples:
-                                        text = example.find('span').text
-                                        example_list.append(text)
-                        except:
-                            pass
-                else:
-                    if soup_tur.find('audio', {'id': 'turengVoiceENTRENus'}):
-                        if soup_tur.find('audio', {'id': 'turengVoiceENTRENus'}).find('source'):
-                            audio_src = soup_tur.find('audio', {'id': 'turengVoiceENTRENus'}).find('source')['src']
-                            audio = audio_src
-                    for row in rows:
-                        if not row.attrs:
-                            tds = row.find_all('td')
-                            category = tds[1].text.strip()
-                            english = " ".join(tds[2].text.split()[:-1])
-                            turkish = tds[3].text.strip()
-                            data.append([category, english, turkish])
-                    if word:
-                        if request.user.is_authenticated:
-                            if not Search.objects.filter(user=request.user, search=word).exists():
-                                create_search = Search.objects.create(user=request.user, search=word)
-                                create_search.save()
-                            else:
-                                obj = Search.objects.get(user=request.user, search=word)
-                                obj.create_time = datetime.datetime.now()
-                                obj.save()
-                    for tb in tables:
-                        if tb.find("th", class_="c2").text == "İngilizce":
-                            if 'teriminin diğer terimlerle kazandığı' in tb.find_previous().find_previous().text:
-                                data_2_rows = tb.find_all('tr')[1:100]
-                                for row in data_2_rows:
-                                    if not row.attrs:
-                                        tds = row.find_all('td')
-                                        category = tds[1].text.strip()
-                                        english = " ".join(tds[2].text.split()[:-1])
-                                        turkish = tds[3].text.strip()
-                                        data_2.append([category, english, turkish])
-                    try:
-                        url_saur = saurus_url.format(word)
-                        html_saur = requests.get(url_saur).content
-                        soup_saur = BeautifulSoup(html_saur, 'lxml')
-                        h2_list = soup_saur.find_all('h2')
-                        for h2 in h2_list:
-                            if "other words" in h2.text:
-                                synonyms = h2.parent.find_next_sibling().find_all('li')
-                                for synonym in synonyms:
-                                    if synonym.find('a'):
-                                        text = synonym.find('a').text
-                                        synonym_list.append(text)
-                            elif "opposites" in h2.text:
-                                antonyms = h2.parent.find_next_sibling().find_all('li')
-                                for antonym in antonyms:
-                                    if antonym.find('a'):
-                                        text = antonym.find('a').text
-                                        antonym_list.append(text)
-                            elif "EXAMPLE SENTENCES" in h2.text:
-                                examples = h2.next_siblings
-                                for example in examples:
-                                    text = example.find('span').text
-                                    example_list.append(text)
-                    except:
-                        pass
-            else:
-                if soup_tur.find('audio', {'id': 'turengVoiceENTRENus'}):
-                    if soup_tur.find('audio', {'id': 'turengVoiceENTRENus'}).find('source'):
-                        audio_src = soup_tur.find('audio', {'id': 'turengVoiceENTRENus'}).find('source')['src']
-                        audio = audio_src
-                for row in rows:
-                    if not row.attrs:
-                        tds = row.find_all('td')
-                        category = tds[1].text.strip()
-                        english = " ".join(tds[2].text.split()[:-1])
-                        turkish = tds[3].text.strip()
-                        data.append([category, english, turkish])
+
+        def english(history_save, is_true):
+            if soup_tur.find('audio', {'id': 'turengVoiceENTRENus'}):
+                if soup_tur.find('audio', {'id': 'turengVoiceENTRENus'}).find('source'):
+                    audio_src = soup_tur.find('audio', {'id': 'turengVoiceENTRENus'}).find('source')['src']
+                    audio = audio_src
+            for row in rows:
+                if not row.attrs:
+                    tds = row.find_all('td')
+                    category = tds[1].text.strip()
+                    english = " ".join(tds[2].text.split()[:-1])
+                    turkish = tds[3].text.strip()
+                    data.append([category, english, turkish])
+            if history_save:
                 if word:
                     if request.user.is_authenticated:
                         if not Search.objects.filter(user=request.user, search=word).exists():
@@ -336,29 +194,89 @@ def dictionary_search(request, word):
                             obj = Search.objects.get(user=request.user, search=word)
                             obj.create_time = datetime.datetime.now()
                             obj.save()
+            if is_true:
+                for tb in tables:
+                    if tb.find("th", class_="c2").text == "İngilizce":
+                        if 'teriminin diğer terimlerle kazandığı' in tb.find_previous().find_previous().text:
+                            data_2_rows = tb.find_all('tr')[1:100]
+                            for row in data_2_rows:
+                                if not row.attrs:
+                                    tds = row.find_all('td')
+                                    category = tds[1].text.strip()
+                                    english = " ".join(tds[2].text.split()[:-1])
+                                    turkish = tds[3].text.strip()
+                                    data_2.append([category, english, turkish])
+
+        def turkish():
+            for row in rows:
+                if not row.attrs:
+                    tds = row.find_all('td')
+                    category = tds[1].text.strip()
+                    turkish = tds[2].text.strip()
+                    english = " ".join(tds[3].text.split()[:-1])
+                    data.append([category, turkish, english])
+            for tb in tables:
+                if tb.find("th", class_="c2").text == "Türkçe":
+                    if 'teriminin diğer terimlerle kazandığı' in tb.find_previous().find_previous().text:
+                        data_2_rows = tb.find_all('tr')[1:100]
+                        for row in data_2_rows:
+                            if not row.attrs:
+                                tds = row.find_all('td')
+                                if '(' not in tds[1].text or tds[2].text:
+                                    category = tds[1].text.strip()
+                                    turkish = tds[2].text.strip()
+                                    english = " ".join(tds[3].text.split()[:-1])
+                                    data_2.append([category, turkish, english])
+
+        def synAntoExs():
+            url_saur = saurus_url.format(word)
+            html_saur = requests.get(url_saur).content
+            soup_saur = BeautifulSoup(html_saur, 'lxml')
+            h2_list = soup_saur.find_all('h2')
+            for h2 in h2_list:
+                if "other words" in h2.text:
+                    synonyms = h2.parent.find_next_sibling().find_all('li')
+                    for synonym in synonyms:
+                        if synonym.find('a'):
+                            text = synonym.find('a').text
+                            synonym_list.append(text)
+                elif "opposites" in h2.text:
+                    antonyms = h2.parent.find_next_sibling().find_all('li')
+                    for antonym in antonyms:
+                        if antonym.find('a'):
+                            text = antonym.find('a').text
+                            antonym_list.append(text)
+                elif "EXAMPLE SENTENCES" in h2.text:
+                    examples = h2.next_siblings
+                    for example in examples:
+                        text = example.find('span').text
+                        example_list.append(text)
+
+        if table.find("th", class_="c2").text == "İngilizce":
+            if table.find_next_sibling('h2'):
+                if 'teriminin İngilizce Türkçe Sözlükte anlamları' in table.find_next_sibling('h2').text:
+                    h2 = table.find_next_sibling('h2')
+                    table_tr = h2.find_next_sibling('table')
+                    rows_table_tr = table_tr.find_all('tr')[1:]
+                    if len(rows_table_tr) > len(rows):
+                        is_english = False
+                        turkish()
+                    else:
+                        english(True, True)
+                        try:
+                            synAntoExs()
+                        except:
+                            pass
+                else:
+                    english(True, True)
+                    try:
+                        synAntoExs()
+                    except:
+                        pass
+            else:
+                english(True, False)
                 try:
-                    url_saur = saurus_url.format(word)
-                    html_saur = requests.get(url_saur).content
-                    soup_saur = BeautifulSoup(html_saur, 'lxml')
-                    h2_list = soup_saur.find_all('h2')
-                    for h2 in h2_list:
-                        if "other words" in h2.text:
-                            synonyms = h2.parent.find_next_sibling().find_all('li')
-                            for synonym in synonyms:
-                                if synonym.find('a'):
-                                    text = synonym.find('a').text
-                                    synonym_list.append(text)
-                        elif "opposites" in h2.text:
-                            antonyms = h2.parent.find_next_sibling().find_all('li')
-                            for antonym in antonyms:
-                                if antonym.find('a'):
-                                    text = antonym.find('a').text
-                                    antonym_list.append(text)
-                        elif "EXAMPLE SENTENCES" in h2.text:
-                            examples = h2.next_siblings
-                            for example in examples:
-                                text = example.find('span').text
-                                example_list.append(text)
+                    synAntoExs()
                 except:
                     pass
         elif table.find("th", class_="c2").text == "Türkçe":
@@ -368,116 +286,21 @@ def dictionary_search(request, word):
                     table_en = h2.find_next_sibling('table')
                     rows_table_en = table_en.find_all('tr')[1:]
                     if len(rows_table_en) >= len(rows):
-                        if soup_tur.find('audio', {'id': 'turengVoiceENTRENus'}):
-                            if soup_tur.find('audio', {'id': 'turengVoiceENTRENus'}).find('source'):
-                                audio_src = soup_tur.find('audio', {'id': 'turengVoiceENTRENus'}).find('source')['src']
-                                audio = audio_src
-                        for row in rows_table_en:
-                            if not row.attrs:
-                                tds = row.find_all('td')
-                                category = tds[1].text.strip()
-                                english = " ".join(tds[2].text.split()[:-1])
-                                turkish = tds[3].text.strip()
-                                data.append([category, english, turkish])
-                        for tb in tables:
-                            if tb.find("th", class_="c2").text == "İngilizce":
-                                if 'teriminin diğer terimlerle kazandığı' in tb.find_previous().find_previous().text:
-                                    data_2_rows = tb.find_all('tr')[1:100]
-                                    for row in data_2_rows:
-                                        if not row.attrs:
-                                            tds = row.find_all('td')
-                                            category = tds[1].text.strip()
-                                            english = " ".join(tds[2].text.split()[:-1])
-                                            turkish = tds[3].text.strip()
-                                            data_2.append([category, english, turkish])
+                        is_english = True
+                        english(False, True)
                         try:
-                            url_saur = saurus_url.format(word)
-                            html_saur = requests.get(url_saur).content
-                            soup_saur = BeautifulSoup(html_saur, 'lxml')
-                            h2_list = soup_saur.find_all('h2')
-                            for h2 in h2_list:
-                                if "other words" in h2.text:
-                                    synonyms = h2.parent.find_next_sibling().find_all('li')
-                                    for synonym in synonyms:
-                                        if synonym.find('a'):
-                                            text = synonym.find('a').text
-                                            synonym_list.append(text)
-                                elif "opposites" in h2.text:
-                                    antonyms = h2.parent.find_next_sibling().find_all('li')
-                                    for antonym in antonyms:
-                                        if antonym.find('a'):
-                                            text = antonym.find('a').text
-                                            antonym_list.append(text)
-                                elif "EXAMPLE SENTENCES" in h2.text:
-                                    examples = h2.next_siblings
-                                    for example in examples:
-                                        text = example.find('span').text
-                                        example_list.append(text)
+                            synAntoExs()
                         except:
                             pass
-                    else:  # is_turkish
+                    else:
                         is_english = False
-                        for row in rows:
-                            if not row.attrs:
-                                tds = row.find_all('td')
-                                category = tds[1].text.strip()
-                                turkish = tds[2].text.strip()
-                                english = " ".join(tds[3].text.split()[:-1])
-                                data.append([category, turkish, english])
-                        for tb in tables:
-                            if tb.find("th", class_="c2").text == "Türkçe":
-                                if 'teriminin diğer terimlerle kazandığı' in tb.find_previous().find_previous().text:
-                                    data_2_rows = tb.find_all('tr')[1:100]
-                                    for row in data_2_rows:
-                                        if not row.attrs:
-                                            tds = row.find_all('td')
-                                            if '(' not in tds[1].text or tds[2].text:
-                                                category = tds[1].text.strip()
-                                                turkish = tds[2].text.strip()
-                                                english = " ".join(tds[3].text.split()[:-1])
-                                                data_2.append([category, turkish, english])
+                        turkish()
                 else:
                     is_english = False
-                    for row in rows:
-                        if not row.attrs:
-                            tds = row.find_all('td')
-                            category = tds[1].text.strip()
-                            turkish = tds[2].text.strip()
-                            english = " ".join(tds[3].text.split()[:-1])
-                            data.append([category, turkish, english])
-                    for tb in tables:
-                        if tb.find("th", class_="c2").text == "Türkçe":
-                            if 'teriminin diğer terimlerle kazandığı' in tb.find_previous().find_previous().text:
-                                data_2_rows = tb.find_all('tr')[1:100]
-                                for row in data_2_rows:
-                                    if not row.attrs:
-                                        tds = row.find_all('td')
-                                        if '(' not in tds[1].text or tds[2].text:
-                                            category = tds[1].text.strip()
-                                            turkish = tds[2].text.strip()
-                                            english = " ".join(tds[3].text.split()[:-1])
-                                            data_2.append([category, turkish, english])
+                    turkish()
             else:
                 is_english = False
-                for row in rows:
-                    if not row.attrs:
-                        tds = row.find_all('td')
-                        category = tds[1].text.strip()
-                        turkish = tds[2].text.strip()
-                        english = " ".join(tds[3].text.split()[:-1])
-                        data.append([category, turkish, english])
-                for tb in tables:
-                    if tb.find("th", class_="c2").text == "Türkçe":
-                        if 'teriminin diğer terimlerle kazandığı' in tb.find_previous().find_previous().text:
-                            data_2_rows = tb.find_all('tr')[1:100]
-                            for row in data_2_rows:
-                                if not row.attrs:
-                                    tds = row.find_all('td')
-                                    if '(' not in tds[1].text or tds[2].text:
-                                        category = tds[1].text.strip()
-                                        turkish = tds[2].text.strip()
-                                        english = " ".join(tds[3].text.split()[:-1])
-                                        data_2.append([category, turkish, english])
+                turkish()
     except AttributeError:
         url_tur = tureng_url.format(word)
         html_tur = requests.get(url_tur).content
@@ -803,7 +626,9 @@ def open_reminder(request):
 def save_quiz(request):
     if request.method == "POST":
         if request.POST.get("quiz_db"):
-            QuizRecorder.objects.filter(user=request.user, is_db=True).delete()
+            qr_objs = QuizRecorder.objects.filter(user=request.user, is_db=True)
+            for obj in qr_objs:
+                obj.delete()
             correct_list = request.POST.getlist("correct_list[]")
             incorrect_list = request.POST.getlist("incorrect_list[]")
             for cor in correct_list:
@@ -813,7 +638,9 @@ def save_quiz(request):
                 obj = QuizRecorder.objects.create(user=request.user, english=incor, is_db=True, is_correct=False)
                 obj.save()
         elif request.POST.get("quiz_unl"):
-            QuizRecorder.objects.filter(user=request.user, is_learned=False).delete()
+            qr_objs = QuizRecorder.objects.filter(user=request.user, is_db=False, is_learned=False)
+            for obj in qr_objs:
+                obj.delete()
             correct_list = request.POST.getlist("correct_list[]")
             incorrect_list = request.POST.getlist("incorrect_list[]")
             for cor in correct_list:
@@ -823,7 +650,9 @@ def save_quiz(request):
                 obj = QuizRecorder.objects.create(user=request.user, english=incor, is_learned=False, is_correct=False)
                 obj.save()
         elif request.POST.get("quiz_l"):
-            QuizRecorder.objects.filter(user=request.user, is_learned=True).delete()
+            qr_objs = QuizRecorder.objects.filter(user=request.user, is_db=False, is_learned=True)
+            for obj in qr_objs:
+                obj.delete()
             correct_list = request.POST.getlist("correct_list[]")
             incorrect_list = request.POST.getlist("incorrect_list[]")
             for cor in correct_list:
@@ -997,7 +826,7 @@ def get_achievs(request):
     if request.method == "GET":
         if request.user.is_authenticated:
             achievements = AchievementDetail.objects.all().order_by("achiev_no")
-            shop_products = ShopProducts.objects.all().order_by("type")
+            shop_products = ShopProducts.objects.all().order_by("price")
             prof = Profile.objects.get(user=request.user)
             achievement_tracker = AchievementTracker.objects.filter(profile=prof.id).order_by('achiev_no')
             ach_tracker_list = []

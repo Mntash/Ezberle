@@ -8,19 +8,19 @@
 <div class="row mt-4">
 
     <div class="col-lg-5 tbl-first mt-md-4">
-        <div class="tbl-words position-relative">
+        <div class="word-list position-relative">
             <span class="wl-title">Öğreneceklerim <br> (<span class="count-unl">{{ unlearned_count }}</span>)</span>
             <div class="tt">
               <i class="fas fa-question-circle"></i>
               <div class="tooltip-content">
-                <div><i class="material-icons">volume_off</i>Bu kelimenin okunuşu bulunamadı</div>
-                <div><i class="material-icons">volume_up</i>Bu kelimenin okunuşu</div>
-                <div><i class="material-icons">done_all</i>Bu kelime ile karşılaştım</div>
-                <div><i class="material-icons">check_box</i>Bu kelimeyi ezberledim</div>
-                <div><i class="material-icons">undo</i>Bu kelimeyi unuttum</div>
-                <div><i class="material-icons">remove_red_eye</i>Bu kelimenin Türkçesini göster</div>
-                <div><i class="material-icons">star_border</i>Bu kelimeyi favorilerime ekle</div>
-                <div><i class="material-icons">delete</i>Bu kelimeyi sil</div>
+                <div><i class="material-icons">volume_off</i>Kelimenin okunuşu yok</div>
+                <div><i class="material-icons">volume_up</i>Kelimenin okunuşu</div>
+                <div><i class="material-icons">done_all</i>Kelime ile listeye ekledikten sonra karşılaştım</div>
+                <div><i class="material-icons">check_box</i>Kelimeyi ezberledim</div>
+                <div><i class="material-icons">undo</i>Kelimeyi unuttum</div>
+                <div><i class="material-icons">remove_red_eye</i>Kelimenin Türkçesini göster</div>
+                <div><i class="material-icons">star_border</i>kelimeyi Favorilerime ekle</div>
+                <div><i class="material-icons">delete</i>Kelimeyi listeden kaldır</div>
               </div>
             </div>
             <ul class="unl-word">
@@ -133,19 +133,19 @@
     </div>
 
     <div class="col-lg-5 mt-md-4">
-        <div class="tbl-words position-relative">
+        <div class="word-list position-relative">
             <span class="wl-title">Öğrendiklerim <br> (<span class="count-l">{{ learned_count }}</span>)</span>
             <div class="tt">
               <i class="fas fa-question-circle"></i>
               <div class="tooltip-content">
-                <div><i class="material-icons">volume_off</i>Bu kelimenin okunuşu bulunamadı</div>
-                <div><i class="material-icons">volume_up</i>Bu kelimenin okunuşu</div>
-                <div><i class="material-icons">done_all</i>Bu kelime ile karşılaştım</div>
-                <div><i class="material-icons">check_box</i>Bu kelimeyi ezberledim</div>
-                <div><i class="material-icons">undo</i>Bu kelimeyi unuttum</div>
-                <div><i class="material-icons">remove_red_eye</i>Bu kelimenin Türkçesini göster</div>
-                <div><i class="material-icons">star_border</i>Bu kelimeyi favorilerime ekle</div>
-                <div><i class="material-icons">delete</i>Bu kelimeyi sil</div>
+                <div><i class="material-icons">volume_off</i>Kelimenin okunuşu yok</div>
+                <div><i class="material-icons">volume_up</i>Kelimenin okunuşu</div>
+                <div><i class="material-icons">done_all</i>Kelime ile listeye ekledikten sonra karşılaştım</div>
+                <div><i class="material-icons">check_box</i>Kelimeyi ezberledim</div>
+                <div><i class="material-icons">undo</i>Kelimeyi unuttum</div>
+                <div><i class="material-icons">remove_red_eye</i>Kelimenin Türkçesini göster</div>
+                <div><i class="material-icons">star_border</i>kelimeyi Favorilerime ekle</div>
+                <div><i class="material-icons">delete</i>Kelimeyi listeden kaldır</div>
               </div>
             </div>
             <ul class="l-word">
@@ -617,21 +617,6 @@ $(function(){
               tr_count_l -= 1
           }
         }
-    })
-
-    $(".search-words").keyup(function() {
-      var search = $(this).val()
-      $.ajax({
-        type:"GET",
-        url: "{% url 'search' %}",
-        data: {
-            'search': search
-        },
-        dataType: 'json',
-        success: function (data) {
-
-        }
-      })
     })
 
     $(".tick-seen").click(function() {
