@@ -29,7 +29,7 @@
                     <li data-id="{{word.id}}" class="li{{word.id}}">
                         <div class="en-section">
                             <div class="align-self-center word">
-                                <a href="{% url 'dictionary-search' word.english %}">{{ word.english }}</a>
+                                <a href="{% url 'dictionary-search' word.english %}" target="_blank">{{ word.english }}</a>
                             </div>
                             <div data-id="{{word.id}}" class="btn-grp">
                                 {% if word.audio %}
@@ -154,7 +154,7 @@
                     <li data-id="{{word.id}}" class="li{{word.id}}">
                         <div class="en-section">
                             <div class="align-self-center word">
-                                <a href="{% url 'dictionary-search' word.english %}">{{ word.english }}</a>
+                                <a href="{% url 'dictionary-search' word.english %}" target="_blank">{{ word.english }}</a>
                             </div>
                             <div data-id="{{word.id}}" class="btn-grp">
                                 {% if word.audio %}
@@ -619,7 +619,7 @@ $(function(){
         }
     })
 
-    $(".tick-seen").click(function() {
+    $(document).on("click", ".tick-seen", function(){
         var ths = $(this)
         var wordId = ths.parent().attr('data-id')
         if (ths.hasClass("cadet")) {
@@ -632,7 +632,7 @@ $(function(){
                 },
                 dataType: 'json',
                 success: function (data) {
-                    if (data.seen) {
+                    if (data.is_seen) {
                         ths.removeClass("cadet")
                         ths.addClass("dodger")
                     }
@@ -648,7 +648,7 @@ $(function(){
                 },
                 dataType: 'json',
                 success: function (data) {
-                    if (!(data.seen)) {
+                    if (!(data.is_seen)) {
                         ths.removeClass("dodger")
                         ths.addClass("cadet")
                     }
@@ -660,12 +660,12 @@ $(function(){
     var count_unl = parseInt("{{ unlearned_count }}")
     var count_l = parseInt("{{ learned_count }}")
 
-    $(".memorize").click(function() {
-            var ths = $(this)
-            var wordId = ths.parent().attr("data-id")
+    $(document).on("click", ".memorize", function(){
+        var ths = $(this)
+        var wordId = ths.parent().attr("data-id")
 
-            if (ths.hasClass("tick-learn")) {
-                $.ajax({
+        if (ths.hasClass("tick-learn")) {
+            $.ajax({
                 type:"GET",
                 url: "{% url 'is-learned' %}",
                 data: {
@@ -674,10 +674,88 @@ $(function(){
                 },
                 dataType: 'json',
                 success: function (data) {
-                    if (data.learned) {
+                    count_unl -= 1
+                    count_l += 1
+                    $(".count-unl").html(count_unl)
+                    $(".count-l").html(count_l)
+                    if (data.is_learned) {
+                        var data_obj = data["word"]
                         var list = $(".li" + wordId)
                         var l_word = $(".l-word")
-                        l_word.prepend(list)
+                        var word_count = data["word_count"]["count"]
+                        if ($(".l-word > li").length >= 10) {
+                            $(".l-word li:last-child").remove()
+                            list.prependTo(l_word).addClass("word-memo")
+                            setTimeout(function(){
+                                list.removeClass("word-memo")
+                            }, 700)
+                        } else {
+                            list.prependTo(l_word).addClass("word-memo")
+                            setTimeout(function(){
+                                list.removeClass("word-memo")
+                            }, 700)
+                        }
+                        if (word_count >= 10) {
+                            var obj_eng = data_obj["english"]
+                            var obj_id = data_obj["id"]
+                            var tr_list = data_obj["tr_list"]
+                            $(".unl-word").append(`
+                            <li data-id="${obj_id}" class="li${obj_id}">
+                                <div class="en-section d-flex justify-content-between">
+                                    <div class="align-self-center word">
+                                        <a href="/sözlük/q=${obj_eng}">${obj_eng}</a>
+                                    </div>
+                                    <div data-id="${obj_id}" class="btn-grp">
+                                        <i title="" class="material-icons audio"></i>
+                                        <audio src=""></audio>
+                                        <i title="Görüldü" class="material-icons tick-seen">done_all</i>
+                                        <i title="Ezberledim" class="material-icons tick-learn memorize">check_box</i>
+                                        <i data-toggle="collapse" data-target=".tr${obj_id}" title="Türkçelerini göster"
+                                           class="material-icons eye">remove_red_eye</i>
+                                        <i title="" class="material-icons star"></i>
+                                        <i title="Sil" class="material-icons del del-unl">delete</i>
+                                    </div>
+                                </div>
+                                <div class="tr-section collapse tr${obj_id}">
+                                    <div>
+                                      <span></span>
+                                    </div>
+                                    <ul></ul>
+                                </div>
+                            </li>`)
+                            if (tr_list) {
+                                if (tr_list.length == 1) {
+                                    $(".tr-section div span").html("Türkçesi:")
+                                    $(".tr-section ul").append(`<li>${tr_list[0]}</li>`)
+                                } else {
+                                    $(".tr-section div span").html("Türkçeleri:")
+                                    tr_list.map(function(obj){
+                                        $(".tr-section ul").append(`<li>${obj}</li>`)
+                                    })
+                                }
+                            } else {
+                                $(".tr-section ul").append(`
+                                <div>
+                                    <strong>&#8722;</strong><span>Bu kelimeye Türkçe eklenmemiş</span><strong>&#8722;</strong>
+                                </div>`)
+                            }
+                            if (data_obj["audio"]) {
+                                $(`[data-id=${obj_id}] i.audio`).attr("title", "Dinle").html("volume_up")
+                                $(`[data-id=${obj_id}] audio`).attr("src", `${data_obj["audio"]}`)
+                            } else {
+                                $(`[data-id=${obj_id}] i.audio`).attr("title", "Ses mevcut değil").html("volume_off")
+                            }
+                            if (data_obj["is_seen"]) {
+                                $(`[data-id=${obj_id}] i.tick-seen`).addClass("dodger")
+                            } else {
+                                $(`[data-id=${obj_id}] i.tick-seen`).addClass("cadet")
+                            }
+                            if (!(data_obj["is_starred"])) {
+                                $(`[data-id=${obj_id}] i.star`).attr("title", "Favorilere ekle").html("star_border")
+                            } else {
+                                $(`[data-id=${obj_id}] i.star`).attr("title", "Favorilere eklendi").addClass("pale-yellow").html("star")
+                            }
+                        }
                         ths.html("undo")
                         ths.toggleClass("tick-learn tick-unlearn")
                         ths.siblings().last().children().first().toggleClass("del-unl del-l")
@@ -692,13 +770,8 @@ $(function(){
                     })
                 }
             })
-            count_unl -= 1
-            count_l += 1
-            $(".count-unl").html(count_unl)
-            $(".count-l").html(count_l)
-            }
-            else if (ths.hasClass("tick-unlearn")) {
-                $.ajax({
+        } else if (ths.hasClass("tick-unlearn")) {
+            $.ajax({
                 type:"GET",
                 url: "{% url 'is-learned' %}",
                 data: {
@@ -707,31 +780,97 @@ $(function(){
                 },
                 dataType: 'json',
                 success: function (data) {
-                    if (!(data.unlearned)) {
+                    count_unl += 1
+                    count_l -= 1
+                    $(".count-unl").html(count_unl)
+                    $(".count-l").html(count_l)
+                    if (!(data.is_learned)) {
+                        var data_obj = data["word"]
                         var list = $(".li" + wordId)
-                        $(".unl-word").prepend(list)
-                        ths.html("check_box")
-                        ths.toggleClass("tick-unlearn tick-learn")
-                        ths.parent().siblings().last().children().first().toggleClass("del-l del-unl")
-                    }
-                    $.ajax({
-                        type:"GET",
-                        url: "{% url 'prg-tracker' %}",
-                        data:{
-                           "ach_no": [1, 5],
-                           "up_or_down": 0,
+                        var unl_word = $(".unl-word")
+                        var word_count = data["word_count"]["count"]
+                        if ($(".unl-word > li").length >= 10) {
+                            $(".unl-word li:last-child").remove()
+                            list.prependTo(unl_word).addClass("word-memo")
+                            setTimeout(function(){
+                                list.removeClass("word-memo")
+                            }, 700)
+                        } else {
+                            list.prependTo(unl_word).addClass("word-memo")
+                            setTimeout(function(){
+                                list.removeClass("word-memo")
+                            }, 700)
                         }
-                    })
+                        if (word_count >= 10) {
+                            var obj_eng = data_obj["english"]
+                            var obj_id = data_obj["id"]
+                            var tr_list = data_obj["tr_list"]
+                            $(".l-word").append(`
+                            <li data-id="${obj_id}" class="li${obj_id}">
+                                <div class="en-section d-flex justify-content-between">
+                                    <div class="align-self-center word">
+                                        <a href="/sözlük/q=${obj_eng}">${obj_eng}</a>
+                                    </div>
+                                    <div data-id="${obj_id}" class="btn-grp">
+                                        <i title="" class="material-icons audio"></i>
+                                        <audio src=""></audio>
+                                        <i title="Görüldü" class="material-icons tick-seen">done_all</i>
+                                        <i title="Ezberledim" class="material-icons tick-learn memorize">undo</i>
+                                        <i data-toggle="collapse" data-target=".tr${obj_id}" title="Türkçelerini göster"
+                                           class="material-icons eye">remove_red_eye</i>
+                                        <i title="" class="material-icons star"></i>
+                                        <i title="Sil" class="material-icons del del-l">delete</i>
+                                    </div>
+                                </div>
+                                <div class="tr-section collapse tr${obj_id}">
+                                    <div>
+                                      <span></span>
+                                    </div>
+                                    <ul></ul>
+                                </div>
+                            </li>`)
+                            if (tr_list) {
+                                if (tr_list.length == 1) {
+                                    $(".tr-section div span").html("Türkçesi:")
+                                    $(".tr-section ul").append(`<li>${tr_list[0]}</li>`)
+                                } else {
+                                    $(".tr-section div span").html("Türkçeleri:")
+                                    tr_list.map(function(obj){
+                                        $(".tr-section ul").append(`<li>${obj}</li>`)
+                                    })
+                                }
+                            } else {
+                                $(".tr-section ul").append(`
+                                <div>
+                                    <strong>&#8722;</strong><span>Bu kelimeye Türkçe eklenmemiş</span><strong>&#8722;</strong>
+                                </div>`)
+                            }
+                            if (data_obj["audio"]) {
+                                $(`[data-id=${obj_id}] i.audio`).attr("title", "Dinle").html("volume_up")
+                                $(`[data-id=${obj_id}] audio`).attr("src", `${data_obj["audio"]}`)
+                            } else {
+                                $(`[data-id=${obj_id}] i.audio`).attr("title", "Ses mevcut değil").html("volume_off")
+                            }
+                            if (data_obj["is_seen"]) {
+                                $(`[data-id=${obj_id}] i.tick-seen`).addClass("dodger")
+                            } else {
+                                $(`[data-id=${obj_id}] i.tick-seen`).addClass("cadet")
+                            }
+                            if (!(data_obj["is_starred"])) {
+                                $(`[data-id=${obj_id}] i.star`).attr("title", "Favorilere ekle").html("star_border")
+                            } else {
+                                $(`[data-id=${obj_id}] i.star`).attr("title", "Favorilere eklendi").addClass("pale-yellow").html("star")
+                            }
+                        }
+                        ths.html("check_box").toggleClass("tick-unlearn tick-learn")
+                        ths.siblings().last().children().first().toggleClass("del-l del-unl")
+                    }
                 }
             })
-            count_unl += 1
-            count_l -= 1
-            $(".count-unl").html(count_unl)
-            $(".count-l").html(count_l)
-            } // end else if
-        })
+        } // end else if
+    })
 
-    $(".star").click(function() {
+    $(document).on("click", ".star", function(){
         var ths = $(this)
         var wordId = ths.parent().attr('data-id')
 
@@ -745,7 +884,7 @@ $(function(){
                 },
                 dataType: 'json',
                 success: function (data) {
-                    if (data.starred) {
+                    if (data.is_starred) {
                         ths.html("star").addClass("pale-yellow")
                     }
                 }
@@ -760,7 +899,7 @@ $(function(){
                 },
                 dataType: 'json',
                 success: function (data) {
-                    if (!(data.starred)) {
+                    if (!(data.is_starred)) {
                         ths.html("star_border").removeClass("pale-yellow")
                     }
                 }
@@ -768,7 +907,7 @@ $(function(){
         }
     })
 
-    $(".del").click(function() {
+    $(document).on("click", ".del", function(){
         var wordId = $(this).parent().attr('data-id')
         $.ajax({
             type:"GET",
@@ -795,8 +934,8 @@ $(function(){
         })
     })
 
-    $("i.audio").click(function() {
-            $(this).next()[0].play()
+    $(document).on("click", "i.audio", function(){
+        $(this).next()[0].play()
     })
 
     var timeoutId;
@@ -811,10 +950,6 @@ $(function(){
         $(document).find(".notif-timer").remove()
         clearTimeout(timeoutId)
     }
-
-
-
-
 })
 
 

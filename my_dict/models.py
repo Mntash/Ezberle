@@ -64,6 +64,9 @@ class WordTr(models.Model):
     english = models.ForeignKey(WordEn, on_delete=models.CASCADE, null=True, related_name="turkish")
     turkish = models.CharField(max_length=100)
 
+    def __str__(self):
+        return self.turkish
+
 
 class Search(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)

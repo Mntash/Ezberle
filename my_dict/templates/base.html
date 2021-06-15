@@ -818,9 +818,15 @@ $(function(){
                     ths.addClass("purchased")
                 } else {
                     stopNotif()
-                    $(".notif").addClass("notif-show").append(`<div class="notif-timer"></div>`).find("span")
-                    .html(`Satın alma başarısız. <br> ${data.gap} coin'e daha ihtiyacın var!`)
-                    notifHide()
+                    if (data.gap) {
+                        $(".notif").addClass("notif-show").append(`<div class="notif-timer"></div>`).find("span").html(
+                        `Satın alma başarısız. <br> ${data.gap} coin'e daha ihtiyacın var!`)
+                        notifHide()
+                    } else {
+                        $(".notif").addClass("notif-show").append(`<div class="notif-timer"></div>`).find("span").html(
+                        `Satın alma başarısız.`)
+                        notifHide()
+                    }
                 }
             }
         })

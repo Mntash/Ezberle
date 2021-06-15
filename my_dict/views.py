@@ -471,46 +471,69 @@ class DelSeenLearnedStarred(View):
     def get(self, request):
         word_id = request.GET.get('id')
         word = WordEn.objects.get(user=request.user, id=word_id)
-        is_seen = False
-        is_learned = False
-        is_deleted = False
-        is_starred = False
+        data = {}
         if request.GET.get('seen'):
             if not word.is_seen:
                 word.is_seen = True
                 word.save()
-                is_seen = True
+                data['is_seen'] = True
             else:
                 word.is_seen = False
                 word.save()
-                is_seen = False
+                data['is_seen'] = False
         elif request.GET.get('learned'):
             word.is_learned = True
             word.save()
-            is_learned = True
+            data['is_learned'] = True
+            unl_words = WordEn.objects.filter(user=request.user, is_learned=False).order_by('-create_time')
+            if len(unl_words) >= 10:
+                obj = unl_words[9]
+                tr_list = []
+                for tr in obj.turkish.all():
+                    tr_list.append(tr.turkish)
+                data['word'] = {
+                    'english': obj.english,
+                    'id': obj.id,
+                    'audio': obj.audio,
+                    'is_seen': obj.is_seen,
+                    'is_starred': obj.is_starred,
+                    'tr_list': tr_list
+                }
+            data['word_count'] = {
+                'count': len(unl_words)
+            }
         elif request.GET.get('unlearned'):
             word.is_learned = False
             word.save()
+            data['is_learned'] = False
+            l_words = WordEn.objects.filter(user=request.user, is_learned=True).order_by('-create_time')
+            if len(l_words) >= 10:
+                obj = l_words[9]
+                tr_list = []
+                for tr in obj.turkish.all():
+                    tr_list.append(tr.turkish)
+                data['word'] = {
+                    'english': obj.english,
+                    'id': obj.id,
+                    'audio': obj.audio,
+                    'is_seen': obj.is_seen,
+                    'is_starred': obj.is_starred,
+                    'tr_list': tr_list
+                }
+            data['word_count'] = {
+                'count': len(l_words)
+            }
         elif request.GET.get('starred'):
             if not word.is_starred:
                 word.is_starred = True
                 word.save()
-                is_starred = True
+                data['is_starred'] = True
             else:
                 word.is_starred = False
                 word.save()
-                is_starred = False
+                data['is_starred'] = False
         elif request.GET.get('delete'):
             word.delete()
-            is_deleted = True
-
-        data = {
-            'seen': is_seen,
-            'learned': is_learned,
-            'unlearned': is_learned,
-            'starred': is_starred,
-            'deleted': is_deleted
-        }
 
         return JsonResponse(data)
 

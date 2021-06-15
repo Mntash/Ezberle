@@ -2367,11 +2367,6 @@ label.checkbox input[disabled=disabled] + span {
     border-color:rgb(0%,50.2%,50.2%,0.2) !important
 }
 
-.no-tr {
-    margin-left:13% ;
-    text-align:center
-}
-
 .times-err {
     position:absolute;
     right:2px;
@@ -2964,17 +2959,36 @@ img[alt="Geçmiş"] {
     list-style-type:none
 }
 
+.unl-word {
+    user-select:none
+}
+
 .unl-word > li, .l-word > li {
     border: 2px solid var(--clr-primary);
     padding: 8px;
     background: var(--clr-gwhite);
     border-radius: 50px;
-    border-radius: 50px;
     margin: 5px 10px;
+    user-select:all !important
 }
 
 .unl-word > li:hover, .l-word > li:hover {
     background:#ededee
+}
+
+.word-memo {
+    animation: word-memo .7s
+}
+
+@keyframes word-memo {
+    from {
+        transform:translate(-180px);
+        opacity:0
+    }
+    to {
+        transform:translate(0px);
+        opacity:1
+    }
 }
 
 .wl-title {
@@ -3072,6 +3086,7 @@ label[for="show-fav"] span {
 
 .tr-section {
     margin-left:3rem;
+    user-select:none !important
 }
 
 .tr-section span {
