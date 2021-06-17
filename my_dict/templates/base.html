@@ -828,8 +828,8 @@ $(function(){
                         notifHide()
                     }
                 }
-            }
-            error: function(data) {
+            },
+            error: function() {
                 stopNotif()
                 $(".notif").addClass("notif-show").append(`<div class="notif-timer"></div>`).find("span").html(
                 `Satın alma başarısız. Lütfen tekrar deneyin.`)
