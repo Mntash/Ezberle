@@ -1012,7 +1012,7 @@ def percentage_calc(n1, n2):
 
 
 def shop_purchase(request):
-    pdt_id = request.POST.get("pdt_id")
+    pdt_id = request.GET.get("pdt_id")
     pdt = ShopProducts.objects.get(id=pdt_id)
     prof = Profile.objects.get(user=request.user)
     if prof.coin - int(pdt.price) >= 0:

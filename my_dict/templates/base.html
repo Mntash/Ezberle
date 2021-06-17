@@ -797,11 +797,10 @@ $(function(){
         var pdt_id = $(this).parent().parent().attr("data-id")
         var ths = $(this)
         $.ajax({
-            type:"POST",
+            type:"GET",
             url: "{% url 'shop-purchase' %}",
             data: {
-                "pdt_id": pdt_id,
-                "csrfmiddlewaretoken" : "{{csrf_token}}"
+                "pdt_id": pdt_id
             },
             dataType: 'json',
             success: function(data){
