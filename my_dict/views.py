@@ -1012,50 +1012,49 @@ def percentage_calc(n1, n2):
 
 
 def shop_purchase(request):
-    if request.method == "POST":
-        pdt_id = request.POST.get("pdt_id")
-        pdt = ShopProducts.objects.get(id=pdt_id)
-        prof = Profile.objects.get(user=request.user)
-        if prof.coin - int(pdt.price) >= 0:
-            if not ProductTracker.objects.filter(profile=prof, text=pdt.text).exists():
-                if pdt.type == "bg-img":
-                    image = str(pdt.background_image).split("my_dict/")[1]
-                    obj = ProductTracker.objects.create(
-                        profile=prof, text=pdt.text, type=pdt.type, color=pdt.color, background_image=image
-                    )
-                    obj.save()
-                elif pdt.type == "rights":
-                    image = ""
-                    obj = ProductTracker.objects.create(
-                        profile=prof, text=pdt.text, type=pdt.type, color=pdt.color, background_image=image
-                    )
-                    obj.save()
-                    if pdt.text == "Biliyor muydun?":
-                        prof.quiz_db_rights += 1
-                    elif pdt.text == "Öğreneceklerim":
-                        prof.quiz_unl_rights += 1
-                    elif pdt.text == "Öğrendiklerim":
-                        prof.quiz_l_rights += 1
-                elif pdt.type == "clr":
-                    image = ""
-                    obj = ProductTracker.objects.create(
-                        profile=prof, text=pdt.text, type=pdt.type, color=pdt.color, background_image=image
-                    )
-                    obj.save()
-                prof.coin = prof.coin - int(pdt.price)
-                prof.save()
-                return JsonResponse(data={
-                    "is_purchased": True,
-                    "pdt_price": int(pdt.price),
-                    "cur_balance": prof.coin
-                })
-            else:
-                return JsonResponse(data={})
-        else:
+    pdt_id = request.POST.get("pdt_id")
+    pdt = ShopProducts.objects.get(id=pdt_id)
+    prof = Profile.objects.get(user=request.user)
+    if prof.coin - int(pdt.price) >= 0:
+        if not ProductTracker.objects.filter(profile=prof, text=pdt.text).exists():
+            if pdt.type == "bg-img":
+                image = str(pdt.background_image).split("my_dict/")[1]
+                obj = ProductTracker.objects.create(
+                    profile=prof, text=pdt.text, type=pdt.type, color=pdt.color, background_image=image
+                )
+                obj.save()
+            elif pdt.type == "rights":
+                image = ""
+                obj = ProductTracker.objects.create(
+                    profile=prof, text=pdt.text, type=pdt.type, color=pdt.color, background_image=image
+                )
+                obj.save()
+                if pdt.text == "Biliyor muydun?":
+                    prof.quiz_db_rights += 1
+                elif pdt.text == "Öğreneceklerim":
+                    prof.quiz_unl_rights += 1
+                elif pdt.text == "Öğrendiklerim":
+                    prof.quiz_l_rights += 1
+            elif pdt.type == "clr":
+                image = ""
+                obj = ProductTracker.objects.create(
+                    profile=prof, text=pdt.text, type=pdt.type, color=pdt.color, background_image=image
+                )
+                obj.save()
+            prof.coin = prof.coin - int(pdt.price)
+            prof.save()
             return JsonResponse(data={
-                "gap": int(pdt.price) - prof.coin,
-                "is_purchased": False
+                "is_purchased": True,
+                "pdt_price": int(pdt.price),
+                "cur_balance": prof.coin
             })
+        else:
+            return JsonResponse(data={})
+    else:
+        return JsonResponse(data={
+            "gap": int(pdt.price) - prof.coin,
+            "is_purchased": False
+        })
 
 
 def get_customization(request):
