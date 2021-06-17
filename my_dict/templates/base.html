@@ -824,10 +824,16 @@ $(function(){
                         notifHide()
                     } else {
                         $(".notif").addClass("notif-show").append(`<div class="notif-timer"></div>`).find("span").html(
-                        `Satın alma başarısız.`)
+                        `Satın alma başarısız. Lütfen tekrar deneyin.`)
                         notifHide()
                     }
                 }
+            }
+            error: function(data) {
+                stopNotif()
+                $(".notif").addClass("notif-show").append(`<div class="notif-timer"></div>`).find("span").html(
+                `Satın alma başarısız. Lütfen tekrar deneyin.`)
+                notifHide()
             }
         })
     })
