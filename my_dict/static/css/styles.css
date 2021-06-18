@@ -1181,7 +1181,8 @@ label.checkbox input[disabled=disabled] + span {
     position:relative;
     height: 140px;
     background:whitesmoke;
-    outline:2px solid rgb(0%,50.2%,50.2%,0.2)
+    outline:2px solid rgb(0%,50.2%,50.2%,0.2);
+    user-select:none
 }
 
 .quiz-question span {
@@ -1551,10 +1552,6 @@ label.checkbox input[disabled=disabled] + span {
     font-size: 13px;
 }
 
-.achievs-tp {
-    text-align:center
-}
-
 .achievs-tp div {
     margin-top:.5rem
 }
@@ -1568,10 +1565,6 @@ label.checkbox input[disabled=disabled] + span {
     text-shadow: 0 0 3px black;
     font-size:4rem;
     cursor:pointer
-}
-
-.achievs-general {
-    text-align:center;
 }
 
 .translate-right {
@@ -1737,6 +1730,7 @@ label.checkbox input[disabled=disabled] + span {
             box-shadow:0 0 0 2px rgb(0%,50.2%,50.2%,0.2)
 }
 
+.achievs img,
 .customization img {
     height:24px;
 }

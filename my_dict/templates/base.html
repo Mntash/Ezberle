@@ -83,7 +83,7 @@
 </div>
 
 <div class="achievs">
-    <img src="{% static 'img/award.png' %}" alt="Başarılar">
+    <img src="{% static 'img/başarılar.png' %}" alt="Başarılar">
 </div>
 
 {% if show_reminder_notif %}
@@ -346,7 +346,7 @@ $(function(){
                     ths.append(`
                                 <div class="title-achievs">
                                     <span>Başarılar</span>
-                                    <img src="{% static 'img/award.png' %}" alt="Başarılar">
+                                    <img src="{% static 'img/başarılar.png' %}" alt="Başarılar">
                                 </div>
                                 <div class="modal-body modal-body-achievs">
                                 <div role="tabpanel">
@@ -465,14 +465,14 @@ $(function(){
                                                   </div>
                                                 </div>
                                             </div>
-                                            <div class="achievs-tp">
+                                            <div class="achievs-tp text-center">
                                                 <label for="achievs-tp-cb">
                                                   <div><span style="cursor:pointer">Genel Başarılar</span></div>
                                                   <i class="fas fa-long-arrow-alt-right"></i>
                                                 </label>
                                             </div>
                                         </div>
-                                        <div class="achievs-general achievs-ga-dis translate-right">
+                                        <div class="achievs-general achievs-ga-dis translate-right text-center">
                                             <span>GENEL BAŞARILAR</span>
                                             <div class="achievements-table">
                                                 <div>
@@ -597,7 +597,7 @@ $(function(){
                                                   </div>
                                                 </div>
                                             </div>
-                                            <div class="achievs-tp">
+                                            <div class="achievs-tp text-center">
                                                 <label for="achievs-tp-cb">
                                                   <div><span style="cursor:pointer">Günlük Başarılar</span></div>
                                                   <i class="fas fa-long-arrow-alt-left"></i>
@@ -1001,7 +1001,7 @@ $(function(){
     $(document).on("click", "a[href='.achievs-tab']", function(){
         $(".title-achievs").find("span").html("Başarılar")
         .end().find("img").remove()
-        .end().append(`<img src="{% static 'img/award.png' %}" alt="Başarılar">`)
+        .end().append(`<img src="{% static 'img/başarılar.png' %}" alt="Başarılar">`)
     })
 
     $(document).on("click", "a[href='.shop-tab']", function(){
@@ -1351,7 +1351,9 @@ $(function(){
         if (ths.hasClass("times-achievs")) {
             gParent.find(".title-achievs").remove()
             gParent.removeClass("achievs-modal py-4 px-sm-4 px-2")
-            gParent.append(`<img src="{% static 'img/award.png' %}" alt="Başarılar">`)
+            setTimeout(function(){
+                gParent.append(`<img src="{% static 'img/başarılar.png' %}" alt="Başarılar">`)
+            }, 40)
             $(".modal-body-achievs").remove()
             ths.remove()
         } else if (ths.hasClass("times-rem")) {
@@ -1460,7 +1462,9 @@ $(function(){
                 success: function(data) {
                     if (!('success' in data)) {
                         $(".ajax_word_info").prepend('<div class="drag"></div>')
-                        $(".sk-chase").remove()
+                        setTimeout(function(){
+                            $(".sk-chase").remove()
+                        }, 4)
                         $(".ajax_word_info").css("left", `${parseInt(x)+width-Math.abs(left)}px`).css("padding", "5px").draggable({ zIndex: 300, cursor: 'move', containment:$(".wrapper"), handle: '.drag' })
                         $(".ajax_word_div").addClass("p-3").css("width", "292px").css("height", "300px").append(`<table class="ajax_word_table">
                                                                                                  <tr>
