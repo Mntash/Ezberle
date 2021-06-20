@@ -620,6 +620,10 @@ label.checkbox input[disabled=disabled] + span {
     transform:translate(-50%)
 }
 
+.pointer {
+    cursor:pointer
+}
+
 /* ---general--- */
 
 /*
@@ -998,7 +1002,6 @@ label.checkbox input[disabled=disabled] + span {
 
 .card-img-top {
     max-width: 85px;
-    cursor:pointer;
     background: var(--clr-secondary)
 }
 
@@ -1773,10 +1776,6 @@ label.checkbox input[disabled=disabled] + span {
     padding: 12px 20px;
     background: linear-gradient(90deg, rgba(13,17,55,1) 0%, rgba(229,33,101,1) 100%);
     color: var(--clr-secondary);
-}
-
-.accordionArrows {
-    cursor: pointer;
 }
 
 .customizationAccordion + ul {
@@ -3304,10 +3303,6 @@ label[for="show-fav"] span {
 .d-grid {
     display:-ms-grid;
     display:grid
-}
-
-.show-psw {
-    cursor:pointer;
 }
 
 .login-input {

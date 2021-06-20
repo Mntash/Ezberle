@@ -223,18 +223,18 @@ $(function(){
                                     </div>
                                     <div class="customizationAccordion">
                                       <div>Renkler</div>
-                                      <div class="accordionArrows">&#x2B9F;</div>
+                                      <div class="accordionArrows"><i class="fas fa-caret-down"></i></div>
                                     </div>
                                     <ul class="color-list"></ul>
                                     <div class="customizationAccordion">
                                       <div>Arka planlar</div>
-                                      <div class="accordionArrows">&#x2B9F;</div>
+                                      <div class="accordionArrows pointer"><i class="fas fa-caret-down"></i></div>
                                     </div>
                                     <ul class="bg-img-list"></ul>
                                 </div>
                             </div>
                         </div>
-                        <div class="times times-customization"><span>&times;</span></div>
+                        <div class="times times-customization pointer"><span>&times;</span></div>
                     `)
                     if (owned_colors.length) {
                         owned_colors.map(function(obj, i){
@@ -275,11 +275,11 @@ $(function(){
     $(document).on("click", ".accordionArrows", function(){
         var ths = $(this)
         if (ths.parent().hasClass("active")) {
-            ths.html("&#x2B9F;")
+            ths.empty().append("<i class='fas fa-caret-down'></i>")
             ths.parent().next().toggle("slide", { direction: "up" })
             ths.parent().removeClass("active")
         } else {
-            ths.html("&#x2B9D;")
+            ths.empty().append("<i class='fas fa-caret-up'></i>")
             ths.parent().next().toggle("slide", { direction: "up" })
             ths.parent().addClass("active")
         }
@@ -634,7 +634,7 @@ $(function(){
                                         </div>
                                     </div>
                                 </div>
-                                <div class="times times-achievs"><span>&times;</span></div>
+                                <div class="times times-achievs pointer"><span>&times;</span></div>
                                 </div>`)
                     prg_max_list = []
                     ach_list.map(function(obj, i){
@@ -1153,7 +1153,7 @@ $(function(){
                                         <div><i class="material-icons">filter_3</i>En son olduğun "Biliyor muydun?" quizinin sonuçları</div>
                                     </div>
                                 </div>
-                                <div class="times times-rem"><span>&times;</span></div>
+                                <div class="times times-rem pointer"><span>&times;</span></div>
                                 </div>`)
                                 if (word_list.length > 0) {
                                     word_list.map(function(i){
