@@ -154,6 +154,7 @@ $(function(){
             $(document).click(function(e) {
                 if ( $(e.target).closest('.customization').length === 0 && !($(e.target).hasClass("fixed-top")) ) {
                     $(".times-customization").click()
+                    $(".tools-backdrop").remove()
                 }
             })
         }
@@ -167,6 +168,9 @@ $(function(){
         if (is_authenticated == "True") {
             var ths = $(this)
             if ( !(ths.hasClass("customization-modal")) ) {
+                setTimeout(function(){
+                    $("body").append("<div class='modal-backdrop tools-backdrop fade show'></div>")
+                }, 4)
                 owned_colors = []
                 owned_bg_imgs = []
                 $.ajax({
@@ -286,6 +290,7 @@ $(function(){
             $(document).click(function(e) {
                 if ( $(e.target).closest('.achievs').length === 0 && !($(e.target).hasClass("fixed-top")) ) {
                     $(".times-achievs").click()
+                    $(".tools-backdrop").remove()
                 }
             })
         }
@@ -299,6 +304,9 @@ $(function(){
         if (is_authenticated == "True") {
             var ths = $(this)
             if ( !(ths.hasClass("achievs-modal")) ) {
+                setTimeout(function(){
+                    $("body").append("<div class='modal-backdrop tools-backdrop fade show'></div>")
+                }, 4)
                 ach_list = []
                 ach_tracker_list = []
                 pdt_list = []
@@ -1037,6 +1045,7 @@ $(function(){
             $(document).click(function(e) {
                 if ( $(e.target).closest('.reminder').length === 0 && !($(e.target).hasClass("fixed-top")) ) {
                     $(".times-rem").click()
+                    $(".tools-backdrop").remove()
                 }
             })
         }
@@ -1050,6 +1059,9 @@ $(function(){
         if (is_authenticated == "True") {
             var ths = $(this)
             if ( !(ths.hasClass("reminder-modal")) ) {
+                setTimeout(function(){
+                    $("body").append("<div class='modal-backdrop tools-backdrop fade show'></div>")
+                }, 4)
                 word_list = []
                 new_words_reminder = []
                 quiz_db_list = []
