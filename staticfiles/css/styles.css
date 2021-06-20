@@ -1533,7 +1533,6 @@ label.checkbox input[disabled=disabled] + span {
 
 .achievs-modal {
     cursor: default;
-    height:500px;
     left: 50%;
     top: 50%;
     font-size:1.6rem;
@@ -1709,7 +1708,6 @@ label.checkbox input[disabled=disabled] + span {
 
 .customization-modal {
     cursor: default;
-    height:500px;
     left: 50%;
     top: 50%;
     font-size:1.6rem;
@@ -1840,7 +1838,6 @@ label.checkbox input[disabled=disabled] + span {
 
 .reminder-modal {
     cursor: default;
-    height:500px;
     left: 50%;
     top: 50%;
     font-size:1.6rem;
@@ -3652,6 +3649,22 @@ label[for="id_remember"] span {
     }
     .new > span {
         margin-left: 13%
+    }
+}
+
+@media (max-height: 576px) {
+    .customization-modal,
+    .reminder-modal,
+    .achievs-modal {
+        height: 425px !important;
+    }
+}
+
+@media (min-height: 576px) {
+    .customization-modal,
+    .reminder-modal,
+    .achievs-modal {
+        height: 550px !important;
     }
 }
 

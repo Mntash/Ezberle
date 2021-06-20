@@ -223,12 +223,12 @@ $(function(){
                                     </div>
                                     <div class="customizationAccordion">
                                       <div>Renkler</div>
-                                      <div class="accordionArrows">&#11167;</div>
+                                      <div class="accordionArrows">&#x2B9F;</div>
                                     </div>
                                     <ul class="color-list"></ul>
                                     <div class="customizationAccordion">
                                       <div>Arka planlar</div>
-                                      <div class="accordionArrows">&#11167;</div>
+                                      <div class="accordionArrows">&#x2B9F;</div>
                                     </div>
                                     <ul class="bg-img-list"></ul>
                                 </div>
@@ -275,11 +275,11 @@ $(function(){
     $(document).on("click", ".accordionArrows", function(){
         var ths = $(this)
         if (ths.parent().hasClass("active")) {
-            ths.html("&#11167;")
+            ths.html("&#x2B9F;")
             ths.parent().next().toggle("slide", { direction: "up" })
             ths.parent().removeClass("active")
         } else {
-            ths.html("&#11165;")
+            ths.html("&#x2B9D;")
             ths.parent().next().toggle("slide", { direction: "up" })
             ths.parent().addClass("active")
         }
