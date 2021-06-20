@@ -32,6 +32,5 @@ urlpatterns = [
     path('shop_purchase/', shop_purchase, name="shop-purchase"),
     path('get_customization/', get_customization, name="get-customization"),
     path('customization/', customization, name="customization"),
-    path('cron/', cron_job, name="cron-job"),
     path('save_feedback/', save_feedback, name="save-feedback"),
 ]

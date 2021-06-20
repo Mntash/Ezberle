@@ -1120,11 +1120,6 @@ def customization(request):
             return JsonResponse(data={})
 
 
-def cron_job(request):
-    if request.method == "GET":
-        return HttpResponse("")
-
-
 def shop_preview(request):
     if request.method == "GET":
         pdt_id = request.GET.get("pdt_id")
