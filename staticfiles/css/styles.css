@@ -3270,6 +3270,15 @@ label[for="show-fav"] span {
            transform-origin: center;
 }
 
+.wrapper-404 {
+    display: grid;
+    place-items: center
+}
+
+.wrapper-404 h1 {
+    color: #ffffff
+}
+
 /* ---404--- */
 
 /*
