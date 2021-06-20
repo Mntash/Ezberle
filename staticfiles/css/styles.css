@@ -1533,7 +1533,7 @@ label.checkbox input[disabled=disabled] + span {
 
 .achievs-modal {
     cursor: default;
-    height:550px;
+    height:500px;
     left: 50%;
     top: 50%;
     font-size:1.6rem;
@@ -1709,7 +1709,7 @@ label.checkbox input[disabled=disabled] + span {
 
 .customization-modal {
     cursor: default;
-    height:550px;
+    height:500px;
     left: 50%;
     top: 50%;
     font-size:1.6rem;
@@ -1840,7 +1840,7 @@ label.checkbox input[disabled=disabled] + span {
 
 .reminder-modal {
     cursor: default;
-    height:550px;
+    height:500px;
     left: 50%;
     top: 50%;
     font-size:1.6rem;
@@ -1885,7 +1885,7 @@ label.checkbox input[disabled=disabled] + span {
 }
 
 .title-customization {
-    width:180px
+    width:185px
 }
 
 .title-achievs {
