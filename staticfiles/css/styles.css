@@ -1533,7 +1533,7 @@ label.checkbox input[disabled=disabled] + span {
 
 .achievs-modal {
     cursor: default;
-    height:600px;
+    height:550px;
     left: 50%;
     top: 50%;
     font-size:1.6rem;
@@ -1889,7 +1889,7 @@ label.checkbox input[disabled=disabled] + span {
 }
 
 .title-achievs {
-    width:130px;
+    width:135px;
 }
 
 .title-reminder {
