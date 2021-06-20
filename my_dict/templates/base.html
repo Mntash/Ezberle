@@ -223,12 +223,12 @@ $(function(){
                                     </div>
                                     <div class="customizationAccordion">
                                       <div>Renkler</div>
-                                      <i class="fas pointer fa-caret-down"></i>
+                                      <i class="fas pointer caret fa-caret-down align-self-center"></i>
                                     </div>
                                     <ul class="color-list"></ul>
                                     <div class="customizationAccordion">
                                       <div>Arka planlar</div>
-                                      <i class="fas pointer fa-caret-down"></i>
+                                      <i class="fas pointer caret fa-caret-down align-self-center"></i>
                                     </div>
                                     <ul class="bg-img-list"></ul>
                                 </div>
@@ -272,14 +272,14 @@ $(function(){
         }
     })
 
-    $(document).on("click", ".fas pointer", function(){
+    $(document).on("click", ".caret", function(){
         var ths = $(this)
         if (ths.parent().hasClass("active")) {
-            ths.empty().append("<i class='fas fa-caret-up'></i>")
+            ths.toggleClass("fa-caret-down fa-caret-up")
             ths.parent().next().toggle("slide", { direction: "up" })
             ths.parent().removeClass("active")
         } else {
-            ths.empty().append("<i class='fas fa-caret-down'></i>")
+            ths.toggleClass("fa-caret-up fa-caret-down")
             ths.parent().next().toggle("slide", { direction: "up" })
             ths.parent().addClass("active")
         }
