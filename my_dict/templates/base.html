@@ -154,7 +154,7 @@ $(function(){
             $(document).click(function(e) {
                 if ( $(e.target).closest('.customization').length === 0 && !($(e.target).hasClass("fixed-top")) ) {
                     $(".times-customization").click()
-                    $(".tools-backdrop").remove()
+                    $(".tools-backdrop-c").remove()
                 }
             })
         }
@@ -169,7 +169,7 @@ $(function(){
             var ths = $(this)
             if ( !(ths.hasClass("customization-modal")) ) {
                 setTimeout(function(){
-                    $("body").append("<div class='modal-backdrop tools-backdrop fade show'></div>")
+                    $("body").append("<div class='modal-backdrop tools-backdrop-c fade show'></div>")
                 }, 4)
                 owned_colors = []
                 owned_bg_imgs = []
@@ -290,7 +290,7 @@ $(function(){
             $(document).click(function(e) {
                 if ( $(e.target).closest('.achievs').length === 0 && !($(e.target).hasClass("fixed-top")) ) {
                     $(".times-achievs").click()
-                    $(".tools-backdrop").remove()
+                    $(".tools-backdrop-a").remove()
                 }
             })
         }
@@ -305,7 +305,7 @@ $(function(){
             var ths = $(this)
             if ( !(ths.hasClass("achievs-modal")) ) {
                 setTimeout(function(){
-                    $("body").append("<div class='modal-backdrop tools-backdrop fade show'></div>")
+                    $("body").append("<div class='modal-backdrop tools-backdrop-a fade show'></div>")
                 }, 4)
                 ach_list = []
                 ach_tracker_list = []
@@ -1045,7 +1045,7 @@ $(function(){
             $(document).click(function(e) {
                 if ( $(e.target).closest('.reminder').length === 0 && !($(e.target).hasClass("fixed-top")) ) {
                     $(".times-rem").click()
-                    $(".tools-backdrop").remove()
+                    $(".tools-backdrop-r").remove()
                 }
             })
         }
@@ -1060,7 +1060,7 @@ $(function(){
             var ths = $(this)
             if ( !(ths.hasClass("reminder-modal")) ) {
                 setTimeout(function(){
-                    $("body").append("<div class='modal-backdrop tools-backdrop fade show'></div>")
+                    $("body").append("<div class='modal-backdrop tools-backdrop-r fade show'></div>")
                 }, 4)
                 word_list = []
                 new_words_reminder = []
