@@ -3234,7 +3234,6 @@ label[for="show-fav"] span {
   font-weight: 300;
   font-family: Audiowide;
   text-shadow: 0px 0px 4px #12000a;
-  animation: fadeInText 3s ease-in 3.5s forwards, flicker4 5s linear 7.5s infinite, hueRotate 6s ease-in-out 3s infinite;
 }
 
 #svgWrap_1,
@@ -3246,11 +3245,6 @@ label[for="show-fav"] span {
   top: 25%;
   left: 50%;
   transform: translate(-50%, -50%);
-}
-
-#svgWrap_1,
-#svgWrap_2 {
-  animation: hueRotate 6s ease-in-out 3s infinite;
 }
 
 #id1_1,
@@ -3274,19 +3268,16 @@ label[for="show-fav"] span {
 #id3_1{
   stroke-dasharray: 940px;
   stroke-dashoffset: -940px;
-  animation: drawLine3 2.5s ease-in-out 0s forwards, flicker3 4s linear 4s infinite;
 }
 
 #id2_1{
   stroke-dasharray: 735px;
   stroke-dashoffset: -735px;
-  animation: drawLine2 2.5s ease-in-out 0.5s forwards, flicker2 4s linear 4.5s infinite;
 }
 
 #id1_1{
   stroke-dasharray: 940px;
   stroke-dashoffset: -940px;
-  animation: drawLine1 2.5s ease-in-out 1s forwards, flicker1 4s linear 5s infinite;
 }
 
 @keyframes drawLine1 {
@@ -3760,6 +3751,26 @@ label[for="id_remember"] span {
     .achievs-modal {
         height: 550px !important;
     }
+    #id1_1{
+      animation: drawLine1 2.5s ease-in-out 1s forwards, flicker1 4s linear 5s infinite;
+    }
+
+    #id2_1{
+      animation: drawLine2 2.5s ease-in-out 0.5s forwards, flicker2 4s linear 4.5s infinite;
+    }
+
+    #id3_1{
+      animation: drawLine3 2.5s ease-in-out 0s forwards, flicker3 4s linear 4s infinite;
+    }
+
+    #svgWrap_1,
+    #svgWrap_2 {
+      animation: hueRotate 6s ease-in-out 3s infinite;
+    }
+
+    .text-404 {
+        animation: fadeInText 3s ease-in 3.5s forwards, flicker4 5s linear 7.5s infinite, hueRotate 6s ease-in-out 3s infinite;
+    }
 }
 
 @media (max-height: 405px) {
@@ -3777,25 +3788,25 @@ label[for="id_remember"] span {
 }
 
 @media (max-height: 480px) {
-    .customization {
+    .customization:not(.customization-modal) {
         top: 67%
     }
-    .achievs {
+    .achievs:not(.achievs-modal) {
         top: 77%
     }
-    .reminder {
+    .reminder:not(.reminder-modal) {
         top: 87%
     }
 }
 
 @media (min-height: 480px) and (max-height:600px) {
-    .customization {
+    .customization:not(.customization-modal) {
         top: 80%
     }
-    .achievs {
+    .achievs:not(.achievs-modal) {
         top: 86%
     }
-    .reminder {
+    .reminder:not(.reminder-modal) {
         top: 92%
     }
 }

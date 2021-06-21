@@ -566,11 +566,11 @@ label.checkbox input[type=checkbox] {
 }
 
 label.custom-cb input[type=checkbox]:checked + span {
-    background-image:url(../img/checkbox-after.png)
+    background-image:url("../img/checkbox-after.9b50c58a48b0.png")
 }
 
 label.custom-cb input[type=checkbox] + span {
-    background-image:url(../img/checkbox-before.png)
+    background-image:url("../img/checkbox-before.5ba1ff4a0f1c.png")
 }
 
 label.checkbox span {
@@ -3253,7 +3253,7 @@ label[for="show-fav"] span {
   stroke: #ff005d;
   stroke-width: 3px;
   fill: transparent;
-  filter: url(#glow);
+  filter: url("#glow");
 }
 
 #id1_2,
@@ -3262,7 +3262,7 @@ label[for="show-fav"] span {
   stroke: #12000a;
   stroke-width: 3px;
   fill: transparent;
-  filter: url(#glow);
+  filter: url("#glow");
 }
 
 #id3_1{
@@ -3743,14 +3743,6 @@ label[for="id_remember"] span {
     .achievs-modal {
         height: 425px !important;
     }
-}
-
-@media (min-height: 576px) {
-    .customization-modal,
-    .reminder-modal,
-    .achievs-modal {
-        height: 550px !important;
-    }
     #id1_1{
       animation: drawLine1 2.5s ease-in-out 1s forwards, flicker1 4s linear 5s infinite;
     }
@@ -3773,6 +3765,14 @@ label[for="id_remember"] span {
     }
 }
 
+@media (min-height: 576px) {
+    .customization-modal,
+    .reminder-modal,
+    .achievs-modal {
+        height: 550px !important;
+    }
+}
+
 @media (max-height: 405px) {
     #svgWrap_1,
     #svgWrap_2 {
@@ -3788,25 +3788,25 @@ label[for="id_remember"] span {
 }
 
 @media (max-height: 480px) {
-    .customization:not(.customization-modal) {
+    .customization {
         top: 67%
     }
-    .achievs:not(.achievs-modal) {
+    .achievs {
         top: 77%
     }
-    .reminder:not(.reminder-modal) {
+    .reminder {
         top: 87%
     }
 }
 
 @media (min-height: 480px) and (max-height:600px) {
-    .customization:not(.customization-modal) {
+    .customization {
         top: 80%
     }
-    .achievs:not(.achievs-modal) {
+    .achievs {
         top: 86%
     }
-    .reminder:not(.reminder-modal) {
+    .reminder {
         top: 92%
     }
 }
