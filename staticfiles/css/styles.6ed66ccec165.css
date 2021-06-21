@@ -566,11 +566,11 @@ label.checkbox input[type=checkbox] {
 }
 
 label.custom-cb input[type=checkbox]:checked + span {
-    background-image:url(../img/checkbox-after.png)
+    background-image:url("../img/checkbox-after.9b50c58a48b0.png")
 }
 
 label.custom-cb input[type=checkbox] + span {
-    background-image:url(../img/checkbox-before.png)
+    background-image:url("../img/checkbox-before.5ba1ff4a0f1c.png")
 }
 
 label.checkbox span {
@@ -2403,10 +2403,6 @@ cb-dict {
     background:#f1f3f5
 }
 
-.search-top .word {
-    border-bottom: medium solid teal
-}
-
 .search-top .srch-i {
     width: 105px
 }
@@ -3257,7 +3253,7 @@ label[for="show-fav"] span {
   stroke: #ff005d;
   stroke-width: 3px;
   fill: transparent;
-  filter: url(#glow);
+  filter: url("#glow");
 }
 
 #id1_2,
@@ -3266,7 +3262,7 @@ label[for="show-fav"] span {
   stroke: #12000a;
   stroke-width: 3px;
   fill: transparent;
-  filter: url(#glow);
+  filter: url("#glow");
 }
 
 #id3_1{
@@ -3657,7 +3653,7 @@ label[for="id_remember"] span {
     .btn-grp i {
         margin-right:.25rem
     }
-    .word-list .word {
+    .word {
         border-bottom: medium solid teal;
         margin-bottom: 5px;
         text-align: center
@@ -3680,7 +3676,7 @@ label[for="id_remember"] span {
             -ms-transform: translateX(-5px);
                 transform: translateX(-5px)
     }
-    .word-list .word {
+    .word {
         border-bottom: none;
         margin-bottom: 0;
         text-align: left

@@ -2403,6 +2403,10 @@ cb-dict {
     background:#f1f3f5
 }
 
+.search-top .word {
+    border-bottom: medium solid teal
+}
+
 .search-top .srch-i {
     width: 105px
 }
@@ -3653,7 +3657,7 @@ label[for="id_remember"] span {
     .btn-grp i {
         margin-right:.25rem
     }
-    .word {
+    .word-list .word {
         border-bottom: medium solid teal;
         margin-bottom: 5px;
         text-align: center
@@ -3676,7 +3680,7 @@ label[for="id_remember"] span {
             -ms-transform: translateX(-5px);
                 transform: translateX(-5px)
     }
-    .word {
+    .word-list .word {
         border-bottom: none;
         margin-bottom: 0;
         text-align: left
@@ -3737,10 +3741,29 @@ label[for="id_remember"] span {
     }
 }
 
-@media (max-height: 576px) {
+@media (min-height: 280px) and (max-height: 330px) {
     .customization-modal,
     .reminder-modal,
-    .achievs-modal {
+    .achievs-modal,
+    .modal-content {
+        height: 207px !important;
+    }
+}
+
+@media (min-height: 330px) and (max-height: 430px) {
+    .customization-modal,
+    .reminder-modal,
+    .achievs-modal,
+    .modal-content {
+        height: 260px !important;
+    }
+}
+
+@media (min-height:430px) and (max-height: 576px) {
+    .customization-modal,
+    .reminder-modal,
+    .achievs-modal,
+    .modal-content {
         height: 425px !important;
     }
 }
