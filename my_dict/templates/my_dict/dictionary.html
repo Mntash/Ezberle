@@ -4,7 +4,7 @@
 
 {% block content %}
 <div class="wrapper">
-<div class="container-media">
+<div class="container-media container">
 
 <div class="row">
 <div class="col-md-9 pd-neg">
@@ -359,10 +359,10 @@ $(function(){
     category.addListener(mediaCategory)
 
     function mediaContainer(container) {
-      if (container.matches) {
-        $(".container-media").addClass("container")
-      } else {
+      if (!(container.matches)) {
         $(".container-media").removeClass("container")
+      } else if (!($(".container-media").hasClass("container"))) {
+        $(".container-media").addClass("container")
       }
     }
     var container = window.matchMedia("(min-width:576px)")
@@ -372,7 +372,6 @@ $(function(){
     function mediaSrch(x) {
       if (x.matches) {
         $(".srch-i").attr("placeholder", "Ara..")
-        $(".search").css("min-height", "0")
       } else {
         $(".srch-i").attr("placeholder", "Kelime ara..")
       }

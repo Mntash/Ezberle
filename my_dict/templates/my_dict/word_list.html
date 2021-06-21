@@ -485,15 +485,9 @@ $(function(){
     function mediaEnSection(x) {
       if (x.matches) {
         $(".en-section").addClass("d-flex justify-content-between")
-        $(".word").css("border-bottom", "none")
-        $(".word").css("margin-bottom", "0")
-        $(".word").css("text-align", "left")
         $(".btn-grp").removeClass("d-flex justify-content-center")
       } else {
         $(".en-section").removeClass("d-flex justify-content-between")
-        $(".word").css("border-bottom", "medium solid teal")
-        $(".word").css("margin-bottom", "5px")
-        $(".word").css("text-align", "center")
         $(".btn-grp").addClass("d-flex justify-content-center")
       }
     }
