@@ -3762,6 +3762,44 @@ label[for="id_remember"] span {
     }
 }
 
+@media (max-height: 405px) {
+    #svgWrap_1,
+    #svgWrap_2 {
+        top: 40% !important
+    }
+}
+
+@media (max-height: 576px) {
+    #svgWrap_1,
+    #svgWrap_2 {
+        width: 350px !important
+    }
+}
+
+@media (max-height: 480px) {
+    .customization {
+        top: 67%
+    }
+    .achievs {
+        top: 77%
+    }
+    .reminder {
+        top: 87%
+    }
+}
+
+@media (min-height: 480px) and (max-height:600px) {
+    .customization {
+        top: 80%
+    }
+    .achievs {
+        top: 86%
+    }
+    .reminder {
+        top: 92%
+    }
+}
+
 @media (min-width: 576px) and (max-width:576px) {
     .navbar-toggler {
         display:none
