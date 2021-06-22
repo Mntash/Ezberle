@@ -3722,7 +3722,7 @@ label[for="id_remember"] span {
     .customization-modal,
     .reminder-modal,
     .achievs-modal {
-        width: 550px !important;
+        width: 600px !important;
     }
     .shop_pdt:hover {
         transform: scale(1.2);

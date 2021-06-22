@@ -1,5 +1,5 @@
 from django.utils import timezone
-from .models import WotdEn, Profile, ProductTracker
+from .models import *
 from bs4 import BeautifulSoup
 import requests
 import lxml
@@ -141,6 +141,13 @@ def reset_reminder_open():
         p.save()
 
 
+def reset_daily_achievements():
+    achievements = AchievementTracker.objects.all()
+    for ach in achievements:
+        if 1 <= ach.achiev_no <= 4:
+            ach.progress_current = 0
+            ach.progress_star = 0
+            ach.save()
 
 
 
