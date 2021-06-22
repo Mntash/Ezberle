@@ -3722,7 +3722,7 @@ label[for="id_remember"] span {
     .customization-modal,
     .reminder-modal,
     .achievs-modal {
-        width: 600px !important;
+        width: 550px !important;
     }
     .shop_pdt:hover {
         transform: scale(1.2);
@@ -3772,7 +3772,7 @@ label[for="id_remember"] span {
     .customization-modal,
     .reminder-modal,
     .achievs-modal {
-        height: 550px !important;
+        height: 600px !important;
     }
     #id1_1{
       animation: drawLine1 2.5s ease-in-out 1s forwards, flicker1 4s linear 5s infinite;
