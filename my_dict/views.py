@@ -155,10 +155,6 @@ def dictionary(request):
 def dictionary_search(request, word):
     data = []
     data_2 = []
-    synonym_list = []
-    antonym_list = []
-    example_list = []
-    audio = ""
     error = False
     suggestion_exists = False
     suggestion_list = []
@@ -173,10 +169,8 @@ def dictionary_search(request, word):
         rows = table.find_all('tr')[1:]
 
         def english(history_save, is_true):
-            if soup_tur.find('audio', {'id': 'turengVoiceENTRENus'}):
-                if soup_tur.find('audio', {'id': 'turengVoiceENTRENus'}).find('source'):
-                    audio_src = soup_tur.find('audio', {'id': 'turengVoiceENTRENus'}).find('source')['src']
-                    audio = audio_src
+            if soup_tur.find('audio', {'id': 'turengVoiceENTRENus'}).find('source'):
+                audio = soup_tur.find('audio', {'id': 'turengVoiceENTRENus'}).find('source')['src']
             for row in rows:
                 if not row.attrs:
                     tds = row.find_all('td')
@@ -206,6 +200,7 @@ def dictionary_search(request, word):
                                     english = " ".join(tds[2].text.split()[:-1])
                                     turkish = tds[3].text.strip()
                                     data_2.append([category, english, turkish])
+            return audio
 
         def turkish():
             for row in rows:
@@ -229,28 +224,30 @@ def dictionary_search(request, word):
                                     data_2.append([category, turkish, english])
 
         def synAntoExs():
+            synonym_list = []
+            antonym_list = []
+            example_list = []
             url_saur = saurus_url.format(word)
             html_saur = requests.get(url_saur).content
             soup_saur = BeautifulSoup(html_saur, 'lxml')
-            h2_list = soup_saur.find_all('h2')
-            for h2 in h2_list:
-                if "other words" in h2.text:
-                    synonyms = h2.parent.find_next_sibling().find_all('li')
-                    for synonym in synonyms:
-                        if synonym.find('a'):
-                            text = synonym.find('a').text
-                            synonym_list.append(text)
-                elif "opposites" in h2.text:
-                    antonyms = h2.parent.find_next_sibling().find_all('li')
-                    for antonym in antonyms:
-                        if antonym.find('a'):
-                            text = antonym.find('a').text
-                            antonym_list.append(text)
-                elif "EXAMPLE SENTENCES" in h2.text:
-                    examples = h2.next_siblings
-                    for example in examples:
-                        text = example.find('span').text
-                        example_list.append(text)
+            if soup_saur.find('div', id='meanings'):
+                synonyms = soup_saur.find('div', id='meanings').find_all('li')
+                for synonym in synonyms:
+                    if synonym.find('a'):
+                        text = synonym.find('a').text
+                        synonym_list.append(text)
+            if soup_saur.find('div', id='antonyms'):
+                antonyms = soup_saur.find('div', id='antonyms').find_all('li')
+                for antonym in antonyms:
+                    if antonym.find('a'):
+                        text = antonym.find('a').text
+                        antonym_list.append(text)
+            if soup_saur.find('div', id='example-sentences'):
+                examples = soup_saur.find('div', id='example-sentences').find('h2').next_siblings
+                for example in examples:
+                    text = example.find('div').find('div').find('div').find('span').text
+                    example_list.append(text)
+            return synonym_list, antonym_list, example_list
 
         if table.find("th", class_="c2").text == "İngilizce":
             if table.find_next_sibling('h2'):
@@ -262,21 +259,24 @@ def dictionary_search(request, word):
                         is_english = False
                         turkish()
                     else:
-                        english(True, True)
+                        audio = english(True, True)
                         try:
-                            synAntoExs()
+                            synAntoExs = synAntoExs()
+                            print(synAntoExs)
                         except:
                             pass
                 else:
-                    english(True, True)
+                    audio = english(True, True)
                     try:
-                        synAntoExs()
+                        synAntoExs = synAntoExs()
+                        print(synAntoExs)
                     except:
                         pass
             else:
-                english(True, False)
+                audio = english(True, False)
                 try:
-                    synAntoExs()
+                    synAntoExs = synAntoExs()
+                    print(synAntoExs)
                 except:
                     pass
         elif table.find("th", class_="c2").text == "Türkçe":
@@ -287,9 +287,10 @@ def dictionary_search(request, word):
                     rows_table_en = table_en.find_all('tr')[1:]
                     if len(rows_table_en) >= len(rows):
                         is_english = True
-                        english(False, True)
+                        audio = english(False, True)
                         try:
-                            synAntoExs()
+                            synAntoExs = synAntoExs()
+                            print(synAntoExs)
                         except:
                             pass
                     else:
@@ -317,9 +318,9 @@ def dictionary_search(request, word):
         'data_2': data_2,
         'word': word,
         'audio': audio,
-        'synonyms': synonym_list[:3],
-        'antonyms': antonym_list[:3],
-        'examples': example_list[:3],
+        'synonyms': synAntoExs[0][:3],
+        'antonyms': synAntoExs[1][:3],
+        'examples': synAntoExs[2][:3],
         'error': error,
         'suggestion_exists': suggestion_exists,
         'suggestion_list': suggestion_list,
