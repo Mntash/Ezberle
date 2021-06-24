@@ -176,7 +176,7 @@ class ShopProducts(models.Model):
     price = models.IntegerField(default=0)
     type = models.CharField(max_length=15, choices=product_types, default='Renk')
     color = models.CharField(max_length=30, null=True, blank=True)
-    background_image = models.ImageField(null=True, blank=True, upload_to='my_dict/static/img')
+    background_image = models.ImageField(null=True, blank=True, upload_to='static/img')
 
     def __str__(self):
         return self.text
