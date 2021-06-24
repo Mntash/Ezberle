@@ -886,7 +886,7 @@ $(function(){
                        'csrfmiddlewaretoken' : '{{csrf_token}}'
                     },
                     success: function(data) {
-                        $("body").css("cssText", `background-image: url(https://ezberle.herokuapp.com/static/img/${data.pdt_image}) !important;
+                        $("body").css("cssText", `background-image: url(https://ezberle.herokuapp.com/my_dict/static/img/${data.pdt_image}) !important;
                                                   background-size: 40%`)
                     }
                 })
@@ -910,7 +910,7 @@ $(function(){
                     $("#menu").css("cssText", `background: ${data.pdt_color}`)
                     $(".ber").css("cssText", `color: ${data.pdt_color}`)
                 } else if (data.pdt_bg_img) {
-                    $("body").css("cssText", `background-image: url(https://ezberle.herokuapp.com/static/img/${data.pdt_bg_img}) !important;
+                    $("body").css("cssText", `background-image: url(https://ezberle.herokuapp.com/my_dict/static/img/${data.pdt_bg_img}) !important;
                                               background-size: 40%`)
                 }
             }
