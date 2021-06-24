@@ -262,21 +262,18 @@ def dictionary_search(request, word):
                         audio = english(True, True)
                         try:
                             synAntoExs = synAntoExs()
-                            print(synAntoExs)
                         except:
                             pass
                 else:
                     audio = english(True, True)
                     try:
                         synAntoExs = synAntoExs()
-                        print(synAntoExs)
                     except:
                         pass
             else:
                 audio = english(True, False)
                 try:
                     synAntoExs = synAntoExs()
-                    print(synAntoExs)
                 except:
                     pass
         elif table.find("th", class_="c2").text == "Türkçe":
@@ -290,7 +287,6 @@ def dictionary_search(request, word):
                         audio = english(False, True)
                         try:
                             synAntoExs = synAntoExs()
-                            print(synAntoExs)
                         except:
                             pass
                     else:
