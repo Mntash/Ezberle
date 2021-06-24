@@ -26,7 +26,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = '+$*jtuqrjxh=-q2_!(%q96k_etxmx12!udcj578@+9*me@bb8='
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 ALLOWED_HOSTS = ['ezberle.herokuapp.com', 'localhost', '127.0.0.1']
 
