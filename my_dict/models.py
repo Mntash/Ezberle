@@ -181,6 +181,9 @@ class ShopProducts(models.Model):
     def __str__(self):
         return self.text
 
+    class Meta:
+        ordering = ['text']
+
 
 class ProductTracker(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False, unique=True)
