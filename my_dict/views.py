@@ -159,6 +159,10 @@ def dictionary_search(request, word):
     suggestion_exists = False
     suggestion_list = []
     is_english = True
+    audio = ""
+    synonym_list = []
+    antonym_list = []
+    example_list = []
 
     try:
         url_tur = tureng_url.format(word)
@@ -261,19 +265,19 @@ def dictionary_search(request, word):
                     else:
                         audio = english(True, True)
                         try:
-                            synAntoExs = synAntoExs()
+                            synonym_list, antonym_list, example_list = synAntoExs()
                         except:
                             pass
                 else:
                     audio = english(True, True)
                     try:
-                        synAntoExs = synAntoExs()
+                        synonym_list, antonym_list, example_list = synAntoExs()
                     except:
                         pass
             else:
                 audio = english(True, False)
                 try:
-                    synAntoExs = synAntoExs()
+                    synonym_list, antonym_list, example_list = synAntoExs()
                 except:
                     pass
         elif table.find("th", class_="c2").text == "Türkçe":
@@ -286,7 +290,7 @@ def dictionary_search(request, word):
                         is_english = True
                         audio = english(False, True)
                         try:
-                            synAntoExs = synAntoExs()
+                            synonym_list, antonym_list, example_list = synAntoExs()
                         except:
                             pass
                     else:
@@ -314,9 +318,9 @@ def dictionary_search(request, word):
         'data_2': data_2,
         'word': word,
         'audio': audio,
-        'synonyms': synAntoExs[0][:3],
-        'antonyms': synAntoExs[1][:3],
-        'examples': synAntoExs[2][:3],
+        'synonyms': synonym_list[:3],
+        'antonyms': antonym_list[:3],
+        'examples': example_list[:3],
         'error': error,
         'suggestion_exists': suggestion_exists,
         'suggestion_list': suggestion_list,
@@ -1015,7 +1019,7 @@ def shop_purchase(request):
     if prof.coin - int(pdt.price) >= 0:
         if not ProductTracker.objects.filter(profile=prof, text=pdt.text).exists():
             if pdt.type == "bg-img":
-                image = str(pdt.background_image).split("my_dict/")[1]
+                image = str(pdt.background_image)
                 obj = ProductTracker.objects.create(
                     profile=prof, text=pdt.text, type=pdt.type, color=pdt.color, background_image=image
                 )
