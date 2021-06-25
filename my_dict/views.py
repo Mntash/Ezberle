@@ -1106,7 +1106,7 @@ def customization(request):
         elif request.POST.get("custom_background_image"):
             pdt_id = request.POST.get("pdt_id")
             pdt = ProductTracker.objects.get(id=pdt_id)
-            prof.custom_background_image = f"url(ezberle.herokuapp.com/static/img/{str(pdt.background_image).split('img/')[1]})"
+            prof.custom_background_image = f"url(https://ezberle.herokuapp.com/static/img/{str(pdt.background_image).split('img/')[1]})"
             prof.custom_background_color = ""
             prof.save()
             data = {
