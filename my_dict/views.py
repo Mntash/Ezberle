@@ -850,7 +850,7 @@ def get_achievs(request):
     if request.method == "GET":
         if request.user.is_authenticated:
             achievements = AchievementDetail.objects.all().order_by("achiev_no")
-            shop_products = ShopProducts.objects.all().order_by("price")
+            shop_products = ShopProducts.objects.all().order_by("price", "text")
             prof = Profile.objects.get(user=request.user)
             achievement_tracker = AchievementTracker.objects.filter(profile=prof.id).order_by('achiev_no')
             ach_tracker_list = []

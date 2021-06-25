@@ -739,7 +739,6 @@ $(function(){
                         }
                       }
                     })
-                    var bg_img_list = []
                     pdt_list.map(function(obj, i){
                         $(".shop-panel").append(`<div class="shop_pdt col-sm-4 col-12" data-id="${obj.pdt_id}">
                                                     <div class="pdt-text">${obj.pdt_text}</div>
@@ -757,7 +756,12 @@ $(function(){
                                 rengini satın al
                             `)
                         } else if (obj.pdt_type === "bg-img") {
-                            bg_img_list.push(obj)
+                            $(".shop_pdt").eq(i).addClass("shop_pdt_bg")
+                            $(".pdt-footer").eq(i).prepend(`<button class="pdt-pv">ön izle</button>`)
+                            $(".pdt-text").eq(i).html(`
+                                <span style="color:#2e3039">${obj.pdt_text}</span>
+                                arka plan resmini satın al
+                            `)
                         } else if (obj.pdt_type === "rights") {
                             $(".shop_pdt").eq(i).addClass("shop_pdt_rights")
                             $(".pdt-text").eq(i).html(`
@@ -770,14 +774,6 @@ $(function(){
                         } else {
                             $(".pdt-footer").eq(i).append(`<button class="pdt-buy"></button>`)
                         }
-                    })
-                    bg_img_list.sort().map(function(obj, i){
-                        $(".shop_pdt").eq(i).addClass("shop_pdt_bg")
-                        $(".pdt-footer").eq(i).prepend(`<button class="pdt-pv">ön izle</button>`)
-                        $(".pdt-text").eq(i).html(`
-                            <span style="color:#2e3039">${obj.pdt_text}</span>
-                            arka plan resmini satın al
-                        `)
                     })
                 }, 700)
             }
