@@ -601,7 +601,7 @@ def get_reminder_list(request):
                   'create_time': obj.create_time.strftime('%d/%m/%Y')
                 }
             )
-        obj_unl = QuizRecorder.objects.filter(user=request.user, is_learned=False)
+        obj_unl = QuizRecorder.objects.filter(user=request.user, is_db=False, is_learned=False)
         for obj in obj_unl:
             quiz_unl.append(
                 {
@@ -610,7 +610,7 @@ def get_reminder_list(request):
                   'create_time': obj.create_time.strftime('%d/%m/%Y')
                 }
             )
-        obj_l = QuizRecorder.objects.filter(user=request.user, is_learned=True)
+        obj_l = QuizRecorder.objects.filter(user=request.user, is_db=False, is_learned=True)
         for obj in obj_l:
             quiz_l.append(
                 {
