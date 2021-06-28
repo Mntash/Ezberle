@@ -5075,7 +5075,7 @@ label[for="id_remember"] span {
 }
 
 .loader-fb:after {
-  background: oldlace;
+  background: #f1f3f5;
   width: 75%;
   height: 75%;
   border-radius: 50%;

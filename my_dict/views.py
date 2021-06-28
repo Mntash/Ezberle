@@ -1136,10 +1136,10 @@ def shop_preview(request):
 
 
 def save_feedback(request):
-    if request.method == 'POST':
-        name = request.POST.get("name")
-        lastname = request.POST.get("lastname")
-        feedback = request.POST.get("feedback")
+    if request.method == 'GET':
+        name = request.GET.get("name")
+        lastname = request.GET.get("lastname")
+        feedback = request.GET.get("feedback")
         obj = Feedback(isim=name, soyisim=lastname, mesaj=feedback)
         obj.save()
         return JsonResponse(data={})
