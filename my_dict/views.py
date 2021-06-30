@@ -172,16 +172,25 @@ def dictionary_search(request, word):
         table = soup_tur.find('table')
         rows = table.find_all('tr')[1:]
 
-        def english(history_save, is_true):
+        def english(rows_table_en, history_save, is_true):
             if soup_tur.find('audio', {'id': 'turengVoiceENTRENus'}).find('source'):
                 audio = soup_tur.find('audio', {'id': 'turengVoiceENTRENus'}).find('source')['src']
-            for row in rows:
-                if not row.attrs:
-                    tds = row.find_all('td')
-                    category = tds[1].text.strip()
-                    english = " ".join(tds[2].text.split()[:-1])
-                    turkish = tds[3].text.strip()
-                    data.append([category, english, turkish])
+            if rows_table_en:
+                for row in rows_table_en:
+                    if not row.attrs:
+                        tds = row.find_all('td')
+                        category = tds[1].text.strip()
+                        english = " ".join(tds[2].text.split()[:-1])
+                        turkish = tds[3].text.strip()
+                        data.append([category, english, turkish])
+            else:
+                for row in rows:
+                    if not row.attrs:
+                        tds = row.find_all('td')
+                        category = tds[1].text.strip()
+                        english = " ".join(tds[2].text.split()[:-1])
+                        turkish = tds[3].text.strip()
+                        data.append([category, english, turkish])
             if history_save:
                 if word:
                     if request.user.is_authenticated:
@@ -206,14 +215,23 @@ def dictionary_search(request, word):
                                     data_2.append([category, english, turkish])
             return audio
 
-        def turkish():
-            for row in rows:
-                if not row.attrs:
-                    tds = row.find_all('td')
-                    category = tds[1].text.strip()
-                    turkish = tds[2].text.strip()
-                    english = " ".join(tds[3].text.split()[:-1])
-                    data.append([category, turkish, english])
+        def turkish(rows_table_tr):
+            if rows_table_tr:
+                for row in rows_table_tr:
+                    if not row.attrs:
+                        tds = row.find_all('td')
+                        category = tds[1].text.strip()
+                        turkish = tds[2].text.strip()
+                        english = " ".join(tds[3].text.split()[:-1])
+                        data.append([category, turkish, english])
+            else:
+                for row in rows:
+                    if not row.attrs:
+                        tds = row.find_all('td')
+                        category = tds[1].text.strip()
+                        turkish = tds[2].text.strip()
+                        english = " ".join(tds[3].text.split()[:-1])
+                        data.append([category, turkish, english])
             for tb in tables:
                 if tb.find("th", class_="c2").text == "Türkçe":
                     if 'teriminin diğer terimlerle kazandığı' in tb.find_previous().find_previous().text:
@@ -261,21 +279,21 @@ def dictionary_search(request, word):
                     rows_table_tr = table_tr.find_all('tr')[1:]
                     if len(rows_table_tr) > len(rows):
                         is_english = False
-                        turkish()
+                        turkish(rows_table_tr)
                     else:
-                        audio = english(True, True)
+                        audio = english(False, True, True)
                         try:
                             synonym_list, antonym_list, example_list = synAntoExs()
                         except:
                             pass
                 else:
-                    audio = english(True, True)
+                    audio = english(False, True, True)
                     try:
                         synonym_list, antonym_list, example_list = synAntoExs()
                     except:
                         pass
             else:
-                audio = english(True, False)
+                audio = english(False, True, False)
                 try:
                     synonym_list, antonym_list, example_list = synAntoExs()
                 except:
@@ -288,20 +306,20 @@ def dictionary_search(request, word):
                     rows_table_en = table_en.find_all('tr')[1:]
                     if len(rows_table_en) >= len(rows):
                         is_english = True
-                        audio = english(False, True)
+                        audio = english(rows_table_en, False, True)
                         try:
                             synonym_list, antonym_list, example_list = synAntoExs()
                         except:
                             pass
                     else:
                         is_english = False
-                        turkish()
+                        turkish(False)
                 else:
                     is_english = False
-                    turkish()
+                    turkish(False)
             else:
                 is_english = False
-                turkish()
+                turkish(False)
     except AttributeError:
         url_tur = tureng_url.format(word)
         html_tur = requests.get(url_tur).content

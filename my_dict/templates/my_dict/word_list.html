@@ -482,19 +482,6 @@ $(function(){
         }
     })
 
-    function mediaEnSection(x) {
-      if (x.matches) {
-        $(".en-section").addClass("d-flex justify-content-between")
-        $(".btn-grp").removeClass("d-flex justify-content-center")
-      } else {
-        $(".en-section").removeClass("d-flex justify-content-between")
-        $(".btn-grp").addClass("d-flex justify-content-center")
-      }
-    }
-    var en_sec = window.matchMedia("(min-width:421px)")
-    mediaEnSection(en_sec)
-    en_sec.addListener(mediaEnSection)
-
     function mediaContainer(x) {
       if (x.matches) {
         $(".word-mng").addClass("container")

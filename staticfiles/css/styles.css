@@ -54,8 +54,7 @@ body {
     overflow-x:hidden;
     -webkit-transition: background .3s;
     -o-transition: background .3s;
-    transition: background .3s;
-    background-repeat:round !important;
+    transition: background .3s
 }
 
 html {
@@ -3893,6 +3892,10 @@ label[for="id_remember"] span {
         margin-bottom: 5px;
         text-align: center
     }
+    .btn-grp {
+        display: flex;
+        justify-content: center
+    }
 }
 
 @media (min-width:421px) {
@@ -3915,6 +3918,10 @@ label[for="id_remember"] span {
         border-bottom: none;
         margin-bottom: 0;
         text-align: left
+    }
+    .en-section {
+        display: flex;
+        justify-content: space-between
     }
 }
 
