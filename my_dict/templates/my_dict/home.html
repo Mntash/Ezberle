@@ -674,24 +674,120 @@ $(function(){
         },
     )
 
+    async function startDb() {
+        var result;
+
+        try {
+            result = await $.ajax({
+                type:"GET",
+                url: "{% url 'get-count' %}",
+                data: {
+                    "count_db": 1,
+                },
+                dataType: 'json',
+                success: function(data) {
+                    quiz_rights = data.quiz_rights
+                }
+            })
+            return result;
+        } catch (error) {
+            console.error(error);
+        }
+    }
+
+    async function startUnl() {
+        var result;
+
+        try {
+            result = await $.ajax({
+                type:"GET",
+                url: "{% url 'get-count' %}",
+                data: {
+                    "count_unl": 1,
+                },
+                dataType: 'json',
+                success: function(data) {
+                    quiz_rights = data.quiz_rights
+                }
+            })
+            return result;
+        } catch (error) {
+            console.error(error);
+        }
+    }
+
+    async function isAddedUnl() {
+        var result;
+
+        try {
+            result = await $.ajax({
+                type:"GET",
+                url: "{% url 'reminder' %}",
+                data: {
+                    'is_added': 'is_added',
+                    'word': word,
+                },
+                dataType: 'json',
+                success: function(data) {
+                    is_added = data.is_added
+                }
+            })
+            return result;
+        } catch (error) {
+            console.error(error);
+        }
+    }
+
+    async function startL() {
+        var result;
+
+        try {
+            result = await $.ajax({
+                type:"GET",
+                url: "{% url 'get-count' %}",
+                data: {
+                    "count_l": 1,
+                },
+                dataType: 'json',
+                success: function(data) {
+                    quiz_rights = data.quiz_rights
+                }
+            })
+            return result;
+        } catch (error) {
+            console.error(error);
+        }
+    }
+
+    async function isAddedL() {
+        var result;
+
+        try {
+            result = await $.ajax({
+                type:"GET",
+                url: "{% url 'reminder' %}",
+                data: {
+                    'is_added': 'is_added',
+                    'word': word,
+                },
+                dataType: 'json',
+                success: function(data) {
+                    is_added = data.is_added
+                }
+            })
+            return result;
+        } catch (error) {
+            console.error(error);
+        }
+    }
+
     $(".start").click(function() {
         if(!event.detail || event.detail == 1) {
             var ths = $(this)
             if (ths.hasClass("start-db")) {
-                quiz_rights = 0
-                $.ajax({
-                    type:"GET",
-                    url: "{% url 'get-count' %}",
-                    data: {
-                        "count_db": 1,
-                    },
-                    async:false,
-                    dataType: 'json',
-                    success: function(data) {
-                        quiz_rights = data.quiz_rights
-                    }
-                })
-                if ( quiz_rights > 0 ) {
+                startDb()
+                setTimeout(function(){
+                    if ( quiz_rights > 0 ) {
                     $.ajax({
                         type:"POST",
                         url: "{% url 'complete-quiz' %}",
@@ -978,21 +1074,12 @@ $(function(){
                     ths.after(`<div class="quiz-err-db mt-1">* Günlük Quiz haklarınızı tamamlamışsınız.
                                                                 Yarın tekrar gelin!</div>`)
                 }
+                }, 40)
             } else if (ths.hasClass("start-unl")) {
                 quiz_rights = 0
-                $.ajax({
-                    type:"GET",
-                    url: "{% url 'get-count' %}",
-                    data: {
-                        "count_unl": 1,
-                    },
-                    async:false,
-                    dataType: 'json',
-                    success: function(data) {
-                        quiz_rights = data.quiz_rights
-                    }
-                })
-                if ( quiz_rights > 0 ) {
+                startUnl()
+                setTimeout(function(){
+                    if ( quiz_rights > 0 ) {
                     $.ajax({
                         type:"POST",
                         url: "{% url 'complete-quiz' %}",
@@ -1253,19 +1340,7 @@ $(function(){
                                         for (i=0;i<value;i++) {
                                             word = $(document).find(".word-unl").eq(i).text()
                                             is_added = ""
-                                            $.ajax({
-                                                type:"GET",
-                                                url: "{% url 'reminder' %}",
-                                                data: {
-                                                    'is_added': 'is_added',
-                                                    'word': word,
-                                                },
-                                                async:false,
-                                                dataType: 'json',
-                                                success: function(data) {
-                                                    is_added = data.is_added
-                                                }
-                                            })
+                                            isAddedUnl()
                                             if (correct_list.includes(word)) {
                                                 $(".res-unl-ul").append(`<li data-id="${i}">
                                                                       <a class="correct" href="" data-id="res-word">${word}</a>
@@ -1319,6 +1394,7 @@ $(function(){
                                                                               </div>
                                                                           </div>
                                                                          </li>`)
+                                                isAddedL()
                                                 if (is_added) {
                                                     $(`div[data-id='unl-${i}']`).append(`<a class="dropdown-item" href="#!">
                                                                                              <i class="fas fa-bell"></i>
@@ -1359,22 +1435,12 @@ $(function(){
                     ths.after(`<div class="quiz-err-unl mt-1">* Günlük Quiz haklarınızı tamamlamışsınız.
                                                                 Yarın tekrar gelin!</div>`)
                 }
-
+                }, 40)
             } else if (ths.hasClass("start-l")) {
                 quiz_rights = 0
-                $.ajax({
-                    type:"GET",
-                    url: "{% url 'get-count' %}",
-                    data: {
-                        "count_l": 1,
-                    },
-                    async:false,
-                    dataType: 'json',
-                    success: function(data) {
-                        quiz_rights = data.quiz_rights
-                    }
-                })
-                if ( quiz_rights > 0 ) {
+                startL()
+                setTimeout(function(){
+                    if ( quiz_rights > 0 ) {
                     $.ajax({
                         type:"POST",
                         url: "{% url 'complete-quiz' %}",
@@ -1744,6 +1810,7 @@ $(function(){
                     ths.after(`<div class="quiz-err-l mt-1">* Günlük Quiz haklarınızı tamamlamışsınız.
                                                                 Yarın tekrar gelin!</div>`)
                 }
+                }, 40)
             }
         }
     })
@@ -1785,18 +1852,13 @@ $(function(){
     mediaContainer(container)
     container.addListener(mediaContainer)
 
-    $(".ref").click(function() {
-        var ths = $(this)
-        if (ths.hasClass('ref-l')) {
-            if (ths.parents().eq(3).hasClass("flip-card")) {
-                ths.parents().eq(3).removeClass("flip-card")
-            } else {
-                ths.parents().eq(3).addClass("flip-card")
-            }
-            $.ajax({
+    async function refL() {
+        var result;
+
+        try {
+            result = await $.ajax({
                 type:"GET",
                 url: "{% url 'quiz-and-refresh' %}",
-                async: false,
                 data: {
                     'random-learned': "refresh",
                 },
@@ -1821,17 +1883,20 @@ $(function(){
                         },1800)
                     }
                 }
-            }) // ajax
-        } else if (ths.hasClass('ref-unl')) {
-            if (ths.parents().eq(3).hasClass("flip-card")) {
-                ths.parents().eq(3).removeClass("flip-card")
-            } else {
-                ths.parents().eq(3).addClass("flip-card")
-            }
-            $.ajax({
+            })
+            return result;
+        } catch (error) {
+            console.error(error);
+        }
+    }
+
+    async function refUnl() {
+        var result;
+
+        try {
+            result = await $.ajax({
                 type:"GET",
                 url: "{% url 'quiz-and-refresh' %}",
-                async: false,
                 data: {
                     'random-unlearned': "refresh",
                 },
@@ -1857,17 +1922,19 @@ $(function(){
                     }
                 }
             })
+            return result;
+        } catch (error) {
+            console.error(error);
         }
-        else if (ths.hasClass('ref-db')) {
-            if (ths.parents().eq(3).hasClass("flip-card")) {
-                ths.parents().eq(3).removeClass("flip-card")
-            } else {
-                ths.parents().eq(3).addClass("flip-card")
-            }
-            $.ajax({
+    }
+
+    async function refDb() {
+        var result;
+
+        try {
+            result = await $.ajax({
                 type:"GET",
                 url: "{% url 'quiz-and-refresh' %}",
-                async: false,
                 data: {
                     'random-db': 'refresh',
                 },
@@ -1893,6 +1960,37 @@ $(function(){
                     }
                 }
             })
+
+            return result;
+        } catch (error) {
+            console.error(error);
+        }
+    }
+
+    $(".ref").click(function() {
+        var ths = $(this)
+        if (ths.hasClass('ref-l')) {
+            if (ths.parents().eq(3).hasClass("flip-card")) {
+                ths.parents().eq(3).removeClass("flip-card")
+            } else {
+                ths.parents().eq(3).addClass("flip-card")
+            }
+            refL()
+        } else if (ths.hasClass('ref-unl')) {
+            if (ths.parents().eq(3).hasClass("flip-card")) {
+                ths.parents().eq(3).removeClass("flip-card")
+            } else {
+                ths.parents().eq(3).addClass("flip-card")
+            }
+            refUnl()
+        }
+        else if (ths.hasClass('ref-db')) {
+            if (ths.parents().eq(3).hasClass("flip-card")) {
+                ths.parents().eq(3).removeClass("flip-card")
+            } else {
+                ths.parents().eq(3).addClass("flip-card")
+            }
+            refDb()
         }
     })
 

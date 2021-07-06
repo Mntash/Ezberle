@@ -18,6 +18,30 @@ tureng_url = 'https://tureng.com/tr/turkce-ingilizce/{}'
 saurus_url = 'https://www.thesaurus.com/browse/{}'
 
 
+def get_word_list(request, obj):
+    if request.user.is_authenticated:
+        if obj == 'db_words':
+            db_words = WordDb.objects.all()
+            return db_words
+        elif obj == 'unlearned_words':
+            unlearned_words = WordEn.objects.filter(user=request.user, is_learned=False)
+            return unlearned_words
+        elif obj == 'learned_words':
+            learned_words = WordEn.objects.filter(user=request.user, is_learned=True)
+            return learned_words
+        elif obj == 'db_words_en':
+            db_words_en = [word["english"] for word in WordDb.objects.all().values()]
+            return db_words_en
+        elif obj == 'unlearned_words_en':
+            unlearned_words_en = [word["english"] for word in
+                                  WordEn.objects.filter(user=request.user, is_learned=False).values()]
+            return unlearned_words_en
+        elif obj == 'learned_words_en':
+            learned_words_en = [word["english"] for word in
+                                WordEn.objects.filter(user=request.user, is_learned=True).values()]
+            return learned_words_en
+
+
 def home(request):
     word_mer = WotdEn.objects.get(website="Merriam")
     word_ox = WotdEn.objects.get(website="Oxford")
@@ -32,28 +56,27 @@ def home(request):
     }
 
     if request.user.is_authenticated:
+        # 4 kategorideki tüm kelimeler
+
         data['last_words'] = WordEn.objects.filter(user=request.user).order_by("-create_time")[:10]
-        db_words = [word["english"] for word in WordDb.objects.all().values()]
-        unlearned_words = [word["english"] for word in
-                           WordEn.objects.filter(user=request.user, is_learned=False).values()]
-        learned_words = [word["english"] for word in WordEn.objects.filter(user=request.user, is_learned=True).values()]
+        db_words = get_word_list(request, 'db_words_en')
+        unlearned_words = get_word_list(request, 'unlearned_words_en')
+        learned_words = get_word_list(request, 'learned_words_en')
         if WordEn.objects.filter(user=request.user, is_new_in_reminder_list=True):
             data['show_reminder_notif'] = True
 
+        # Sayfa açılırken 4 karttaki rastgele kelimeler
+
         random_ = random.sample(db_words, k=10)
         data['random_db'] = random_
-        if len(unlearned_words) < 10:
-            random_ = random.sample(unlearned_words, len(unlearned_words))
-            data['random_unl'] = random_
-        else:
-            random_ = random.sample(unlearned_words, k=10)
-            data['random_unl'] = random_
-        if len(learned_words) < 10:
-            random_ = random.sample(learned_words, len(learned_words))
-            data['random_l'] = random_
-        else:
-            random_ = random.sample(learned_words, k=10)
-            data['random_l'] = random_
+        random_unl = random.sample(unlearned_words, len(unlearned_words)) \
+            if len(unlearned_words) < 10 else random.sample(unlearned_words, k=10)
+        data['random_unl'] = random_unl
+        random_l = random.sample(learned_words, len(learned_words)) \
+            if len(learned_words) < 10 else random.sample(learned_words, k=10)
+        data['random_l'] = random_l
+
+        # Günlük kelimeler eklenmiş mi
 
         if WordEn.objects.filter(user=request.user, english=word_mer.english).exists():
             data['mer_exists'] = True
@@ -64,6 +87,8 @@ def home(request):
         if WordEn.objects.filter(user=request.user, english=word_vocab.english).exists():
             data['vocab_exists'] = True
 
+        # Quiz hakları
+
         if Profile.objects.get(user_id=request.user.id).quiz_db_rights:
             data['quiz_db_rights'] = True
         if Profile.objects.get(user_id=request.user.id).quiz_unl_rights:
@@ -71,7 +96,10 @@ def home(request):
         if Profile.objects.get(user_id=request.user.id).quiz_l_rights:
             data['quiz_l_rights'] = True
 
+        # Hatırlatıcıyı günde 1 kere aç
+
         data['open_reminder_daily'] = Profile.objects.get(user_id=request.user.id).open_reminder_daily
+        data['reminder_count'] = Profile.objects.get(user_id=request.user.id).reminder_count
     return render(request, 'my_dict/home.html', context=data)
 
 
@@ -85,9 +113,9 @@ def quiz_and_refresh(request):
     tr_list = []
 
     if request.user.is_authenticated:
-        db_words = [word["english"] for word in WordDb.objects.all().values()]
-        unlearned_words = [word["english"] for word in WordEn.objects.filter(user=request.user, is_learned=False).values()]
-        learned_words = [word["english"] for word in WordEn.objects.filter(user=request.user, is_learned=True).values()]
+        db_words = get_word_list(request, 'db_words_en')
+        unlearned_words = get_word_list(request, 'unlearned_words_en')
+        learned_words = get_word_list(request, 'learned_words_en')
 
     if request.method == "GET":
         if request.GET.get('random-db'):
@@ -358,8 +386,8 @@ def dictionary_search(request, word):
 
 @login_required
 def my_word_list(request):
-    l_words = WordEn.objects.filter(user=request.user, is_learned=True)
-    unl_words = WordEn.objects.filter(user=request.user, is_learned=False)
+    unl_words = get_word_list(request, 'unlearned_words')
+    l_words = get_word_list(request, 'learned_words')
 
     if request.method == 'POST':
         if "english-unl" in request.POST:
@@ -418,8 +446,8 @@ def my_word_list(request):
 
 @login_required
 def my_word_list_search(request, word):
-    unl_words = WordEn.objects.filter(user=request.user, is_learned=False)
-    l_words = WordEn.objects.filter(user=request.user, is_learned=True)
+    unl_words = get_word_list(request, "unlearned_words")
+    l_words = get_word_list(request, "learned_words")
     word_unl = list()
     word_l = list()
     if word:
@@ -711,14 +739,12 @@ def get_word_count_and_quiz_rights(request):
     if request.method == "GET":
         prof = Profile.objects.get(user=request.user)
         if request.GET.get('count_unl'):
-            obj = WordEn.objects.filter(user=request.user, is_learned=False)
             quiz_rights = prof.quiz_unl_rights
-            count = len(obj)
+            count = len(get_word_list(request, 'unlearned_words'))
             return JsonResponse(data={'count_unl': count, 'quiz_rights': quiz_rights})
         elif request.GET.get('count_l'):
-            obj = WordEn.objects.filter(user=request.user, is_learned=True)
             quiz_rights = prof.quiz_l_rights
-            count = len(obj)
+            count = len(get_word_list(request, 'learned_words'))
             return JsonResponse(data={'count_l': count, 'quiz_rights': quiz_rights})
         elif request.GET.get('count_db'):
             quiz_rights = prof.quiz_db_rights
