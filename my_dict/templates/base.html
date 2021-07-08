@@ -1616,10 +1616,8 @@ $(function(){
                         $(".notif").addClass("notif-show").append(`<div class="notif-timer"></div>`).find("span").html("Kelime hakkında sonuç bulunamadı!")
                         notifHide()
                         setTimeout(function(){
-                            $(".sk-chase").remove()
-                            $(".ajax_word_btn").eq(0).remove()
-                            $(".ajax_word_info").append(`<button class='ajax_word_btn'><i class='fab fa-readme oldlace'></i></button>`)
-                        }, 200)
+                            $(".ajax_word_info").remove()
+                        }, 1000)
                     }
                 }
             })
