@@ -4285,6 +4285,9 @@ label[for="id_remember"] span {
             -ms-transform:translate(1300px);
                 transform:translate(1300px)
     }
+    .wotd-tr-list {
+        max-height: 75px
+    }
 }
 
 @media (min-width: 992px) and (max-width: 1200px) {
