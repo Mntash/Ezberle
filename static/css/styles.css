@@ -4347,6 +4347,9 @@ label[for="id_remember"] span {
     .word-mng-search input {
         width:125px
     }
+    .wotd-tr-list {
+        max-height: 75px
+    }
 }
 
 /* ---media queries--- */
