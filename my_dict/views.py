@@ -54,12 +54,14 @@ def home(request):
         'word_dict': word_dict,
         'word_vocab': word_vocab,
     }
+    db_words = get_word_list(request, 'db_words_en')
+    random_ = random.sample(db_words, k=10)
+    data['random_db'] = random_
 
     if request.user.is_authenticated:
         # 4 kategorideki tüm kelimeler
 
         data['last_words'] = WordEn.objects.filter(user=request.user).order_by("-create_time")[:10]
-        db_words = get_word_list(request, 'db_words_en')
         unlearned_words = get_word_list(request, 'unlearned_words_en')
         learned_words = get_word_list(request, 'learned_words_en')
         if WordEn.objects.filter(user=request.user, is_new_in_reminder_list=True):
@@ -67,8 +69,6 @@ def home(request):
 
         # Sayfa açılırken 4 karttaki rastgele kelimeler
 
-        random_ = random.sample(db_words, k=10)
-        data['random_db'] = random_
         random_unl = random.sample(unlearned_words, len(unlearned_words)) \
             if len(unlearned_words) < 10 else random.sample(unlearned_words, k=10)
         data['random_unl'] = random_unl
