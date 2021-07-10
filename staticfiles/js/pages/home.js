@@ -1,10 +1,9 @@
-scroll = $(".scroll_top")
 window.onscroll = function() {scrollFunction()}
 function scrollFunction() {
   if (document.body.scrollTop > 100 || document.documentElement.scrollTop > 100) {
-    scroll.css("display", "block")
+    $(".scroll_top").css("display", "block")
   } else {
-    scroll.css("display", "none")
+    $(".scroll_top").css("display", "none")
   }
 }
 

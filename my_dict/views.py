@@ -19,19 +19,19 @@ saurus_url = 'https://www.thesaurus.com/browse/{}'
 
 
 def get_word_list(request, obj):
+    if obj == 'db_words':
+        db_words = WordDb.objects.all()
+        return db_words
+    elif obj == 'db_words_en':
+        db_words_en = [word["english"] for word in WordDb.objects.all().values()]
+        return db_words_en
     if request.user.is_authenticated:
-        if obj == 'db_words':
-            db_words = WordDb.objects.all()
-            return db_words
-        elif obj == 'unlearned_words':
+        if obj == 'unlearned_words':
             unlearned_words = WordEn.objects.filter(user=request.user, is_learned=False)
             return unlearned_words
         elif obj == 'learned_words':
             learned_words = WordEn.objects.filter(user=request.user, is_learned=True)
             return learned_words
-        elif obj == 'db_words_en':
-            db_words_en = [word["english"] for word in WordDb.objects.all().values()]
-            return db_words_en
         elif obj == 'unlearned_words_en':
             unlearned_words_en = [word["english"] for word in
                                   WordEn.objects.filter(user=request.user, is_learned=False).values()]
