@@ -104,7 +104,7 @@ def home(request):
 
 
 def quiz_and_refresh(request):
-    db_words = []
+    db_words = get_word_list(request, 'db_words_en')
     unlearned_words = []
     learned_words = []
     random_db = []
@@ -113,7 +113,6 @@ def quiz_and_refresh(request):
     tr_list = []
 
     if request.user.is_authenticated:
-        db_words = get_word_list(request, 'db_words_en')
         unlearned_words = get_word_list(request, 'unlearned_words_en')
         learned_words = get_word_list(request, 'learned_words_en')
 

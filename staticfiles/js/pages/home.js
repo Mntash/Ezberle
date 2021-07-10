@@ -1272,7 +1272,7 @@ async function refL() {
                         $(".title-l").css("z-index", "-1").html("")
                         ref = $(".ref-img-l").detach()
                         $("button[data-target='#quiz-l']").html("")
-                    },700)
+                    },500)
                     setTimeout(function() {
                         $(".title-l").css("z-index", "initial").html("Öğrendiklerim")
                         $(".ref-l").prepend(ref)
@@ -1280,7 +1280,7 @@ async function refL() {
                         data.random_learned.map(function(i) {
                             $(".ul-learned").append(`<li><a class="teal" href="/sözlük/q=${i}/">${i}</a></li>`)
                         })
-                    },1800)
+                    },1600)
                 }
             }
         })
