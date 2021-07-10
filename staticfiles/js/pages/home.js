@@ -1310,7 +1310,7 @@ async function refUnl() {
                         $(".title-unl").css("z-index", "-1").html("")
                         ref = $(".ref-img-unl").detach()
                         $("button[data-target='#quiz-unl']").html("")
-                    },700)
+                    },500)
                     setTimeout(function() {
                         $(".title-unl").css("z-index", "initial").html("Öğreneceklerim")
                         $(".ref-unl").prepend(ref)
@@ -1318,7 +1318,7 @@ async function refUnl() {
                         data.random_unlearned.map(function(i) {
                             $(".ul-unlearned").append(`<li><a class="teal" href="/sözlük/q=${i}/">${i}</a></li>`)
                         })
-                    },1800)
+                    },1600)
                 }
             }
         })
@@ -1348,7 +1348,7 @@ async function refDb() {
                         $(".title-db").css("z-index", "-1").html("")
                         ref = $(".ref-img-db").detach()
                         $("button[data-target='#quiz-db']").html("")
-                    },700)
+                    },500)
                     setTimeout(function() {
                         $(".title-db").css("z-index", "initial").html("Biliyor muydun?")
                         $(".ref-db").prepend(ref)
@@ -1356,7 +1356,7 @@ async function refDb() {
                         data.random_db.map(function(i) {
                             $(".ul-db").append(`<li><a class="teal" href="/sözlük/q=${i}/">${i}</a></li>`)
                         })
-                    },1800)
+                    },1600)
                 }
             }
         })
