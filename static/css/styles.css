@@ -1046,6 +1046,7 @@ label.checkbox input[disabled=disabled] + span {
 .wotd-tr-list {
     list-style: inside;
     height: 96px;
+    font-size: 1.35rem;
     overflow: auto;
     text-align: start;
     background: aliceblue;
@@ -3885,7 +3886,7 @@ label[for="id_remember"] span {
         margin-right: 20px;
     }
     .btn-grp i {
-        margin-right:.25rem
+        margin-right:1rem
     }
     .word-list .word {
         border-bottom: medium solid teal;
@@ -4286,7 +4287,7 @@ label[for="id_remember"] span {
                 transform:translate(1300px)
     }
     .wotd-tr-list {
-        max-height: 75px
+        max-height: 93px
     }
 }
 

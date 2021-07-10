@@ -580,7 +580,44 @@ class DelSeenLearnedStarred(View):
                 word.save()
                 data['is_starred'] = False
         elif request.GET.get('delete'):
+            print(word)
             word.delete()
+            if request.GET.get('del_unlearned'):
+                unl_words = WordEn.objects.filter(user=request.user, is_learned=False).order_by('-create_time')
+                if len(unl_words) >= 10:
+                    obj = unl_words[9]
+                    tr_list = []
+                    for tr in obj.turkish.all():
+                        tr_list.append(tr.turkish)
+                    data['word'] = {
+                        'english': obj.english,
+                        'id': obj.id,
+                        'audio': obj.audio,
+                        'is_seen': obj.is_seen,
+                        'is_starred': obj.is_starred,
+                        'tr_list': tr_list
+                    }
+                data['word_count'] = {
+                    'count': len(unl_words)
+                }
+            else:
+                l_words = WordEn.objects.filter(user=request.user, is_learned=True).order_by('-create_time')
+                if len(l_words) >= 10:
+                    obj = l_words[9]
+                    tr_list = []
+                    for tr in obj.turkish.all():
+                        tr_list.append(tr.turkish)
+                    data['word'] = {
+                        'english': obj.english,
+                        'id': obj.id,
+                        'audio': obj.audio,
+                        'is_seen': obj.is_seen,
+                        'is_starred': obj.is_starred,
+                        'tr_list': tr_list
+                    }
+                data['word_count'] = {
+                    'count': len(l_words)
+                }
 
         return JsonResponse(data)
 
@@ -770,7 +807,8 @@ def search_word(word, opt):
                     tr_list.append(tr)
             return tr_list
         except:
-            return None
+            tr_list = []
+            return tr_list
     else:
         try:
             table = soup.find('table')
