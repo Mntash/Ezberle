@@ -1,3 +1,12 @@
+window.onscroll = function() {scrollFunction()}
+function scrollFunction() {
+  if (document.body.scrollTop > 100 || document.documentElement.scrollTop > 100) {
+    $(".scroll_top").css("display", "block")
+  } else {
+    $(".scroll_top").css("display", "none")
+  }
+}
+
 $(document).on("click", "a.dropdown-item", function() {
     var ths = $(this)
     var text = ths.parent().parent().prev().text()

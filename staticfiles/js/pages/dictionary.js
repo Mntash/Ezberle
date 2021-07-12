@@ -1,14 +1,11 @@
-$(".register").click(function(){
-    $("#loginModal").modal()
-})
-
-window.onscroll = function() {scrollFixedSearch()}
-function scrollFixedSearch() {
+window.onscroll = function() {
+    scrollSearch()
+    scrollFunction()
+}
+function scrollSearch() {
   if (document.body.scrollTop > 100 || document.documentElement.scrollTop > 100) {
-    $(".scroll_top").css("display", "block")
     $(".fixed_search").addClass("fixed_search_anim")
   } else {
-    $(".scroll_top").css("display", "none")
     $(".fixed_search").removeClass("fixed_search_anim")
   }
 }

@@ -1,12 +1,3 @@
-window.onscroll = function() {scrollFunction()}
-function scrollFunction() {
-  if (document.body.scrollTop > 100 || document.documentElement.scrollTop > 100) {
-    $(".scroll_top").css("display", "block")
-  } else {
-    $(".scroll_top").css("display", "none")
-  }
-}
-
 $(".object-content").click(function(){
     if ( $(this).attr("data-target") == "#quiz-unl" ) {
         $.ajax({

@@ -17,6 +17,9 @@ class ShopProductsAdmin(admin.ModelAdmin):
     search_fields = ['text']
 
 
+
+
+
 class AchievTrackerInline(admin.TabularInline):
     model = AchievementTracker
     extra = 0

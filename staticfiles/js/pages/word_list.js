@@ -1,12 +1,3 @@
-window.onscroll = function() {scrollFunction()}
-function scrollFunction() {
-  if (document.body.scrollTop > 100 || document.documentElement.scrollTop > 100) {
-    $(".scroll_top").css("display", "block")
-  } else {
-    $(".scroll_top").css("display", "none")
-  }
-}
-
 $("#show-fav").click(function(){
     if ($(this).is(':checked')) {
         window.location.pathname = "/kelime_listesi/q=$favorites"
@@ -314,7 +305,7 @@ $(document).on("click", ".memorize", function(){
                     var l_word = $(".l-word")
                     var word_count = data["word_count"]["count"]
                     if ($(".l-word > li").length >= 10) {
-                        $(".l-word li:last-child").remove()
+                        $(".l-word > li:last-child").remove()
                         list.prependTo(l_word).addClass("word-memo")
                         setTimeout(function(){
                             list.removeClass("word-memo")
@@ -355,16 +346,16 @@ $(document).on("click", ".memorize", function(){
                         </li>`)
                         if (tr_list) {
                             if (tr_list.length == 1) {
-                                $(".tr-section div span").html("Türkçesi:")
-                                $(".tr-section ul").append(`<li>${tr_list[0]}</li>`)
+                                $(".unl-word .tr${obj_id} span").html("Türkçesi:")
+                                $(".unl-word .tr${obj_id} ul").append(`<li>${tr_list[0]}</li>`)
                             } else {
-                                $(".tr-section div span").html("Türkçeleri:")
+                                $(".unl-word .tr${obj_id} span").html("Türkçeleri:")
                                 tr_list.map(function(obj){
-                                    $(".tr-section ul").append(`<li>${obj}</li>`)
+                                    $(".unl-word .tr${obj_id} ul").append(`<li>${obj}</li>`)
                                 })
                             }
                         } else {
-                            $(".tr-section ul").append(`
+                            $(".unl-word .tr${obj_id} ul").append(`
                             <div>
                                 <strong>&#8722;</strong><span>Bu kelimeye Türkçe eklenmemiş</span><strong>&#8722;</strong>
                             </div>`)
@@ -420,7 +411,7 @@ $(document).on("click", ".memorize", function(){
                     var unl_word = $(".unl-word")
                     var word_count = data["word_count"]["count"]
                     if ($(".unl-word > li").length >= 10) {
-                        $(".unl-word li:last-child").remove()
+                        $(".unl-word > li:last-child").remove()
                         list.prependTo(unl_word).addClass("word-memo")
                         setTimeout(function(){
                             list.removeClass("word-memo")
@@ -461,16 +452,16 @@ $(document).on("click", ".memorize", function(){
                         </li>`)
                         if (tr_list) {
                             if (tr_list.length == 1) {
-                                $(".tr-section div span").html("Türkçesi:")
-                                $(".tr-section ul").append(`<li>${tr_list[0]}</li>`)
+                                $(".l-word .tr${obj_id} span").html("Türkçesi:")
+                                $(".l-word .tr${obj_id} ul").append(`<li>${tr_list[0]}</li>`)
                             } else {
-                                $(".tr-section div span").html("Türkçeleri:")
+                                $(".l-word .tr${obj_id} span").html("Türkçeleri:")
                                 tr_list.map(function(obj){
-                                    $(".tr-section ul").append(`<li>${obj}</li>`)
+                                    $(".l-word .tr${obj_id} ul").append(`<li>${obj}</li>`)
                                 })
                             }
                         } else {
-                            $(".tr-section ul").append(`
+                            $(".l-word .tr${obj_id} ul").append(`
                             <div>
                                 <strong>&#8722;</strong><span>Bu kelimeye Türkçe eklenmemiş</span><strong>&#8722;</strong>
                             </div>`)
