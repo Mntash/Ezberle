@@ -346,16 +346,16 @@ $(document).on("click", ".memorize", function(){
                         </li>`)
                         if (tr_list) {
                             if (tr_list.length == 1) {
-                                $(".unl-word .tr${obj_id} span").html("Türkçesi:")
-                                $(".unl-word .tr${obj_id} ul").append(`<li>${tr_list[0]}</li>`)
+                                $(`.unl-word .tr${obj_id} span`).html("Türkçesi:")
+                                $(`.unl-word .tr${obj_id} ul`).append(`<li>${tr_list[0]}</li>`)
                             } else {
-                                $(".unl-word .tr${obj_id} span").html("Türkçeleri:")
+                                $(`.unl-word .tr${obj_id} span`).html("Türkçeleri:")
                                 tr_list.map(function(obj){
-                                    $(".unl-word .tr${obj_id} ul").append(`<li>${obj}</li>`)
+                                    $(`.unl-word .tr${obj_id} ul`).append(`<li>${obj}</li>`)
                                 })
                             }
                         } else {
-                            $(".unl-word .tr${obj_id} ul").append(`
+                            $(`.unl-word .tr${obj_id} ul`).append(`
                             <div>
                                 <strong>&#8722;</strong><span>Bu kelimeye Türkçe eklenmemiş</span><strong>&#8722;</strong>
                             </div>`)
@@ -410,8 +410,8 @@ $(document).on("click", ".memorize", function(){
                     var list = $(".li" + wordId)
                     var unl_word = $(".unl-word")
                     var word_count = data["word_count"]["count"]
-                    if ($(".unl-word > li").length >= 10) {
-                        $(".unl-word > li:last-child").remove()
+                    if ($(`.unl-word > li`).length >= 10) {
+                        $(`.unl-word > li:last-child`).remove()
                         list.prependTo(unl_word).addClass("word-memo")
                         setTimeout(function(){
                             list.removeClass("word-memo")
@@ -422,6 +422,8 @@ $(document).on("click", ".memorize", function(){
                             list.removeClass("word-memo")
                         }, 700)
                     }
+                    ths.html("check_box").toggleClass("tick-unlearn tick-learn")
+                    ths.siblings().last().children().first().toggleClass("del-l del-unl")
                     if (word_count >= 10) {
                         var obj_eng = data_obj["english"]
                         var obj_id = data_obj["id"]
@@ -452,16 +454,16 @@ $(document).on("click", ".memorize", function(){
                         </li>`)
                         if (tr_list) {
                             if (tr_list.length == 1) {
-                                $(".l-word .tr${obj_id} span").html("Türkçesi:")
-                                $(".l-word .tr${obj_id} ul").append(`<li>${tr_list[0]}</li>`)
+                                $(`.l-word .tr${obj_id} span`).html("Türkçesi:")
+                                $(`.l-word .tr${obj_id} ul`).append(`<li>${tr_list[0]}</li>`)
                             } else {
-                                $(".l-word .tr${obj_id} span").html("Türkçeleri:")
+                                $(`.l-word .tr${obj_id} span`).html("Türkçeleri:")
                                 tr_list.map(function(obj){
-                                    $(".l-word .tr${obj_id} ul").append(`<li>${obj}</li>`)
+                                    $(`.l-word .tr${obj_id} ul`).append(`<li>${obj}</li>`)
                                 })
                             }
                         } else {
-                            $(".l-word .tr${obj_id} ul").append(`
+                            $(`.l-word .tr${obj_id} ul`).append(`
                             <div>
                                 <strong>&#8722;</strong><span>Bu kelimeye Türkçe eklenmemiş</span><strong>&#8722;</strong>
                             </div>`)
@@ -483,12 +485,10 @@ $(document).on("click", ".memorize", function(){
                             $(`[data-id=${obj_id}] i.star`).attr("title", "Favorilere eklendi").addClass("pale-yellow").html("star")
                         }
                     }
-                    ths.html("check_box").toggleClass("tick-unlearn tick-learn")
-                    ths.siblings().last().children().first().toggleClass("del-l del-unl")
                 }
             }
         })
-    } // end else if
+    }
 })
 
 $(document).on("click", ".star", function(){
