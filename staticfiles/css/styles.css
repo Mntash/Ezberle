@@ -1134,10 +1134,7 @@ label.checkbox input[disabled=disabled] + span {
 
 .star-collected {
     -webkit-animation: star-collected-anim 1s;
-            animation: star-collected-anim 1s
-}
-
-.star-collected img {
+            animation: star-collected-anim 1s;
     -webkit-filter: grayscale(0);
             filter: grayscale(0)
 }
@@ -1815,7 +1812,7 @@ label.checkbox input[disabled=disabled] + span {
             box-shadow:0 0 0 2px rgb(0%,50.2%,50.2%,0.2)
 }
 
-.achievs img,
+.achievs img:not([alt="Yıldız"]),
 .customization img {
     height:24px;
 }
@@ -3935,6 +3932,16 @@ label[for="id_remember"] span {
 @media (min-width: 463px) and (max-width: 576px) {
     .history-li {
         width: 40%
+    }
+}
+
+@media (min-width:463px) {
+    .star-wrapper {
+        -webkit-transform: scale(.7);
+            -ms-transform: scale(.7);
+                transform: scale(.7);
+        width: 24px;
+        height: 24px;
     }
 }
 

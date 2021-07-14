@@ -66,9 +66,9 @@ $(".srch-i").keypress(function(event){
     }
 })
 
-$('p:contains("{{word}}")', document.body).each(function(){
+$('p:contains(word)', document.body).each(function(){
   $(this).html($(this).html().replace(
-        new RegExp("{{word}}", 'g'), '<span style="color:indianred; font-style:italic">'+ "{{word}}" +'</span>'
+        new RegExp(word, 'g'), '<span style="color:indianred; font-style:italic">'+ word +'</span>'
   ))
 })
 

@@ -179,7 +179,7 @@ $(".customization").click(function(){
                         $("ul.bg-img-list").append("<div class='custom_abs_li'>Marketten bir resim satın aldığında burada gösterilir.</div>")
                     }
                 }, 700)
-            }, 40)
+            }, 200)
         }
     } else {
         $("#loginModal").modal()
@@ -580,7 +580,7 @@ $(".achievs").click(function(){
                         if (obj.prg_star === 0) {
                           $("img[alt='Yıldız']").eq(i).addClass("gscale-on")
                           if (obj.prg_current >= prg_max_list[i]) {
-                            $("img[alt='Yıldız']").eq(i).parent().addClass("collect")
+                            $("img[alt='Yıldız']").eq(i).addClass("collect")
                           }
                         }
                       } else if (i === 4) {
@@ -589,18 +589,18 @@ $(".achievs").click(function(){
                           $("img[alt='Yıldız']").eq(i+1).addClass("gscale-on")
                           $("img[alt='Yıldız']").eq(i+2).addClass("gscale-on")
                           if (obj.prg_current >= prg_max_list[i]) {
-                            $("img[alt='Yıldız']").eq(i).parent().addClass("collect")
+                            $("img[alt='Yıldız']").eq(i).addClass("collect")
                           }
                         } else if (obj.prg_star === 1) {
                           $("img[alt='Yıldız']").eq(i+1).addClass("gscale-on")
                           $("img[alt='Yıldız']").eq(i+2).addClass("gscale-on")
                           if (obj.prg_current >= prg_max_list[i]) {
-                            $("img[alt='Yıldız']").eq(i+1).parent().addClass("collect")
+                            $("img[alt='Yıldız']").eq(i+1).addClass("collect")
                           }
                         } else if (obj.prg_star === 2) {
                           $("img[alt='Yıldız']").eq(i+2).addClass("gscale-on")
                           if (obj.prg_current >= prg_max_list[i]) {
-                            $("img[alt='Yıldız']").eq(i+2).parent().addClass("collect")
+                            $("img[alt='Yıldız']").eq(i+2).addClass("collect")
                           }
                         }
                       } else if (i === 5) {
@@ -609,18 +609,18 @@ $(".achievs").click(function(){
                           $("img[alt='Yıldız']").eq(i+3).addClass("gscale-on")
                           $("img[alt='Yıldız']").eq(i+4).addClass("gscale-on")
                           if (obj.prg_current >= prg_max_list[i]) {
-                            $("img[alt='Yıldız']").eq(i+2).parent().addClass("collect")
+                            $("img[alt='Yıldız']").eq(i+2).addClass("collect")
                           }
                         } else if (obj.prg_star === 1) {
                           $("img[alt='Yıldız']").eq(i+3).addClass("gscale-on")
                           $("img[alt='Yıldız']").eq(i+4).addClass("gscale-on")
                           if (obj.prg_current >= prg_max_list[i]) {
-                            $("img[alt='Yıldız']").eq(i+3).parent().addClass("collect")
+                            $("img[alt='Yıldız']").eq(i+3).addClass("collect")
                           }
                         } else if (obj.prg_star === 2) {
                           $("img[alt='Yıldız']").eq(i+4).addClass("gscale-on")
                           if (obj.prg_current >= prg_max_list[i]) {
-                            $("img[alt='Yıldız']").eq(i+4).parent().addClass("collect")
+                            $("img[alt='Yıldız']").eq(i+4).addClass("collect")
                           }
                         }
                       } else if (i === 6) {
@@ -629,18 +629,18 @@ $(".achievs").click(function(){
                           $("img[alt='Yıldız']").eq(i+5).addClass("gscale-on")
                           $("img[alt='Yıldız']").eq(i+6).addClass("gscale-on")
                           if (obj.prg_current >= prg_max_list[i]) {
-                            $("img[alt='Yıldız']").eq(i+4).parent().addClass("collect")
+                            $("img[alt='Yıldız']").eq(i+4).addClass("collect")
                           }
                         } else if (obj.prg_star === 1) {
                           $("img[alt='Yıldız']").eq(i+5).addClass("gscale-on")
                           $("img[alt='Yıldız']").eq(i+6).addClass("gscale-on")
                           if (obj.prg_current >= prg_max_list[i]) {
-                            $("img[alt='Yıldız']").eq(i+5).parent().addClass("collect")
+                            $("img[alt='Yıldız']").eq(i+5).addClass("collect")
                           }
                         } else if (obj.prg_star === 2) {
                           $("img[alt='Yıldız']").eq(i+6).addClass("gscale-on")
                           if (obj.prg_current >= prg_max_list[i]) {
-                            $("img[alt='Yıldız']").eq(i+6).parent().addClass("collect")
+                            $("img[alt='Yıldız']").eq(i+6).addClass("collect")
                           }
                         }
                       } else if (i === 7) {
@@ -649,18 +649,18 @@ $(".achievs").click(function(){
                           $("img[alt='Yıldız']").eq(i+7).addClass("gscale-on")
                           $("img[alt='Yıldız']").eq(i+8).addClass("gscale-on")
                           if (obj.prg_current >= prg_max_list[i]) {
-                            $("img[alt='Yıldız']").eq(i+6).parent().addClass("collect")
+                            $("img[alt='Yıldız']").eq(i+6).addClass("collect")
                           }
                         } else if (obj.prg_star === 1) {
                           $("img[alt='Yıldız']").eq(i+7).addClass("gscale-on")
                           $("img[alt='Yıldız']").eq(i+8).addClass("gscale-on")
                           if (obj.prg_current >= prg_max_list[i]) {
-                            $("img[alt='Yıldız']").eq(i+7).parent().addClass("collect")
+                            $("img[alt='Yıldız']").eq(i+7).addClass("collect")
                           }
                         } else if (obj.prg_star === 2) {
                           $("img[alt='Yıldız']").eq(i+8).addClass("gscale-on")
                           if (obj.prg_current >= prg_max_list[i]) {
-                            $("img[alt='Yıldız']").eq(i+8).parent().addClass("collect")
+                            $("img[alt='Yıldız']").eq(i+8).addClass("collect")
                           }
                         }
                       }
@@ -702,7 +702,7 @@ $(".achievs").click(function(){
                         }
                     })
                 }, 700)
-            }, 40)
+            }, 200)
         }
     } else {
         $("#loginModal").modal()
@@ -862,14 +862,14 @@ async function starAjax(ths) {
                     setTimeout(function(){
                         $(".coin-inc").eq(0).remove()
                         $(".balance span").html(data.cur_balance)
-                        ths.parent().removeClass("collect")
+                        ths.removeClass("collect")
                     }, 500)
                     var cur = ths.parent().parent().parent().prev().find(".prg_cur")
                     var max = ths.parent().parent().parent().prev().find(".prg_max")
                     var ach_text = ths.parent().parent().parent().prev().find(".goal-text")
                     var coin_value = ths.parent().parent().prev().find(".coin_value")
                     prg_max = data.prg_max
-                    ths.parent().addClass("star-collected star-collected-anim")
+                    ths.addClass("star-collected star-collected-anim")
                     if (ach_no > 4 && ths.parent().next().length) {
                         cur.html("0")
                         max.html(prg_max)
@@ -897,7 +897,7 @@ async function starAjax(ths) {
                         cur.html(max)
                     }
                     setTimeout(function(){
-                        ths.parent().removeClass("star-collected-anim")
+                        ths.removeClass("star-collected-anim")
                     }, 1000)
                 }
             }
@@ -911,7 +911,7 @@ async function starAjax(ths) {
 
 $(document).on("click", "img[alt='Yıldız']", function(){
     var ths = $(this)
-    if (ths.parent().hasClass("collect")) {
+    if (ths.hasClass("collect")) {
         ach_no = parseInt(ths.parent().attr("data-ach-no"))
         prg_max = 0
         starAjax(ths)
@@ -1298,7 +1298,7 @@ $(".reminder").click(function(){
                                 }
 
                 }, 700)
-            }, 40)
+            }, 200)
         }
     } else {
         $("#loginModal").modal()
@@ -1317,18 +1317,22 @@ $(document).on("click", ".times", function(){
             gParent.append(`<img src="/static/img/başarılar.png" alt="Başarılar">`)
         }, 40)
         $(".modal-body-achievs").remove()
+        $(".tools-backdrop-a").remove()
         ths.remove()
     } else if (ths.hasClass("times-rem")) {
         gParent.find(".title-reminder").remove()
         gParent.removeClass("reminder-modal py-4 px-sm-4 px-2")
         gParent.append(`<img src="/static/img/reminder.svg" alt="Hatırlatıcı">`)
         $(".modal-body-reminder").remove()
+        $(".tools-backdrop-r").remove()
         ths.remove()
     } else if (ths.hasClass("times-customization")) {
         gParent.find(".title-customization").remove()
         gParent.removeClass("customization-modal py-4 px-sm-4 px-2")
         gParent.append(`<img src="/static/img/customization.png" alt="Kişiselleştirme">`)
         $(".modal-body-customization").remove()
+
+        $(".tools-backdrop-c").remove()
         ths.remove()
     }
 })
