@@ -4300,6 +4300,12 @@ label[for="id_remember"] span {
     }
 }
 
+@media (min-width: 421px) and (max-width: 992px) {
+    .btn-grp i {
+        margin-right:1.25rem
+    }
+}
+
 @media (max-width: 992px) {
     .mb-6 {
         margin-bottom:5.6rem
