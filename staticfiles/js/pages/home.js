@@ -160,6 +160,7 @@ $(".start").click(function() {
     if(!event.detail || event.detail == 1) {
         var ths = $(this)
         if (ths.hasClass("start-db")) {
+            quiz_rights = 0
             startDb()
             setTimeout(function(){
                 if ( quiz_rights > 0 ) {
@@ -454,7 +455,7 @@ $(".start").click(function() {
                 ths.after(`<div class="quiz-err-db mt-1">* Günlük Quiz haklarınızı tamamlamışsınız.
                                                             Yarın tekrar gelin!</div>`)
             }
-            }, 40)
+            }, 300)
         } else if (ths.hasClass("start-unl")) {
             quiz_rights = 0
             startUnl()
@@ -820,7 +821,7 @@ $(".start").click(function() {
                 ths.after(`<div class="quiz-err-unl mt-1">* Günlük Quiz haklarınızı tamamlamışsınız.
                                                             Yarın tekrar gelin!</div>`)
             }
-            }, 40)
+            }, 300)
         } else if (ths.hasClass("start-l")) {
             quiz_rights = 0
             startL()
@@ -1200,7 +1201,7 @@ $(".start").click(function() {
                 ths.after(`<div class="quiz-err-l mt-1">* Günlük Quiz haklarınızı tamamlamışsınız.
                                                             Yarın tekrar gelin!</div>`)
             }
-            }, 40)
+            }, 300)
         }
     }
 })
