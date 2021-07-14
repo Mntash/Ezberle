@@ -10,7 +10,8 @@ class SearchTurengTests(TestCase):
     data_tur = []
 
     def test_tureng_search(self, word):
-        tureng_search = self.tureng_url.format(word)
+        response = self.client.get(self.tureng_url.format(word))
+        self.assertEquals(response.status_code, 200)
 
     test_tureng_search("word")
 
