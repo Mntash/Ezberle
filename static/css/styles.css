@@ -371,7 +371,7 @@ input[type="text"]:disabled {
             box-shadow: 0 0 0 0.2rem rgb(130 138 145 / 50%)
 }
 
-.btn-after:hover {
+.btn-after:not(.disabled):hover {
     background:#cd5c5c;
     -webkit-box-shadow: 0 0 5px indianred;
             box-shadow: 0 0 5px indianred;
@@ -636,6 +636,10 @@ label.checkbox input[disabled=disabled] + span {
 
 .pointer {
     cursor:pointer
+}
+
+.audiowide {
+    font-family: "Audiowide"
 }
 
 /* ---general--- */
@@ -955,7 +959,7 @@ label.checkbox input[disabled=disabled] + span {
     border-left: 5px solid indianred;
 }
 
-.home-card button.btn-before:hover {
+.home-card button.btn-before:not(.disabled):hover {
     border:none;
 }
 
@@ -1087,8 +1091,8 @@ label.checkbox input[disabled=disabled] + span {
 
 .ul-last-added,
 .ul-db,
-.ul-unlearned,
-.ul-learned {
+.ul-unl,
+.ul-l {
     padding-left: 4rem;
     margin-top:3.8rem;
     font-weight:700
@@ -1096,8 +1100,8 @@ label.checkbox input[disabled=disabled] + span {
 
 .ul-last-added li::marker,
 .ul-db li::marker,
-.ul-unlearned li::marker,
-.ul-learned li::marker {
+.ul-unl li::marker,
+.ul-l li::marker {
     color:var(--clr-primary)
 }
 
@@ -2179,16 +2183,13 @@ label.checkbox input[disabled=disabled] + span {
             transform: translateX(-50%);
     background: var(--clr-secondary);
     bottom: -90px;
-    border-radius: 10px;
-    color: var(--clr-primary);
-    padding: 6px 13px;
+    color: var(--clr-secondary);
+    padding: 9px 15px;
     -webkit-transition: all .5s;
     -o-transition: all .5s;
     transition: all .5s;
     border: 3px solid rgba(0,0,0,0.2);
     z-index: 99999;
-    -webkit-box-shadow: 0 0 5px 5px #CD5C5C;
-            box-shadow: 0 0 5px 5px #CD5C5C;
     padding-bottom:1.25rem;
     -webkit-user-select:none;
        -moz-user-select:none;
@@ -2196,8 +2197,15 @@ label.checkbox input[disabled=disabled] + span {
             user-select:none
 }
 
-.notif-timer {
+.notif.success {
+    background: #2cb74c;
+}
+
+.notif.fail {
     background: var(--clr-ired);
+}
+
+.notif-timer {
     height: 4px;
     border-radius:5px;
     position: absolute;
@@ -2205,6 +2213,14 @@ label.checkbox input[disabled=disabled] + span {
     left: 14px;
     -webkit-animation: notifTimer 3s linear;
             animation: notifTimer 3s linear
+}
+
+.notif.success .notif-timer {
+    background: var(--clr-ired);
+}
+
+.notif.fail .notif-timer {
+    background: #2cb74c;
 }
 
 .notif-show {
@@ -2653,17 +2669,17 @@ cb-dict {
   transition: all 0.3s
 }
 
-.change .plus {
+.add-btn.word-delete .plus {
     -webkit-transform: rotate(90deg);
         -ms-transform: rotate(90deg);
             transform: rotate(90deg)
 }
 
-.change .minus {
+.add-btn.word-delete .minus {
     opacity: 0
 }
 
-.change {
+.add-btn.word-delete {
     background: brown
 }
 
@@ -3135,7 +3151,7 @@ img[alt="Geçmiş"] {
     color:#f0ea02
 }
 
-.cadet:hover {
+.word-unseen:hover {
     color:dodgerblue
 }
 
@@ -3182,8 +3198,7 @@ label[for="show-fav"] span {
     width: 1.6rem;
 }
 
-.reset-unl,
-.reset-l {
+input[value='Sıfırla'] {
     margin-right:5px
 }
 
@@ -3192,10 +3207,6 @@ label[for="show-fav"] span {
     outline: none;
     -webkit-box-shadow:0 0 0 1px var(--clr-primary);
             box-shadow:0 0 0 1px var(--clr-primary)
-}
-
-.tr-first:first-child {
-    border-top:none;
 }
 
 .tr-section {
@@ -3257,16 +3268,16 @@ label[for="show-fav"] span {
     font-size:21px
 }
 
-.cadet {
+.word-unseen {
     color: cadetblue
 }
 
-.dodger {
+.word-seen {
     color: dodgerblue
 }
 
-.tick-learn,
-.tick-unlearn {
+.check-learn,
+.check-unlearn {
     color: #2cb74c;
 }
 

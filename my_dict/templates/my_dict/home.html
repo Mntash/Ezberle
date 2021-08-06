@@ -44,13 +44,7 @@
                         </li>
                     {% endfor %}
                     </ul>
-                {% else %}
-                    <ul class="wotd-tr-list text-center" >
-                        (...)
-                    </ul>
-                {% endif %}
-                <div class="home-card-footer center-h">
-                {% if word_mer.turkish.all %}
+                    <div class="home-card-footer center-h">
                     {% if user.is_authenticated %}
                         {% if mer_exists %}
                             <div><button data-id="1" class="add-btn-home btn-after"></button></div>
@@ -60,8 +54,13 @@
                     {% else %}
                         <div><button class="add-btn-home btn-before" data-toggle="modal" data-target="#loginModal"></button></div>
                     {% endif %}
+                    </div>
                 {% else %}
-                        {% if user.is_authenticated %}
+                    <ul class="wotd-tr-list text-center" style="font-weight:bold">
+                        (&mdash;)
+                    </ul>
+                    <div class="home-card-footer center-h">
+                    {% if user.is_authenticated %}
                         {% if mer_exists %}
                             <div><button data-id="1" class="add-btn-home btn-after disabled not-allowed" disabled></button></div>
                         {% else %}
@@ -70,8 +69,8 @@
                     {% else %}
                         <div><button class="add-btn-home btn-before disabled not-allowed" data-toggle="modal" data-target="#loginModal" disabled></button></div>
                     {% endif %}
+                    </div>
                 {% endif %}
-                </div>
             </div>
         </div>
     </div>
@@ -108,13 +107,7 @@
                         </li>
                     {% endfor %}
                     </ul>
-                {% else %}
-                    <ul class="wotd-tr-list text-center" >
-                        (...)
-                    </ul>
-                {% endif %}
-                <div class="home-card-footer center-h">
-                {% if word_ox.turkish.all %}
+                    <div class="home-card-footer center-h">
                     {% if user.is_authenticated %}
                         {% if ox_exists %}
                             <div><button data-id="2" class="add-btn-home btn-after"></button></div>
@@ -124,7 +117,12 @@
                     {% else %}
                         <div><button class="add-btn-home btn-before" data-toggle="modal" data-target="#loginModal"></button></div>
                     {% endif %}
+                    </div>
                 {% else %}
+                    <ul class="wotd-tr-list text-center" style="font-weight:bold">
+                        (&mdash;)
+                    </ul>
+                    <div class="home-card-footer center-h">
                     {% if user.is_authenticated %}
                         {% if ox_exists %}
                             <div><button data-id="2" class="add-btn-home btn-after disabled not-allowed" disabled></button></div>
@@ -134,8 +132,8 @@
                     {% else %}
                         <div><button class="add-btn-home btn-before disabled not-allowed" data-toggle="modal" data-target="#loginModal" disabled></button></div>
                     {% endif %}
-                {% endif %}
                     </div>
+                {% endif %}
             </div>
         </div>
     </div>
@@ -172,13 +170,7 @@
                         </li>
                     {% endfor %}
                     </ul>
-                {% else %}
-                    <ul class="wotd-tr-list text-center" >
-                        (...)
-                    </ul>
-                {% endif %}
-                <div class="home-card-footer center-h">
-                {% if word_dict.turkish.all %}
+                    <div class="home-card-footer center-h">
                     {% if user.is_authenticated %}
                         {% if dict_exists %}
                             <div><button data-id="3" class="add-btn-home btn-after"></button></div>
@@ -188,7 +180,12 @@
                     {% else %}
                         <div><button class="add-btn-home btn-before" data-toggle="modal" data-target="#loginModal"></button></div>
                     {% endif %}
+                    </div>
                 {% else %}
+                    <ul class="wotd-tr-list text-center" style="font-weight:bold">
+                        (&mdash;)
+                    </ul>
+                    <div class="home-card-footer center-h">
                     {% if user.is_authenticated %}
                         {% if dict_exists %}
                             <div><button data-id="3" class="add-btn-home btn-after disabled not-allowed" disabled>></button></div>
@@ -198,8 +195,8 @@
                     {% else %}
                         <div><button class="add-btn-home btn-before disabled not-allowed" data-toggle="modal" data-target="#loginModal" disabled></button></div>
                     {% endif %}
-                {% endif %}
                     </div>
+                {% endif %}
             </div>
         </div>
     </div>
@@ -240,13 +237,7 @@
                         </li>
                     {% endfor %}
                     </ul>
-                {% else %}
-                    <ul class="wotd-tr-list text-center" >
-                        (...)
-                    </ul>
-                {% endif %}
-                <div class="home-card-footer center-h">
-                {% if word_vocab.turkish.all %}
+                    <div class="home-card-footer center-h">
                     {% if user.is_authenticated %}
                         {% if vocab_exists %}
                             <div><button data-id="4" class="add-btn-home btn-after"></button></div>
@@ -256,7 +247,12 @@
                     {% else %}
                         <div><button class="add-btn-home btn-before" data-toggle="modal" data-target="#loginModal"></div>
                     {% endif %}
+                    </div>
                 {% else %}
+                    <ul class="wotd-tr-list text-center" style="font-weight:bold">
+                        (&mdash;)
+                    </ul>
+                    <div class="home-card-footer center-h">
                     {% if user.is_authenticated %}
                         {% if vocab_exists %}
                             <div><button data-id="4" class="add-btn-home btn-after disabled not-allowed" disabled></button></div>
@@ -266,8 +262,8 @@
                     {% else %}
                         <div><button class="add-btn-home btn-before disabled not-allowed" data-toggle="modal" data-target="#loginModal" disabled></button></div>
                     {% endif %}
+                    </div>
                 {% endif %}
-                </div>
             </div>
         </div>
     </div>
@@ -345,7 +341,7 @@
         <div class="cn-3c card card-note">
             <span class="title-home title-unl">Öğreneceklerim</span>
             <div class="overflow-auto position-relative">
-                <ul class="ul-unlearned">
+                <ul class="ul-unl">
                     {% for word in random_unl %}
                     <li>
                         <a href="{% url 'dictionary-search' word %}" target="_blank">{{ word }}</a>
@@ -395,7 +391,7 @@
         <div class="cn-4c card card-note">
             <span class="title-home title-l">Öğrendiklerim</span>
             <div class="overflow-auto position-relative">
-                <ul class="ul-learned">
+                <ul class="ul-l">
                     {% for word in random_l %}
                     <li>
                         <a href="{% url 'dictionary-search' word %}" target="_blank">{{ word }}</a>

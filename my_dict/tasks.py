@@ -32,9 +32,7 @@ def reset_quiz():
 def word_of_the_day():
     try:
         if WotdEn.objects.all():
-            all_wotds = WotdEn.objects.all()
-            for wotd in all_wotds:
-                wotd.delete()
+            WotdEn.objects.all().delete()
     except:
         pass
 

@@ -22,6 +22,9 @@ class Profile(models.Model):
     def __str__(self):
         return self.user.username
 
+    class Meta:
+        verbose_name_plural = "Profiller"
+
 
 @receiver(post_save, sender=User)
 def create_user_profile(sender, instance, created, **kwargs):
@@ -55,9 +58,10 @@ class WordEn(models.Model):
 
     class Meta:
         ordering = ['-create_time']
+        verbose_name_plural = "İngilizce Kelimeler"
 
     def __str__(self):
-        return self.english
+        return f'{self.user} --- {self.english}'
 
 
 class WordTr(models.Model):
@@ -74,7 +78,7 @@ class Search(models.Model):
     create_time = models.DateTimeField(auto_now=True)
 
     def __str__(self):
-        return self.search
+        return f'{self.user} --- {self.search}'
 
     class Meta:
         verbose_name_plural = "Aramalar"
@@ -87,6 +91,9 @@ class WotdEn(models.Model):
 
     def __str__(self):
         return self.english
+
+    class Meta:
+        verbose_name_plural = "Günün Kelimeleri"
 
 
 class WotdTr(models.Model):
@@ -113,6 +120,9 @@ class QuizRecorder(models.Model):
         if not self.is_learned:
             return f"{self.user} -- Öğreneceklerim -- {self.english}"
 
+    class Meta:
+        verbose_name_plural = "Quiz kayıtları"
+
 
 class WordDb(models.Model):
     english = models.CharField(max_length=50)
@@ -120,6 +130,9 @@ class WordDb(models.Model):
 
     def __str__(self):
         return self.english
+
+    class Meta:
+        verbose_name_plural = "Database Kelimeleri"
 
 
 class Achievements(models.Model):
@@ -181,6 +194,9 @@ class ShopProducts(models.Model):
     def __str__(self):
         return self.text
 
+    class Meta:
+        verbose_name_plural = "Market Ürünleri"
+
 
 class ProductTracker(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False, unique=True)
@@ -201,3 +217,6 @@ class Feedback(models.Model):
 
     def __str__(self):
         return f"{self.isim} {self.soyisim} --- {self.mesaj}"
+
+    class Meta:
+        verbose_name_plural = "Geri Bildirimler"

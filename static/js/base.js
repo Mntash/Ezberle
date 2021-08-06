@@ -1,12 +1,3 @@
-window.onscroll = function() {scrollFunction()}
-function scrollFunction() {
-  if (document.body.scrollTop > 100 || document.documentElement.scrollTop > 100) {
-    $(".scroll_top").css("display", "block")
-  } else {
-    $(".scroll_top").css("display", "none")
-  }
-}
-
 $(document).on("click", "a.dropdown-item", function() {
     var ths = $(this)
     var text = ths.parent().parent().prev().text()
@@ -21,9 +12,13 @@ $(document).on("click", "a.dropdown-item", function() {
             dataType: 'json',
             success: function(data) {
                 stopNotif()
-                $(".notif").addClass("notif-show").append(`<div class="notif-timer"></div>`).find("span").html("Hatırlatıcıya eklendi!")
+                $(".notif").addClass("notif-show success").append(`<div class="notif-timer"></div>`).find("span")
+                  .html("Hatırlatıcıya eklendi!")
                 notifHide()
                 ths.find("span").html("Hatırlatıcıdan kaldır")
+            },
+            error: function() {
+                notifAjaxError()
             }
         })
     } else if (ths.find("span").html() === "Hatırlatıcıdan kaldır") {
@@ -37,7 +32,7 @@ $(document).on("click", "a.dropdown-item", function() {
             dataType: 'json',
             success: function(data) {
                 stopNotif()
-                $(".notif").addClass("notif-show").append(`<div class="notif-timer"></div>`).find("span").html("Hatırlatıcıdan kaldırıldı!")
+                $(".notif").addClass("notif-show success").append(`<div class="notif-timer"></div>`).find("span").html("Hatırlatıcıdan kaldırıldı!")
                 notifHide()
                 var attr = ths.parent().attr("data-reminder")
                 if ( typeof attr !== typeof undefined && attr !== false ) {
@@ -45,24 +40,22 @@ $(document).on("click", "a.dropdown-item", function() {
                 } else {
                     ths.find("span").html("Hatırlatıcıya ekle")
                 }
+            },
+            error: function() {
+                notifAjaxError()
             }
         })
     }
 })
 
-function closeCustomization() {
-    if ($('.customization').hasClass("customization-modal")) {
-        $(document).click(function(e) {
-            if ( $(e.target).closest('.customization').length === 0 && !($(e.target).hasClass("fixed-top")) ) {
-                $(".times-customization").click()
-                $(".tools-backdrop-c").remove()
-            }
-        })
+$(document).click(function(e, type){
+    if ($(".reminder").hasClass("reminder-modal")) {
+        closeToolModal(e, "reminder")
+    } else if ($(".achievs").hasClass("achievs-modal")){
+        closeToolModal(e, "achievs")
+    } else if ($(".customization").hasClass("customization-modal")) {
+        closeToolModal(e, "customization")
     }
-}
-
-$(document).click(function(){
-    closeCustomization()
 })
 
 async function getCustomizationAjax() {
@@ -105,12 +98,11 @@ $(".customization").click(function(){
         var ths = $(this)
         if ( !(ths.hasClass("customization-modal")) ) {
             setTimeout(function(){
-                $("body").append("<div class='modal-backdrop tools-backdrop-c fade show'></div>")
+                $("body").append("<div class='modal-backdrop tools-backdrop-customization fade show'></div>")
             }, 4)
             owned_colors = []
             owned_bg_imgs = []
-            getCustomizationAjax()
-            setTimeout(function(){
+            $.when(getCustomizationAjax()).then( () => {
                 ths.addClass("customization-modal py-4 px-sm-4 px-2").find("img").remove()
                 setTimeout(function(){
                     ths.append(`
@@ -179,7 +171,7 @@ $(".customization").click(function(){
                         $("ul.bg-img-list").append("<div class='custom_abs_li'>Marketten bir resim satın aldığında burada gösterilir.</div>")
                     }
                 }, 700)
-            }, 200)
+            })
         }
     } else {
         $("#loginModal").modal()
@@ -199,20 +191,14 @@ $(document).on("click", ".caret", function(){
     }
 })
 
-function closeAchievs() {
-    if ($('.achievs').hasClass("achievs-modal")) {
-        $(document).click(function(e) {
-            if ( $(e.target).closest('.achievs').length === 0 && !($(e.target).hasClass("fixed-top")) ) {
-                $(".times-achievs").click()
-                $(".tools-backdrop-a").remove()
-            }
-        })
+function closeToolModal(e, type) {
+    if ($(`.${type}`).hasClass(`${type}-modal`)) {
+        if ( $(e.target).closest(`.${type}`).length === 0 && !($(e.target).hasClass("fixed-top")) ) {
+            $(`.times-${type}`).click()
+            $(`.tools-backdrop-${type}`).remove()
+        }
     }
 }
-
-$(document).click(function(){
-    closeAchievs()
-})
 
 async function getAchievsAjax() {
     let result;
@@ -267,301 +253,306 @@ $(".achievs").click(function(){
         var ths = $(this)
         if ( !(ths.hasClass("achievs-modal")) ) {
             setTimeout(function(){
-                $("body").append("<div class='modal-backdrop tools-backdrop-a fade show'></div>")
+                $("body").append("<div class='modal-backdrop tools-backdrop-achievs fade show'></div>")
             }, 4)
             ach_list = []
             ach_tracker_list = []
             pdt_list = []
             acc_coin = 0
-            getAchievsAjax()
-            setTimeout(function(){
+            $.when(getAchievsAjax()).then( () => {
                 ths.addClass("achievs-modal py-4 px-sm-4 px-2").find("img").remove()
                 setTimeout(function(){
                     ths.append(`
-                                <div class="title-achievs">
-                                    <span>Başarılar</span>
-                                    <img src="/static/img/başarılar.png" alt="Başarılar">
-                                </div>
-                                <div class="modal-body modal-body-achievs">
-                                <div role="tabpanel">
-                                    <ul class="nav nav-tabs">
-                                        <li>
-                                            <a class="nav-link active" data-toggle="tab" href=".achievs-tab">
-                                                <i class="fas fa-trophy"></i>
-                                            </a>
-                                        </li>
-                                        <li>
-                                            <a class="nav-link" data-toggle="tab" href=".shop-tab">
-                                                <i class="fas fa-shopping-cart"></i>
-                                            </a>
-                                        </li>
-                                    </ul>
-                                    <div class="tab-content">
-                                        <input style="position:absolute;left:-20px" id="achievs-tp-cb" type="checkbox">
-                                        <div class="achievs-tab tab-pane active">
-                                        <div class="achievs-daily text-center achievs-da-show">
-                                            <span>GÜNLÜK BAŞARILAR</span>
-                                            <div class="achievements-table">
-                                                <div>
-                                                  <div class="goal-sect">
-                                                    <div><div class="goal-text"></div></div>
-                                                    <div>
-                                                      İlerleme
-                                                      <div class="progress-bar-custom" data-prg-id="1">
-                                                        <div>
-                                                          <span class="prg_cur"></span>/<span class="prg_max"></span>
-                                                        </div>
-                                                      </div>
-                                                    </div>
-                                                  </div>
-                                                  <div class="stars">
-                                                    <div>
-                                                      <img src="/static/img/ezber-coin.png" width="21px" height="21px" alt="Ezber Coin">
-                                                      <span class="coin_value"></span>
-                                                    </div>
-                                                    <div>
-                                                      <div class="star-wrapper" data-ach-no="1">
-                                                        <img src="/static/img/star.png" width="30px" height="30px" alt="Yıldız">
-                                                      </div>
-                                                    </div>
-                                                  </div>
-                                                </div>
-                                                <div>
-                                                  <div class="goal-sect">
-                                                    <div><div class="goal-text"></div></div>
-                                                    <div>
-                                                      İlerleme
-                                                      <div class="progress-bar-custom" data-prg-id="2">
-                                                        <div>
-                                                          <span class="prg_cur"></span>/<span class="prg_max"></span>
-                                                        </div>
-                                                      </div>
-                                                    </div>
-                                                  </div>
-                                                  <div class="stars">
-                                                    <div>
-                                                      <img src="/static/img/ezber-coin.png" width="21px" height="21px" alt="Ezber Coin">
-                                                      <span class="coin_value"></span>
-                                                    </div>
-                                                    <div>
-                                                      <div class="star-wrapper" data-ach-no="2">
-                                                        <img src="/static/img/star.png" width="30px" height="30px" alt="Yıldız">
-                                                      </div>
-                                                    </div>
-                                                  </div>
-                                                </div>
-                                                <div>
-                                                  <div class="goal-sect">
-                                                    <div><div class="goal-text"></div></div>
-                                                    <div>
-                                                      İlerleme
-                                                      <div class="progress-bar-custom" data-prg-id="3">
-                                                        <div>
-                                                          <span class="prg_cur"></span>/<span class="prg_max"></span>
-                                                        </div>
-                                                      </div>
-                                                    </div>
-                                                  </div>
-                                                  <div class="stars">
-                                                    <div>
-                                                      <img src="/static/img/ezber-coin.png" width="21px" height="21px" alt="Ezber Coin">
-                                                      <span class="coin_value"></span>
-                                                    </div>
-                                                    <div>
-                                                      <div class="star-wrapper" data-ach-no="3">
-                                                        <img src="/static/img/star.png" width="30px" height="30px" alt="Yıldız">
-                                                      </div>
-                                                    </div>
-                                                  </div>
-                                                </div>
-                                                <div>
-                                                  <div class="goal-sect">
-                                                    <div><div class="goal-text"></div></div>
-                                                    <div>
-                                                      İlerleme
-                                                      <div class="progress-bar-custom" data-prg-id="4">
-                                                        <div>
-                                                          <span class="prg_cur"></span>/<span class="prg_max"></span>
-                                                        </div>
-                                                      </div>
-                                                    </div>
-                                                  </div>
-                                                  <div class="stars">
-                                                    <div>
-                                                      <img src="/static/img/ezber-coin.png" width="21px" height="21px" alt="Ezber Coin">
-                                                      <span class="coin_value"></span>
-                                                    </div>
-                                                    <div>
-                                                      <div class="star-wrapper" data-ach-no="4">
-                                                        <img src="/static/img/star.png" width="30px" height="30px" alt="Yıldız">
-                                                      </div>
-                                                    </div>
-                                                  </div>
-                                                </div>
+                    <div class="title-achievs">
+                        <span>Başarılar</span>
+                        <img src="/static/img/başarılar.png" alt="Başarılar">
+                    </div>
+                    <div class="modal-body modal-body-achievs">
+                    <div role="tabpanel">
+                        <ul class="nav nav-tabs">
+                            <li>
+                                <a class="nav-link active" data-toggle="tab" href=".achievs-tab">
+                                    <i class="fas fa-trophy"></i>
+                                </a>
+                            </li>
+                            <li>
+                                <a class="nav-link" data-toggle="tab" href=".shop-tab">
+                                    <i class="fas fa-shopping-cart"></i>
+                                </a>
+                            </li>
+                        </ul>
+                        <div class="tab-content">
+                            <input style="position:absolute;visibility:hidden" id="achievs-tp-cb" type="checkbox">
+                            <div class="achievs-tab tab-pane active">
+                            <div class="achievs-daily text-center achievs-da-show">
+                                <span>GÜNLÜK BAŞARILAR</span>
+                                <div class="achievements-table">
+                                    <div>
+                                      <div class="goal-sect">
+                                        <div><div class="goal-text"></div></div>
+                                        <div>
+                                          İlerleme
+                                          <div class="progress-bar-custom" data-prg-id="1">
+                                            <div>
+                                              <span class="prg_cur"></span>/<span class="prg_max"></span>
                                             </div>
-                                            <div class="achievs-tp text-center">
-                                                <label for="achievs-tp-cb">
-                                                  <div><span style="cursor:pointer">Genel Başarılar</span></div>
-                                                  <i class="fas fa-long-arrow-alt-right"></i>
-                                                </label>
+                                          </div>
+                                        </div>
+                                      </div>
+                                      <div class="stars">
+                                        <div>
+                                          <img src="/static/img/ezber-coin.png" width="21px" height="21px" alt="Ezber Coin">
+                                          <span class="coin_value"></span>
+                                        </div>
+                                        <div>
+                                          <div class="star-wrapper" data-ach-no="1">
+                                            <img src="/static/img/star.png" width="30px" height="30px" alt="Yıldız">
+                                          </div>
+                                        </div>
+                                      </div>
+                                    </div>
+                                    <div>
+                                      <div class="goal-sect">
+                                        <div><div class="goal-text"></div></div>
+                                        <div>
+                                          İlerleme
+                                          <div class="progress-bar-custom" data-prg-id="2">
+                                            <div>
+                                              <span class="prg_cur"></span>/<span class="prg_max"></span>
                                             </div>
+                                          </div>
                                         </div>
-                                        <div class="achievs-general achievs-ga-dis translate-right text-center">
-                                            <span>GENEL BAŞARILAR</span>
-                                            <div class="achievements-table">
-                                                <div>
-                                                  <div class="goal-sect">
-                                                    <div><div class="goal-text"></div></div>
-                                                    <div>
-                                                      İlerleme
-                                                      <div class="progress-bar-custom" data-prg-id="5">
-                                                        <div>
-                                                          <span class="prg_cur"></span>/<span class="prg_max"></span>
-                                                        </div>
-                                                      </div>
-                                                    </div>
-                                                  </div>
-                                                  <div class="stars">
-                                                    <div>
-                                                      <img src="/static/img/ezber-coin.png" width="21px" height="21px" alt="Ezber Coin">
-                                                      <span class="coin_value"></span>
-                                                    </div>
-                                                    <div>
-                                                      <div class="star-wrapper" data-ach-no="5">
-                                                        <img src="/static/img/star.png" width="30px" height="30px" alt="Yıldız">
-                                                      </div>
-                                                      <div class="star-wrapper" data-ach-no="5">
-                                                        <img src="/static/img/star.png" width="30px" height="30px" alt="Yıldız">
-                                                      </div>
-                                                      <div class="star-wrapper" data-ach-no="5">
-                                                        <img src="/static/img/star.png" width="30px" height="30px" alt="Yıldız">
-                                                      </div>
-                                                    </div>
-                                                  </div>
-                                                </div>
-                                                <div>
-                                                  <div class="goal-sect">
-                                                    <div><div class="goal-text"></div></div>
-                                                    <div>
-                                                      İlerleme
-                                                      <div class="progress-bar-custom" data-prg-id="6">
-                                                        <div>
-                                                          <span class="prg_cur"></span>/<span class="prg_max"></span>
-                                                        </div>
-                                                      </div>
-                                                    </div>
-                                                  </div>
-                                                  <div class="stars">
-                                                    <div>
-                                                      <img src="/static/img/ezber-coin.png" width="21px" height="21px" alt="Ezber Coin">
-                                                      <span class="coin_value"></span>
-                                                    </div>
-                                                    <div>
-                                                      <div class="star-wrapper" data-ach-no="8">
-                                                        <img src="/static/img/star.png" width="30px" height="30px" alt="Yıldız">
-                                                      </div>
-                                                      <div class="star-wrapper" data-ach-no="8">
-                                                        <img src="/static/img/star.png" width="30px" height="30px" alt="Yıldız">
-                                                      </div>
-                                                      <div class="star-wrapper" data-ach-no="8">
-                                                        <img src="/static/img/star.png" width="30px" height="30px" alt="Yıldız">
-                                                      </div>
-                                                    </div>
-                                                  </div>
-                                                </div>
-                                                <div>
-                                                  <div class="goal-sect">
-                                                    <div><div class="goal-text"></div></div>
-                                                    <div>
-                                                      İlerleme
-                                                      <div class="progress-bar-custom" data-prg-id="7">
-                                                        <div>
-                                                          <span class="prg_cur"></span>/<span class="prg_max"></span>
-                                                        </div>
-                                                      </div>
-                                                    </div>
-                                                  </div>
-                                                  <div class="stars">
-                                                    <div>
-                                                      <img src="/static/img/ezber-coin.png" width="21px" height="21px" alt="Ezber Coin">
-                                                      <span class="coin_value"></span>
-                                                    </div>
-                                                    <div>
-                                                      <div class="star-wrapper" data-ach-no="11">
-                                                        <img src="/static/img/star.png" width="30px" height="30px" alt="Yıldız">
-                                                        <div></div>
-                                                      </div>
-                                                      <div class="star-wrapper" data-ach-no="11">
-                                                        <img src="/static/img/star.png" width="30px" height="30px" alt="Yıldız">
-                                                      </div>
-                                                      <div class="star-wrapper" data-ach-no="11">
-                                                        <img src="/static/img/star.png" width="30px" height="30px" alt="Yıldız">
-                                                      </div>
-                                                    </div>
-                                                  </div>
-                                                </div>
-                                                <div>
-                                                  <div class="goal-sect">
-                                                    <div><div class="goal-text"></div></div>
-                                                    <div>
-                                                      İlerleme
-                                                      <div class="progress-bar-custom" data-prg-id="8">
-                                                        <div>
-                                                          <span class="prg_cur"></span>/<span class="prg_max"></span>
-                                                        </div>
-                                                      </div>
-                                                    </div>
-                                                  </div>
-                                                  <div class="stars">
-                                                    <div>
-                                                      <img src="/static/img/ezber-coin.png" width="21px" height="21px" alt="Ezber Coin">
-                                                      <span class="coin_value"></span>
-                                                    </div>
-                                                    <div>
-                                                      <div class="star-wrapper" data-ach-no="14">
-                                                        <img src="/static/img/star.png" width="30px" height="30px" alt="Yıldız">
-                                                      </div>
-                                                      <div class="star-wrapper" data-ach-no="14">
-                                                        <img src="/static/img/star.png" width="30px" height="30px" alt="Yıldız">
-                                                      </div>
-                                                      <div class="star-wrapper" data-ach-no="14">
-                                                        <img src="/static/img/star.png" width="30px" height="30px" alt="Yıldız">
-                                                      </div>
-                                                    </div>
-                                                  </div>
-                                                </div>
+                                      </div>
+                                      <div class="stars">
+                                        <div>
+                                          <img src="/static/img/ezber-coin.png" width="21px" height="21px" alt="Ezber Coin">
+                                          <span class="coin_value"></span>
+                                        </div>
+                                        <div>
+                                          <div class="star-wrapper" data-ach-no="2">
+                                            <img src="/static/img/star.png" width="30px" height="30px" alt="Yıldız">
+                                          </div>
+                                        </div>
+                                      </div>
+                                    </div>
+                                    <div>
+                                      <div class="goal-sect">
+                                        <div><div class="goal-text"></div></div>
+                                        <div>
+                                          İlerleme
+                                          <div class="progress-bar-custom" data-prg-id="3">
+                                            <div>
+                                              <span class="prg_cur"></span>/<span class="prg_max"></span>
                                             </div>
-                                            <div class="achievs-tp text-center">
-                                                <label for="achievs-tp-cb">
-                                                  <div><span style="cursor:pointer">Günlük Başarılar</span></div>
-                                                  <i class="fas fa-long-arrow-alt-left"></i>
-                                                </label>
+                                          </div>
+                                        </div>
+                                      </div>
+                                      <div class="stars">
+                                        <div>
+                                          <img src="/static/img/ezber-coin.png" width="21px" height="21px" alt="Ezber Coin">
+                                          <span class="coin_value"></span>
+                                        </div>
+                                        <div>
+                                          <div class="star-wrapper" data-ach-no="3">
+                                            <img src="/static/img/star.png" width="30px" height="30px" alt="Yıldız">
+                                          </div>
+                                        </div>
+                                      </div>
+                                    </div>
+                                    <div>
+                                      <div class="goal-sect">
+                                        <div><div class="goal-text"></div></div>
+                                        <div>
+                                          İlerleme
+                                          <div class="progress-bar-custom" data-prg-id="4">
+                                            <div>
+                                              <span class="prg_cur"></span>/<span class="prg_max"></span>
                                             </div>
+                                          </div>
                                         </div>
+                                      </div>
+                                      <div class="stars">
+                                        <div>
+                                          <img src="/static/img/ezber-coin.png" width="21px" height="21px" alt="Ezber Coin">
+                                          <span class="coin_value"></span>
                                         </div>
-                                        <div class="shop-tab tab-pane text-center">
-                                            <div class="shop-panel row"></div>
+                                        <div>
+                                          <div class="star-wrapper" data-ach-no="4">
+                                            <img src="/static/img/star.png" width="30px" height="30px" alt="Yıldız">
+                                          </div>
                                         </div>
+                                      </div>
                                     </div>
                                 </div>
-                                <div class="balance-wrapper">
-                                  <div class="balance">
-                                    <img src="/static/img/ezber-coin.png" width="21px" height="21px" alt="Ezber Coin">
-                                    <span></span>
+                                <div class="achievs-tp text-center">
+                                    <label for="achievs-tp-cb">
+                                      <div><span style="cursor:pointer">Genel Başarılar</span></div>
+                                      <i class="fas fa-long-arrow-alt-right"></i>
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="achievs-general achievs-ga-dis translate-right text-center">
+                                <span>GENEL BAŞARILAR</span>
+                                <div class="achievements-table">
+                                    <div>
+                                      <div class="goal-sect">
+                                        <div><div class="goal-text"></div></div>
+                                        <div>
+                                          İlerleme
+                                          <div class="progress-bar-custom" data-prg-id="5">
+                                            <div>
+                                              <span class="prg_cur"></span>/<span class="prg_max"></span>
+                                            </div>
+                                          </div>
+                                        </div>
+                                      </div>
+                                      <div class="stars">
+                                        <div>
+                                          <img src="/static/img/ezber-coin.png" width="21px" height="21px" alt="Ezber Coin">
+                                          <span class="coin_value"></span>
+                                        </div>
+                                        <div>
+                                          <div class="star-wrapper" data-ach-no="5">
+                                            <img src="/static/img/star.png" width="30px" height="30px" alt="Yıldız">
+                                          </div>
+                                          <div class="star-wrapper" data-ach-no="5">
+                                            <img src="/static/img/star.png" width="30px" height="30px" alt="Yıldız">
+                                          </div>
+                                          <div class="star-wrapper" data-ach-no="5">
+                                            <img src="/static/img/star.png" width="30px" height="30px" alt="Yıldız">
+                                          </div>
+                                        </div>
+                                      </div>
+                                    </div>
+                                    <div>
+                                      <div class="goal-sect">
+                                        <div><div class="goal-text"></div></div>
+                                        <div>
+                                          İlerleme
+                                          <div class="progress-bar-custom" data-prg-id="6">
+                                            <div>
+                                              <span class="prg_cur"></span>/<span class="prg_max"></span>
+                                            </div>
+                                          </div>
+                                        </div>
+                                      </div>
+                                      <div class="stars">
+                                        <div>
+                                          <img src="/static/img/ezber-coin.png" width="21px" height="21px" alt="Ezber Coin">
+                                          <span class="coin_value"></span>
+                                        </div>
+                                        <div>
+                                          <div class="star-wrapper" data-ach-no="8">
+                                            <img src="/static/img/star.png" width="30px" height="30px" alt="Yıldız">
+                                          </div>
+                                          <div class="star-wrapper" data-ach-no="8">
+                                            <img src="/static/img/star.png" width="30px" height="30px" alt="Yıldız">
+                                          </div>
+                                          <div class="star-wrapper" data-ach-no="8">
+                                            <img src="/static/img/star.png" width="30px" height="30px" alt="Yıldız">
+                                          </div>
+                                        </div>
+                                      </div>
+                                    </div>
+                                    <div>
+                                      <div class="goal-sect">
+                                        <div><div class="goal-text"></div></div>
+                                        <div>
+                                          İlerleme
+                                          <div class="progress-bar-custom" data-prg-id="7">
+                                            <div>
+                                              <span class="prg_cur"></span>/<span class="prg_max"></span>
+                                            </div>
+                                          </div>
+                                        </div>
+                                      </div>
+                                      <div class="stars">
+                                        <div>
+                                          <img src="/static/img/ezber-coin.png" width="21px" height="21px" alt="Ezber Coin">
+                                          <span class="coin_value"></span>
+                                        </div>
+                                        <div>
+                                          <div class="star-wrapper" data-ach-no="11">
+                                            <img src="/static/img/star.png" width="30px" height="30px" alt="Yıldız">
+                                            <div></div>
+                                          </div>
+                                          <div class="star-wrapper" data-ach-no="11">
+                                            <img src="/static/img/star.png" width="30px" height="30px" alt="Yıldız">
+                                          </div>
+                                          <div class="star-wrapper" data-ach-no="11">
+                                            <img src="/static/img/star.png" width="30px" height="30px" alt="Yıldız">
+                                          </div>
+                                        </div>
+                                      </div>
+                                    </div>
+                                    <div>
+                                      <div class="goal-sect">
+                                        <div><div class="goal-text"></div></div>
+                                        <div>
+                                          İlerleme
+                                          <div class="progress-bar-custom" data-prg-id="8">
+                                            <div>
+                                              <span class="prg_cur"></span>/<span class="prg_max"></span>
+                                            </div>
+                                          </div>
+                                        </div>
+                                      </div>
+                                      <div class="stars">
+                                        <div>
+                                          <img src="/static/img/ezber-coin.png" width="21px" height="21px" alt="Ezber Coin">
+                                          <span class="coin_value"></span>
+                                        </div>
+                                        <div>
+                                          <div class="star-wrapper" data-ach-no="14">
+                                            <img src="/static/img/star.png" width="30px" height="30px" alt="Yıldız">
+                                          </div>
+                                          <div class="star-wrapper" data-ach-no="14">
+                                            <img src="/static/img/star.png" width="30px" height="30px" alt="Yıldız">
+                                          </div>
+                                          <div class="star-wrapper" data-ach-no="14">
+                                            <img src="/static/img/star.png" width="30px" height="30px" alt="Yıldız">
+                                          </div>
+                                        </div>
+                                      </div>
+                                    </div>
+                                </div>
+                                <div class="achievs-tp text-center">
+                                    <label for="achievs-tp-cb">
+                                      <div><span style="cursor:pointer">Günlük Başarılar</span></div>
+                                      <i class="fas fa-long-arrow-alt-left"></i>
+                                    </label>
+                                </div>
+                            </div>
+                            </div>
+                            <div class="shop-tab tab-pane text-center">
+                                <div class="d-flex justify-content-end mt-2">
+                                  <div>
+                                    <button class="return_to_def audiowide">Varsayılan ayarlara dön</button>
                                   </div>
                                 </div>
-                                <div class="rem-tt">
-                                    <i class="fas fa-question-circle"></i>
-                                    <div class="tooltip-content">
-                                        <div><i class="fas fa-trophy"></i>Günlük ve Genel Başarılar</div>
-                                        <div>
-                                          <i class="fas fa-shopping-cart"></i>
-                                            Ezber coin'leri harcayarak özellik açabileceğin mağaza
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="times times-achievs pointer"><span>&times;</span></div>
-                                </div>`)
+                                <div class="shop-panel row"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="balance-wrapper">
+                      <div class="balance">
+                        <img src="/static/img/ezber-coin.png" width="21px" height="21px" alt="Ezber Coin">
+                        <span></span>
+                      </div>
+                    </div>
+                    <div class="rem-tt">
+                        <i class="fas fa-question-circle"></i>
+                        <div class="tooltip-content">
+                            <div><i class="fas fa-trophy"></i>Günlük ve Genel Başarılar</div>
+                            <div>
+                              <i class="fas fa-shopping-cart"></i>
+                                Ezber coin'leri harcayarak özellik açabileceğin mağaza
+                            </div>
+                        </div>
+                    </div>
+                    <div class="times times-achievs pointer"><span>&times;</span></div>
+                    </div>
+                    `)
                     prg_max_list = []
                     ach_list.map(function(obj, i){
                         $(".goal-text").eq(i).html(obj.ach_text)
@@ -666,14 +657,16 @@ $(".achievs").click(function(){
                       }
                     })
                     pdt_list.map(function(obj, i){
-                        $(".shop-panel").append(`<div class="shop_pdt col-sm-4 col-12" data-id="${obj.pdt_id}">
-                                                    <div class="pdt-text">${obj.pdt_text}</div>
-                                                    <div class="pdt-price">
-                                                      <img src="/static/img/ezber-coin.png" width="21px" height="21px" alt="Ezber Coin">
-                                                      ${obj.pdt_price}
-                                                    </div>
-                                                    <div class="pdt-footer"></div>
-                                                </div>`)
+                        $(".shop-panel").append(`
+                            <div class="shop_pdt col-sm-4 col-12" data-id="${obj.pdt_id}">
+                                <div class="pdt-text">${obj.pdt_text}</div>
+                                <div class="pdt-price">
+                                  <img src="/static/img/ezber-coin.png" width="21px" height="21px" alt="Ezber Coin">
+                                  ${obj.pdt_price}
+                                </div>
+                                <div class="pdt-footer"></div>
+                            </div>
+                        `)
                         if (obj.pdt_type === "clr") {
                             $(".shop_pdt").eq(i).addClass("shop_pdt_clr")
                             $(".pdt-footer").eq(i).prepend(`<button class="pdt-pv">ön izle</button>`)
@@ -702,7 +695,7 @@ $(".achievs").click(function(){
                         }
                     })
                 }, 700)
-            }, 200)
+            })
         }
     } else {
         $("#loginModal").modal()
@@ -725,6 +718,11 @@ $(document).on("click", ".return_to_def", function(){
                 $("body").css("cssText", "background-color: #008080")
             }
         })
+    } else {
+        $(".icon-bar a").css("cssText", "background: #008080")
+        $("#menu").css("cssText", "background: #008080")
+        $(".ber").css("cssText", "color: #008080")
+        $("body").css("cssText", "background-color: #008080")
     }
 })
 
@@ -741,7 +739,7 @@ $(document).on("click", ".pdt-buy:not(.purchased)", function(){
         success: function(data){
             if (data.is_purchased) {
                 stopNotif()
-                $(".notif").addClass("notif-show").append(`<div class="notif-timer"></div>`).find("span")
+                $(".notif").addClass("notif-show success").append(`<div class="notif-timer"></div>`).find("span")
                 .html("Satın alma başarılı!")
                 notifHide()
                 $(`<div class='coin-inc'>-${data.pdt_price}</div>`).appendTo(".balance-wrapper").addClass("coin-inc-anim")
@@ -753,21 +751,18 @@ $(document).on("click", ".pdt-buy:not(.purchased)", function(){
             } else {
                 stopNotif()
                 if (data.gap) {
-                    $(".notif").addClass("notif-show").append(`<div class="notif-timer"></div>`).find("span").html(
+                    $(".notif").addClass("notif-show fail").append(`<div class="notif-timer"></div>`).find("span").html(
                     `Satın alma başarısız. <br> ${data.gap} coin'e daha ihtiyacın var!`)
                     notifHide()
                 } else {
-                    $(".notif").addClass("notif-show").append(`<div class="notif-timer"></div>`).find("span").html(
+                    $(".notif").addClass("notif-show fail").append(`<div class="notif-timer"></div>`).find("span").html(
                     `Satın alma başarısız. <br> Lütfen tekrar deneyin.`)
                     notifHide()
                 }
             }
         },
         error: function() {
-            stopNotif()
-            $(".notif").addClass("notif-show").append(`<div class="notif-timer"></div>`).find("span").html(
-            `Satın alma başarısız. <br> Lütfen tekrar deneyin.`)
-            notifHide()
+            notifAjaxError()
         }
     })
 })
@@ -977,21 +972,6 @@ setTimeout(function(){
     }
 }, 5000)
 
-function closeReminder() {
-    if ($('.reminder').hasClass("reminder-modal")) {
-        $(document).click(function(e) {
-            if ( $(e.target).closest('.reminder').length === 0 && !($(e.target).hasClass("fixed-top")) ) {
-                $(".times-rem").click()
-                $(".tools-backdrop-r").remove()
-            }
-        })
-    }
-}
-
-$(document).click(function(){
-    closeReminder()
-})
-
 async function getReminderAjax(args) {
     let result;
 
@@ -1038,15 +1018,14 @@ $(".reminder").click(function(){
         var ths = $(this)
         if ( !(ths.hasClass("reminder-modal")) ) {
             setTimeout(function(){
-                $("body").append("<div class='modal-backdrop tools-backdrop-r fade show'></div>")
+                $("body").append("<div class='modal-backdrop tools-backdrop-reminder fade show'></div>")
             }, 4)
             word_list = []
             new_words_reminder = []
             quiz_db_list = []
             quiz_unl_list = []
             quiz_l_list = []
-            getReminderAjax()
-            setTimeout(function(){
+            $.when(getReminderAjax()).then( () => {
                 ths.addClass("reminder-modal py-4 px-sm-4 px-2").find("img").remove()
                 setTimeout(function(){
                     ths.append(`
@@ -1102,7 +1081,7 @@ $(".reminder").click(function(){
                                         <div><i class="material-icons">filter_3</i>En son olduğun "Biliyor muydun?" quizinin sonuçları</div>
                                     </div>
                                 </div>
-                                <div class="times times-rem pointer"><span>&times;</span></div>
+                                <div class="times times-reminder pointer"><span>&times;</span></div>
                                 </div>`)
                                 if (word_list.length > 0) {
                                     word_list.map(function(i){
@@ -1221,7 +1200,7 @@ $(".reminder").click(function(){
                                 }
 
                                 if (quiz_l.length > 0) {
-                                    $(".quiz-2").prepend(`<h6 class="d-flex justify-content-end mt-2">Son olduğun quiz'in tarihi: ${quiz_l_list['create_time']}</h6>`)
+                                    $(".quiz-2").prepend(`<h6 class="d-flex justify-content-end mt-2">Son olduğun quiz'in tarihi: ${quiz_l_list[0]['create_time']}</h6>`)
                                     quiz_l_list.map(function(i){
                                         if (i.is_correct) {
                                             $(".quiz-2").find("ul").append(`<li>
@@ -1298,7 +1277,7 @@ $(".reminder").click(function(){
                                 }
 
                 }, 700)
-            }, 200)
+            })
         }
     } else {
         $("#loginModal").modal()
@@ -1308,56 +1287,24 @@ $(".reminder").click(function(){
 $(document).on("click", ".times", function(){
     var ths = $(this)
     var gParent = ths.parent().parent()
-    ths.prev().remove()
-    gParent.find("div[role]").remove()
     if (ths.hasClass("times-achievs")) {
-        gParent.find(".title-achievs").remove()
-        gParent.removeClass("achievs-modal py-4 px-sm-4 px-2")
-        setTimeout(function(){
-            gParent.append(`<img src="/static/img/başarılar.png" alt="Başarılar">`)
-        }, 40)
-        $(".modal-body-achievs").remove()
-        $(".tools-backdrop-a").remove()
-        ths.remove()
-    } else if (ths.hasClass("times-rem")) {
-        gParent.find(".title-reminder").remove()
-        gParent.removeClass("reminder-modal py-4 px-sm-4 px-2")
+        var type = "achievs"
+        gParent.append(`<img src="/static/img/başarılar.png" alt="Başarılar">`)
+    } else if (ths.hasClass("times-reminder")) {
+        var type = "reminder"
         gParent.append(`<img src="/static/img/reminder.svg" alt="Hatırlatıcı">`)
-        $(".modal-body-reminder").remove()
-        $(".tools-backdrop-r").remove()
-        ths.remove()
     } else if (ths.hasClass("times-customization")) {
-        gParent.find(".title-customization").remove()
-        gParent.removeClass("customization-modal py-4 px-sm-4 px-2")
+        var type = "customization"
         gParent.append(`<img src="/static/img/customization.png" alt="Kişiselleştirme">`)
-        $(".modal-body-customization").remove()
-
-        $(".tools-backdrop-c").remove()
-        ths.remove()
     }
+    ths.prev().remove()
+    gParent.find(`div[role]`).remove()
+    gParent.find(`.title-${type}`).remove()
+    gParent.removeClass(`${type}-modal py-4 px-sm-4 px-2`)
+    $(`.modal-body-${type}`).remove()
+    $(`.tools-backdrop-${type}`).remove()
+    ths.remove()
 })
-
-$(".scroll_top").click(function(){
-    topFunction()
-})
-
-function topFunction() {
-  document.body.scrollTop = 0
-  document.documentElement.scrollTop = 0
-}
-
-var timeoutId;
-
-function notifHide() {
-    timeoutId = setTimeout(function(){
-        $(".notif").removeClass("notif-show").find("div").remove()
-    }, 3000)
-}
-
-function stopNotif() {
-    $(document).find(".notif-timer").remove()
-    clearTimeout(timeoutId)
-}
 
 $(document).on("click", "i[title='Dinle']", function(){
     if ($("#ajax_audio").length > 0) {
@@ -1431,21 +1378,24 @@ $(document).on("click", ".ajax_word_btn", function(){
                     setTimeout(function(){
                         $(".sk-chase").remove()
                     }, 40)
-                    $(".ajax_word_info").css("left", `${parseInt(x)+width-Math.abs(left)}px`).css("padding", "5px").draggable({ zIndex: 300, cursor: 'move', containment:$(".wrapper"), handle: '.drag' })
-                    $(".ajax_word_div").addClass("p-3").css("width", "292px").css("height", "300px").append(`<table class="ajax_word_table">
-                                                                                             <tr>
-                                                                                                <th>Kelime</th>
-                                                                                                <th>Hece</th>
-                                                                                                <th>Telaffuz</th>
-                                                                                                <th>Dinle</th>
-                                                                                             </tr>
-                                                                                             <tr>
-                                                                                                <td>${data.word}</td>
-                                                                                                <td>${data.syllables}</td>
-                                                                                                <td>${data.pronunciation}</td>
-                                                                                                <td class="audio"></td>
-                                                                                             </tr>
-                                                                                           </table>`)
+                    $(".ajax_word_info").css("left", `${parseInt(x)+width-Math.abs(left)}px`).css("padding", "5px")
+                      .draggable({ zIndex: 300, cursor: 'move', containment:$(".wrapper"), handle: '.drag' })
+                    $(".ajax_word_div").addClass("p-3").css("width", "292px").css("height", "300px").append(`
+                      <table class="ajax_word_table">
+                        <tr>
+                          <th>Kelime</th>
+                          <th>Hece</th>
+                          <th>Telaffuz</th>
+                          <th>Dinle</th>
+                        </tr>
+                        <tr>
+                          <td>${data.word}</td>
+                          <td>${data.syllables}</td>
+                          <td>${data.pronunciation}</td>
+                          <td class="audio"></td>
+                        </tr>
+                      </table>
+                    `)
                     if (data.audio != "None") {
                         $("td.audio").append(`
                                             <i title="Dinle" class="fas fa-volume-up"></i>
@@ -1515,13 +1465,124 @@ $(document).on("click", ".ajax_word_btn", function(){
                     })
                 } else {
                     stopNotif()
-                    $(".notif").addClass("notif-show").append(`<div class="notif-timer"></div>`).find("span").html("Kelime hakkında sonuç bulunamadı!")
+                    $(".notif").addClass("notif-show fail").append(`<div class="notif-timer"></div>`).find("span").html("Kelime hakkında sonuç bulunamadı!")
                     notifHide()
                     setTimeout(function(){
                         $(".ajax_word_info").remove()
-                    }, 600)
+                    }, 300)
                 }
             }
         })
     }
 })
+
+var timeoutId;
+
+function notifHide() {
+    timeoutId = setTimeout(function(){
+        if ( $(".notif").hasClass("success") ) {
+            $(".notif").removeClass("notif-show success").find("div").remove()
+        } else if ( $(".notif").hasClass("fail") ) {
+            $(".notif").removeClass("notif-show fail").find("div").remove()
+        }
+    }, 3000)
+}
+
+function stopNotif() {
+    $(document).find(".notif-timer").remove()
+    clearTimeout(timeoutId)
+}
+
+function mediaContainer(container) {
+  if (!(container.matches)) {
+    $(".container-media").removeClass("container")
+  } else if (!($(".container-media").hasClass("container"))) {
+    $(".container-media").addClass("container")
+  }
+}
+
+var container = window.matchMedia("(min-width:576px)")
+mediaContainer(container)
+container.addListener(mediaContainer)
+
+function notifAjaxError() {
+  stopNotif()
+  $(".notif").addClass("notif-show fail").append(`<div class="notif-timer"></div>`).find("span").html("İşlem başarısız oldu.")
+  notifHide()
+}
+
+function notifWordAdded() {
+    stopNotif()
+    $(".notif").addClass("notif-show success").append(`<div class="notif-timer"></div>`).find("span").html("Kelime eklendi!")
+    notifHide()
+}
+
+function notifWordDeleted() {
+    stopNotif()
+    $(".notif").addClass("notif-show success").append(`<div class="notif-timer"></div>`).find("span").html("Kelime silindi!")
+    notifHide()
+}
+
+function addLWordPrgTrackerAjax() {
+    $.ajax({
+        type:"GET",
+        url: "/prg_tracker/",
+        data:{
+           "ach_no": [1, 5],
+           "up_or_down": 1,
+        }
+    })
+}
+
+function deleteLWordAjax() {
+    $.ajax({
+        type:"GET",
+        url: "/prg_tracker/",
+        data:{
+           "ach_no": [1, 5],
+           "up_or_down": 0,
+        }
+    })
+}
+
+function addUnlWordPrgTrackerAjax() {
+    $.ajax({
+        type:"GET",
+        url: "/prg_tracker/",
+        data:{
+           "ach_no": [2, 8],
+           "up_or_down": 1,
+        }
+    })
+}
+
+function deleteUnlWordPrgTrackerAjax() {
+    $.ajax({
+        type:"GET",
+        url: "/prg_tracker/",
+        data:{
+           "ach_no": [2, 8],
+           "up_or_down": 0,
+        }
+    })
+}
+
+window.onscroll = function() {scrollFunction()}
+function scrollFunction() {
+  if (document.body.scrollTop > 100 || document.documentElement.scrollTop > 100) {
+    $(".scroll_top").css("display", "block")
+  } else {
+    $(".scroll_top").css("display", "none")
+  }
+}
+
+$(".scroll_top").click(function(){
+    topFunction()
+})
+
+function topFunction() {
+  document.body.scrollTop = 0
+  document.documentElement.scrollTop = 0
+}
+
+$(this).scrollTop(0)

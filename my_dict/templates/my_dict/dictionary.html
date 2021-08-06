@@ -37,18 +37,18 @@
                 {% endif %}
                 {% if user.is_authenticated %}
                     {% if not word_exists %}
-                    <div title="Kelimeyi ekle" class="add-btn mx-1 position-relative align-self-center">
+                    <div title="Kelimeyi ekle" class="add-btn mx-1 position-relative align-self-center word-add">
                         <span class="plus"></span>
                         <span class="minus"></span>
                     </div>
                     {% else %}
-                    <div title="Kelimeyi sil" class="add-btn mx-1 position-relative align-self-center change">
+                    <div title="Kelimeyi sil" class="add-btn mx-1 position-relative align-self-center word-delete">
                         <span class="plus"></span>
                         <span class="minus"></span>
                     </div>
                     {% endif %}
                 {% else %}
-                <div title="Kelimeyi ekle" class="add-btn add-btn-modal mx-1 position-relative align-self-center">
+                <div title="Kelimeyi ekle" class="add-btn mx-1 position-relative align-self-center">
                     <div class="plus"></div>
                     <div class="minus"></div>
                 </div>
@@ -73,11 +73,11 @@
                   </thead>
                   <tbody>
                   {% for col in data %}
-                    <tr class="tr-first">
+                    <tr>
                         <th class="category" scope="row">{{ forloop.counter }}</th>
                         <td class="category">{{ col.0 }}</td>
                         <td>{{ col.1 }}</td>
-                        <td id="tr-first"><a class="hover-primary" href="{% url 'dictionary-search' col.2 %}">{{ col.2 }}</a></td>
+                        <td class="t-row"><a class="hover-primary" href="{% url 'dictionary-search' col.2 %}">{{ col.2 }}</a></td>
                         <td>
                             <label class="custom-cb checkbox" for="{{forloop.counter}}">
                                 <input id="{{forloop.counter}}" type="checkbox" value="{{ col.2 }}"/>
@@ -103,7 +103,7 @@
                   </thead>
                   <tbody>
                   {% for col in data_2 %}
-                    <tr class="tr-first">
+                    <tr>
                         <th class="category" scope="row">{{ forloop.counter }}</th>
                         <td class="category">{{ col.0 }}</td>
                         <td>{{ col.1 }}</td>
@@ -126,7 +126,7 @@
                   </thead>
                   <tbody>
                   {% for col in data %}
-                    <tr class="tr-first">
+                    <tr>
                         <th class="category" scope="row">{{ forloop.counter }}</th>
                         <td class="category">{{ col.0 }}</td>
                         <td>{{ col.1 }}</td>
@@ -150,7 +150,7 @@
                   </thead>
                   <tbody>
                   {% for col in data_2 %}
-                    <tr class="tr-first">
+                    <tr>
                         <th class="category" scope="row">{{ forloop.counter }}</th>
                         <td class="category">{{ col.0 }}</td>
                         <td>{{ col.1 }}</td>

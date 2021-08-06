@@ -24,6 +24,12 @@ $("input[value='Gönder']").click(function(e){
                     $("form .d-flex").remove()
                     $("form p").remove()
                     $("form").append("<p class='mt-3' style='color: indianred'>Mesajınız gönderilmiştir.</p>")
+                },
+                error: function() {
+                    stopNotif()
+                    $(".notif").addClass("notif-show fail").append(`<div class="notif-timer"></div>`).find("span")
+                      .html("İşlem başarısız oldu.")
+                    notifHide()
                 }
             })
         }, 100)
@@ -34,12 +40,14 @@ $("input[value='Gönder']").click(function(e){
     }
 })
 
-$(this).scrollTop(0)
-window.onscroll = function() {animateDivs()}
+window.onscroll = function() {
+    animateDivs()
+    scrollFunction()
+}
+
 function animateDivs() {
     var slide = window.matchMedia("(min-width:992px)")
     if (document.body.scrollTop > 100 || document.documentElement.scrollTop > 100) {
-        $(".scroll2top").css("display", "block")
         for (i=0;i<$(".main_home_sect").length-2;i++) {
             function divAnimation(i) {
                 if (document.body.scrollTop > 130+(i*440) || document.documentElement.scrollTop > 130+(i*440)) {
@@ -54,7 +62,5 @@ function animateDivs() {
             }
             divAnimation(i)
         }
-    } else {
-        $(".scroll2top").css("display", "none")
     }
 }

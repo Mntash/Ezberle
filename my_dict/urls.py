@@ -33,4 +33,8 @@ urlpatterns = [
     path('get_customization/', get_customization, name="get-customization"),
     path('customization/', customization, name="customization"),
     path('save_feedback/', save_feedback, name="save-feedback"),
+    path('word_list_ajax_search/', word_list_ajax_search, name="ajax-search"),
+    path('api/category_products/<str:search>', api_get_category_products),
+    path('api/category_list/', api_get_categories),
+    path('api/search_results/<str:search>/', api_get_search_results)
 ]

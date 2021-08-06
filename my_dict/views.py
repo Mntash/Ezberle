@@ -13,6 +13,14 @@ import datetime
 from django.core.paginator import Paginator
 import json
 from .forms import FeedbackForm
+import time
+from selenium import webdriver
+from selenium.webdriver import Chrome
+from selenium.webdriver.chrome.options import Options
+from selenium.common.exceptions import TimeoutException
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.common.by import By
 
 tureng_url = 'https://tureng.com/tr/turkce-ingilizce/{}'
 saurus_url = 'https://www.thesaurus.com/browse/{}'
@@ -107,9 +115,7 @@ def quiz_and_refresh(request):
     db_words = get_word_list(request, 'db_words_en')
     unlearned_words = []
     learned_words = []
-    random_db = []
-    random_unlearned = []
-    random_learned = []
+    random_list = []
     tr_list = []
 
     if request.user.is_authenticated:
@@ -120,46 +126,44 @@ def quiz_and_refresh(request):
         if request.GET.get('random-db'):
             if request.GET.get('random-db') == "refresh":
                 random_ = random.sample(db_words, k=10)
-                random_db = random_
+                random_list = random_
             else:
                 number = int(request.GET.get('random-db'))
                 random_ = random.sample(db_words, k=number)
-                random_db = random_
+                random_list = random_
                 for word in random_:
                     tr_list.append(search_word(word, 1))
-        elif request.GET.get('random-unlearned'):
-            if request.GET.get('random-unlearned') == "refresh":
+        elif request.GET.get('random-unl'):
+            if request.GET.get('random-unl') == "refresh":
                 if len(unlearned_words) < 10:
                     random_ = random.sample(unlearned_words, k=len(unlearned_words))
-                    random_unlearned = random_
+                    random_list = random_
                 else:
                     random_ = random.sample(unlearned_words, k=10)
-                    random_unlearned = random_
+                    random_list = random_
             else:
-                number = int(request.GET.get('random-unlearned'))
+                number = int(request.GET.get('random-unl'))
                 random_ = random.sample(unlearned_words, k=number)
-                random_unlearned = random_
+                random_list = random_
                 for word in random_:
                     tr_list.append(search_word(word, 1))
-        elif request.GET.get('random-learned'):
-            if request.GET.get('random-learned') == "refresh":
+        elif request.GET.get('random-l'):
+            if request.GET.get('random-l') == "refresh":
                 if len(learned_words) < 10:
                     random_ = random.sample(learned_words, k=len(learned_words))
-                    random_learned = random_
+                    random_list = random_
                 else:
                     random_ = random.sample(learned_words, k=10)
-                    random_learned = random_
+                    random_list = random_
             else:
-                number = int(request.GET.get('random-learned'))
+                number = int(request.GET.get('random-l'))
                 random_ = random.sample(learned_words, k=number)
-                random_learned = random_
+                random_list = random_
                 for word in random_:
                     tr_list.append(search_word(word, 1))
 
     data = {
-        'random_db': random_db,
-        'random_unlearned': random_unlearned,
-        'random_learned': random_learned,
+        'random_list': random_list,
         'tr_list': tr_list
     }
 
@@ -180,16 +184,17 @@ def dictionary(request):
 
 
 def dictionary_search(request, word):
-    data = []
-    data_2 = []
+    data_list = []
+    data_list_2 = []
     error = False
     suggestion_exists = False
     suggestion_list = []
     is_english = True
-    audio = ""
     synonym_list = []
     antonym_list = []
     example_list = []
+
+    data = {}
 
     try:
         url_tur = tureng_url.format(word)
@@ -200,8 +205,9 @@ def dictionary_search(request, word):
         rows = table.find_all('tr')[1:]
 
         def english(rows_table_en, history_save, is_true):
-            if soup_tur.find('audio', {'id': 'turengVoiceENTRENus'}).find('source'):
+            if soup_tur.find('audio', {'id': 'turengVoiceENTRENus'}):
                 audio = soup_tur.find('audio', {'id': 'turengVoiceENTRENus'}).find('source')['src']
+                data['audio'] = audio
             if rows_table_en:
                 for row in rows_table_en:
                     if not row.attrs:
@@ -209,7 +215,7 @@ def dictionary_search(request, word):
                         category = tds[1].text.strip()
                         english = " ".join(tds[2].text.split()[:-1])
                         turkish = tds[3].text.strip()
-                        data.append([category, english, turkish])
+                        data_list.append([category, english, turkish])
             else:
                 for row in rows:
                     if not row.attrs:
@@ -217,7 +223,7 @@ def dictionary_search(request, word):
                         category = tds[1].text.strip()
                         english = " ".join(tds[2].text.split()[:-1])
                         turkish = tds[3].text.strip()
-                        data.append([category, english, turkish])
+                        data_list.append([category, english, turkish])
             if history_save:
                 if word:
                     if request.user.is_authenticated:
@@ -232,15 +238,14 @@ def dictionary_search(request, word):
                 for tb in tables:
                     if tb.find("th", class_="c2").text == "İngilizce":
                         if 'teriminin diğer terimlerle kazandığı' in tb.find_previous().find_previous().text:
-                            data_2_rows = tb.find_all('tr')[1:100]
-                            for row in data_2_rows:
+                            data_list_2_rows = tb.find_all('tr')[1:100]
+                            for row in data_list_2_rows:
                                 if not row.attrs:
                                     tds = row.find_all('td')
                                     category = tds[1].text.strip()
                                     english = " ".join(tds[2].text.split()[:-1])
                                     turkish = tds[3].text.strip()
-                                    data_2.append([category, english, turkish])
-            return audio
+                                    data_list_2.append([category, english, turkish])
 
         def turkish(rows_table_tr):
             if rows_table_tr:
@@ -250,7 +255,7 @@ def dictionary_search(request, word):
                         category = tds[1].text.strip()
                         turkish = tds[2].text.strip()
                         english = " ".join(tds[3].text.split()[:-1])
-                        data.append([category, turkish, english])
+                        data_list.append([category, turkish, english])
             else:
                 for row in rows:
                     if not row.attrs:
@@ -258,19 +263,19 @@ def dictionary_search(request, word):
                         category = tds[1].text.strip()
                         turkish = tds[2].text.strip()
                         english = " ".join(tds[3].text.split()[:-1])
-                        data.append([category, turkish, english])
+                        data_list.append([category, turkish, english])
             for tb in tables:
                 if tb.find("th", class_="c2").text == "Türkçe":
                     if 'teriminin diğer terimlerle kazandığı' in tb.find_previous().find_previous().text:
-                        data_2_rows = tb.find_all('tr')[1:100]
-                        for row in data_2_rows:
+                        data_list_2_rows = tb.find_all('tr')[1:100]
+                        for row in data_list_2_rows:
                             if not row.attrs:
                                 tds = row.find_all('td')
                                 if '(' not in tds[1].text or tds[2].text:
                                     category = tds[1].text.strip()
                                     turkish = tds[2].text.strip()
                                     english = " ".join(tds[3].text.split()[:-1])
-                                    data_2.append([category, turkish, english])
+                                    data_list_2.append([category, turkish, english])
 
         def synAntoExs():
             synonym_list = []
@@ -308,19 +313,19 @@ def dictionary_search(request, word):
                         is_english = False
                         turkish(rows_table_tr)
                     else:
-                        audio = english(False, True, True)
+                        english(False, True, True)
                         try:
                             synonym_list, antonym_list, example_list = synAntoExs()
                         except:
                             pass
                 else:
-                    audio = english(False, True, True)
+                    english(False, True, True)
                     try:
                         synonym_list, antonym_list, example_list = synAntoExs()
                     except:
                         pass
             else:
-                audio = english(False, True, False)
+                english(False, True, False)
                 try:
                     synonym_list, antonym_list, example_list = synAntoExs()
                 except:
@@ -333,7 +338,7 @@ def dictionary_search(request, word):
                     rows_table_en = table_en.find_all('tr')[1:]
                     if len(rows_table_en) >= len(rows):
                         is_english = True
-                        audio = english(rows_table_en, False, True)
+                        english(rows_table_en, False, True)
                         try:
                             synonym_list, antonym_list, example_list = synAntoExs()
                         except:
@@ -358,20 +363,6 @@ def dictionary_search(request, word):
             suggestion_exists = True
         error = True
 
-    data = {
-        'data': data,
-        'data_2': data_2,
-        'word': word,
-        'audio': audio,
-        'synonyms': synonym_list[:3],
-        'antonyms': antonym_list[:3],
-        'examples': example_list[:3],
-        'error': error,
-        'suggestion_exists': suggestion_exists,
-        'suggestion_list': suggestion_list,
-        'is_english': is_english
-    }
-
     if request.user.is_authenticated:
         data['last_20_history'] = Search.objects.filter(user=request.user).order_by("-create_time")[:20]
         if word:
@@ -379,6 +370,17 @@ def dictionary_search(request, word):
                 data['word_exists'] = True
         if WordEn.objects.filter(user=request.user, is_new_in_reminder_list=True):
             data['show_reminder_notif'] = True
+
+    data['data'] = data_list
+    data['data_2'] = data_list_2
+    data['word'] = word
+    data['synonyms'] = synonym_list[:3]
+    data['antonyms'] = antonym_list[:3]
+    data['examples'] = example_list[:3]
+    data['error'] = error
+    data['suggestion_exists'] = suggestion_exists
+    data['suggestion_list'] = suggestion_list
+    data['is_english'] = is_english
 
     return render(request, 'my_dict/dictionary.html', context=data)
 
@@ -388,38 +390,7 @@ def my_word_list(request):
     unl_words = get_word_list(request, 'unlearned_words')
     l_words = get_word_list(request, 'learned_words')
 
-    if request.method == 'POST':
-        if "english-unl" in request.POST:
-            word_en = request.POST.get('english-unl')
-            word_tr_list = request.POST.getlist('turkish-unl[]')
-            if not WordEn.objects.filter(user=request.user, english=word_en).exists():
-                create_word_en = WordEn(user=request.user, english=word_en)
-                create_word_en.save()
-                for word_tr in word_tr_list:
-                    if word_tr.strip() != "":
-                        create_word_tr = create_word_en.turkish.create(turkish=word_tr)
-                        create_word_tr.save()
-                is_added = True
-            else:
-                is_added = False
-            data = {'is_added': is_added}
-            return JsonResponse(data)
-        elif "english-l" in request.POST:
-            word_en = request.POST.get('english-l')
-            word_tr_list = request.POST.getlist('turkish-l[]')
-            if not WordEn.objects.filter(user=request.user, english=word_en).exists():
-                create_word_en = WordEn(user=request.user, english=word_en, is_learned=True)
-                create_word_en.save()
-                for word_tr in word_tr_list:
-                    if word_tr.strip() != "":
-                        create_word_tr = create_word_en.turkish.create(turkish=word_tr)
-                        create_word_tr.save()
-                is_added = True
-            else:
-                is_added = False
-            data = {'is_added': is_added}
-            return JsonResponse(data)
-    elif request.method == "GET":
+    if request.method == "GET":
         word = request.GET.get("q")
         my_word_list_search(request, word)
 
@@ -491,24 +462,58 @@ def ajax_search(request):
 
 def word_cd(request):
     if request.method == "GET":
+        add = False
         word_en = request.GET['word_en']
         word_tr_list = request.GET.getlist('tr[]')
-        if not WordEn.objects.filter(user=request.user, english=word_en).exists():
-            try:
-                audio_src = request.GET['audio']
-                create_word_en = WordEn(user=request.user, english=word_en, audio=audio_src)
-                create_word_en.save()
-                for word_tr in word_tr_list:
-                    create_word_tr = create_word_en.turkish.create(turkish=word_tr)
-                    create_word_tr.save()
-                return JsonResponse(data={'is_added': True})
-            except:
-                create_word_en = WordEn(user=request.user, english=word_en)
-                create_word_en.save()
-                return JsonResponse(data={'is_added': True})
+        if request.GET.get('is_btn_add'):
+            add = json.loads(request.GET.get('is_btn_add'))
+        if add:
+            if not WordEn.objects.filter(user=request.user, english=word_en).exists():
+                try:
+                    audio_src = request.GET['audio']
+                    if request.GET.get('type'):
+                        type = json.loads(request.GET.get('type'))
+                        create_word_en = WordEn(user=request.user, english=word_en, audio=audio_src, is_learned=type)
+                        create_word_en.save()
+                    else:
+                        create_word_en = WordEn(user=request.user, english=word_en, audio=audio_src)
+                        create_word_en.save()
+                    for word_tr in word_tr_list:
+                        create_word_tr = create_word_en.turkish.create(turkish=word_tr)
+                        create_word_tr.save()
+                    if request.GET.get('word_list'):
+                        obj = WordEn.objects.get(user=request.user, english=word_en)
+                        tr_list = [tr["turkish"] for tr in obj.turkish.all().values()]
+                        data = {
+                            'english': obj.english,
+                            'id': obj.id,
+                            'tr_list': tr_list,
+                            'is_added': True
+                        }
+                        return JsonResponse(data=data)
+                    else:
+                        return JsonResponse(data={'is_added': True})
+                except:
+                    create_word_en = WordEn(user=request.user, english=word_en)
+                    create_word_en.save()
+                    return JsonResponse(data={'is_added': True})
+            else:
+                return JsonResponse(
+                    data={
+                        'error_msg': 'Kelime zaten eklenmiş'
+                    })
         else:
-            WordEn.objects.filter(user=request.user, english=word_en).delete()
-            return JsonResponse(data={'is_deleted': True})
+            if WordEn.objects.filter(user=request.user, english=word_en).exists():
+                WordEn.objects.filter(user=request.user, english=word_en).delete()
+                return JsonResponse(
+                    data={
+                        'is_deleted': True,
+                    })
+            else:
+                return JsonResponse(
+                    data={
+                        'error_msg': 'Kelime zaten silinmiş'
+                    })
 
     return HttpResponse()
 
@@ -518,7 +523,7 @@ class DelSeenLearnedStarred(View):
         word_id = request.GET.get('id')
         word = WordEn.objects.get(user=request.user, id=word_id)
         data = {}
-        if request.GET.get('seen'):
+        if request.GET.get('is_seen'):
             if not word.is_seen:
                 word.is_seen = True
                 word.save()
@@ -527,49 +532,17 @@ class DelSeenLearnedStarred(View):
                 word.is_seen = False
                 word.save()
                 data['is_seen'] = False
-        elif request.GET.get('learned'):
+        elif request.GET.get('memo-l'):
             word.is_learned = True
             word.save()
-            data['is_learned'] = True
-            unl_words = WordEn.objects.filter(user=request.user, is_learned=False).order_by('-create_time')
-            if len(unl_words) >= 10:
-                obj = unl_words[9]
-                tr_list = []
-                for tr in obj.turkish.all():
-                    tr_list.append(tr.turkish)
-                data['word'] = {
-                    'english': obj.english,
-                    'id': obj.id,
-                    'audio': obj.audio,
-                    'is_seen': obj.is_seen,
-                    'is_starred': obj.is_starred,
-                    'tr_list': tr_list
-                }
-            data['word_count'] = {
-                'count': len(unl_words)
-            }
-        elif request.GET.get('unlearned'):
+            word_no = int(request.GET.get('get_nth_word')) * 10
+            data = get_nth_word(request, False, word_no)
+        elif request.GET.get('memo-unl'):
             word.is_learned = False
             word.save()
-            data['is_learned'] = False
-            l_words = WordEn.objects.filter(user=request.user, is_learned=True).order_by('-create_time')
-            if len(l_words) >= 10:
-                obj = l_words[9]
-                tr_list = []
-                for tr in obj.turkish.all():
-                    tr_list.append(tr.turkish)
-                data['word'] = {
-                    'english': obj.english,
-                    'id': obj.id,
-                    'audio': obj.audio,
-                    'is_seen': obj.is_seen,
-                    'is_starred': obj.is_starred,
-                    'tr_list': tr_list
-                }
-            data['word_count'] = {
-                'count': len(l_words)
-            }
-        elif request.GET.get('starred'):
+            word_no = int(request.GET.get('get_nth_word')) * 10
+            data = get_nth_word(request, True, word_no)
+        elif request.GET.get('star'):
             if not word.is_starred:
                 word.is_starred = True
                 word.save()
@@ -579,44 +552,12 @@ class DelSeenLearnedStarred(View):
                 word.save()
                 data['is_starred'] = False
         elif request.GET.get('delete'):
-            print(word)
             word.delete()
-            if request.GET.get('del_unlearned'):
-                unl_words = WordEn.objects.filter(user=request.user, is_learned=False).order_by('-create_time')
-                if len(unl_words) >= 10:
-                    obj = unl_words[9]
-                    tr_list = []
-                    for tr in obj.turkish.all():
-                        tr_list.append(tr.turkish)
-                    data['word'] = {
-                        'english': obj.english,
-                        'id': obj.id,
-                        'audio': obj.audio,
-                        'is_seen': obj.is_seen,
-                        'is_starred': obj.is_starred,
-                        'tr_list': tr_list
-                    }
-                data['word_count'] = {
-                    'count': len(unl_words)
-                }
+            word_no = int(request.GET.get('get_nth_word')) * 10
+            if request.GET.get('del_unl'):
+                data = get_nth_word(request, False, word_no)
             else:
-                l_words = WordEn.objects.filter(user=request.user, is_learned=True).order_by('-create_time')
-                if len(l_words) >= 10:
-                    obj = l_words[9]
-                    tr_list = []
-                    for tr in obj.turkish.all():
-                        tr_list.append(tr.turkish)
-                    data['word'] = {
-                        'english': obj.english,
-                        'id': obj.id,
-                        'audio': obj.audio,
-                        'is_seen': obj.is_seen,
-                        'is_starred': obj.is_starred,
-                        'tr_list': tr_list
-                    }
-                data['word_count'] = {
-                    'count': len(l_words)
-                }
+                data = get_nth_word(request, True, word_no)
 
         return JsonResponse(data)
 
@@ -636,8 +577,7 @@ def reminder_cd(request):
             obj.save()
         elif request.GET.get("is_added"):
             obj = WordEn.objects.get(user=request.user, english=word)
-            if obj.is_in_reminder_list:
-                data['is_added'] = True
+            data['is_added'] = True if obj.is_in_reminder_list else False
 
     return JsonResponse(data=data)
 
@@ -671,41 +611,41 @@ def get_reminder_list(request):
     quiz_l = []
     new_in_reminder_list = []
     if request.method == "GET":
-        words = WordEn.objects.filter(user=request.user, is_in_reminder_list=True)
+        words = WordEn.objects.filter(user=request.user, is_in_reminder_list=True).order_by('-is_new_in_reminder_list')
         for word in words:
             reminder_list.append(word.english)
         obj_db = QuizRecorder.objects.filter(user=request.user, is_db=True)
         for obj in obj_db:
             quiz_db.append(
                 {
-                  'english': obj.english,
-                  'is_correct': obj.is_correct,
-                  'create_time': obj.create_time.strftime('%d/%m/%Y')
+                    'english': obj.english,
+                    'is_correct': obj.is_correct,
+                    'create_time': obj.create_time.strftime('%d/%m/%Y')
                 }
             )
         obj_unl = QuizRecorder.objects.filter(user=request.user, is_db=False, is_learned=False)
         for obj in obj_unl:
             quiz_unl.append(
                 {
-                  'english': obj.english,
-                  'is_correct': obj.is_correct,
-                  'create_time': obj.create_time.strftime('%d/%m/%Y')
+                    'english': obj.english,
+                    'is_correct': obj.is_correct,
+                    'create_time': obj.create_time.strftime('%d/%m/%Y')
                 }
             )
         obj_l = QuizRecorder.objects.filter(user=request.user, is_db=False, is_learned=True)
         for obj in obj_l:
             quiz_l.append(
                 {
-                  'english': obj.english,
-                  'is_correct': obj.is_correct,
-                  'create_time': obj.create_time.strftime('%d/%m/%Y')
+                    'english': obj.english,
+                    'is_correct': obj.is_correct,
+                    'create_time': obj.create_time.strftime('%d/%m/%Y')
                 }
             )
         new_in_reminder = WordEn.objects.filter(user=request.user, is_new_in_reminder_list=True)
         if new_in_reminder:
             for word in new_in_reminder:
                 new_in_reminder_list.append(word.english)
-                obj = WordEn.objects.get(user=request.user, english=word, is_new_in_reminder_list=True)
+                obj = WordEn.objects.get(user=request.user, english=word.english, is_new_in_reminder_list=True)
                 obj.is_new_in_reminder_list = False
                 obj.save()
 
@@ -777,11 +717,11 @@ def get_word_count_and_quiz_rights(request):
         if request.GET.get('count_unl'):
             quiz_rights = prof.quiz_unl_rights
             count = len(get_word_list(request, 'unlearned_words'))
-            return JsonResponse(data={'count_unl': count, 'quiz_rights': quiz_rights})
+            return JsonResponse(data={'count': count, 'quiz_rights': quiz_rights})
         elif request.GET.get('count_l'):
             quiz_rights = prof.quiz_l_rights
             count = len(get_word_list(request, 'learned_words'))
-            return JsonResponse(data={'count_l': count, 'quiz_rights': quiz_rights})
+            return JsonResponse(data={'count': count, 'quiz_rights': quiz_rights})
         elif request.GET.get('count_db'):
             quiz_rights = prof.quiz_db_rights
             return JsonResponse(data={'quiz_rights': quiz_rights})
@@ -970,37 +910,40 @@ def get_achievs(request):
                             })
                             ach_tracker_list.append({
                                 "prg_current": achievement_tracker[i].progress_current,
-                                "prg_percentage": round(percentage_calc(achievement_tracker[i].progress_current, achievements[i].progress_max), 1),
+                                "prg_percentage": round(percentage_calc(achievement_tracker[i].progress_current,
+                                                                        achievements[i].progress_max), 1),
                                 "prg_star": achievement_tracker[i].progress_star
                             })
                         elif achievement_tracker[i].progress_star == 1:
                             ach_list.append({
-                                "ach_text": achievements[i+1].text,
-                                "ach_coin": achievements[i+1].coin_value,
-                                "ach_prg_max": achievements[i+1].progress_max,
+                                "ach_text": achievements[i + 1].text,
+                                "ach_coin": achievements[i + 1].coin_value,
+                                "ach_prg_max": achievements[i + 1].progress_max,
                                 "ach_daily": False,
                             })
                             ach_tracker_list.append({
-                                "prg_current": achievement_tracker[i+1].progress_current,
-                                "prg_percentage": round(percentage_calc(achievement_tracker[i+1].progress_current, achievements[i+1].progress_max), 1),
+                                "prg_current": achievement_tracker[i + 1].progress_current,
+                                "prg_percentage": round(percentage_calc(achievement_tracker[i + 1].progress_current,
+                                                                        achievements[i + 1].progress_max), 1),
                                 "prg_star": achievement_tracker[i].progress_star
                             })
                         elif achievement_tracker[i].progress_star >= 2:
                             ach_list.append({
-                                "ach_text": achievements[i+2].text,
-                                "ach_coin": achievements[i+2].coin_value,
-                                "ach_prg_max": achievements[i+2].progress_max,
+                                "ach_text": achievements[i + 2].text,
+                                "ach_coin": achievements[i + 2].coin_value,
+                                "ach_prg_max": achievements[i + 2].progress_max,
                                 "ach_daily": False,
                             })
                             if achievement_tracker[i].progress_star == 2:
                                 ach_tracker_list.append({
-                                    "prg_current": achievement_tracker[i+2].progress_current,
-                                    "prg_percentage": round(percentage_calc(achievement_tracker[i+2].progress_current, achievements[i+2].progress_max), 1),
+                                    "prg_current": achievement_tracker[i + 2].progress_current,
+                                    "prg_percentage": round(percentage_calc(achievement_tracker[i + 2].progress_current,
+                                                                            achievements[i + 2].progress_max), 1),
                                     "prg_star": achievement_tracker[i].progress_star
                                 })
                             else:
                                 ach_tracker_list.append({
-                                    "prg_current": achievement_tracker[i+2].progress_current,
+                                    "prg_current": achievement_tracker[i + 2].progress_current,
                                     "prg_percentage": 100,
                                     "prg_star": achievement_tracker[i].progress_star
                                 })
@@ -1049,7 +992,7 @@ def prg_tracker(request):
                                 obj.progress_current -= 1
                                 obj.save()
                     elif obj.progress_star == 1:
-                        obj = AchievementTracker.objects.get(profile=prof.id, achiev_no=int(ach_no)+1)
+                        obj = AchievementTracker.objects.get(profile=prof.id, achiev_no=int(ach_no) + 1)
                         if obj.progress_star == 0:
                             if up_or_down:
                                 obj.progress_current += 1
@@ -1059,7 +1002,7 @@ def prg_tracker(request):
                                     obj.progress_current -= 1
                                     obj.save()
                     elif obj.progress_star == 2:
-                        obj = AchievementTracker.objects.get(profile=prof.id, achiev_no=int(ach_no)+2)
+                        obj = AchievementTracker.objects.get(profile=prof.id, achiev_no=int(ach_no) + 2)
                         if obj.progress_star == 0:
                             if up_or_down:
                                 obj.progress_current += 1
@@ -1072,7 +1015,7 @@ def prg_tracker(request):
             for ach_no in ach_no_list:
                 obj = AchievementTracker.objects.get(profile=prof.id, achiev_no=int(ach_no))
                 ach = AchievementDetail.objects.get(achiev_no=int(ach_no))
-                ach_next = AchievementDetail.objects.get(achiev_no=int(ach_no)+1)
+                ach_next = AchievementDetail.objects.get(achiev_no=int(ach_no) + 1)
                 prof.coin += ach.coin_value
                 prof.save()
                 obj.progress_star += 1
@@ -1224,3 +1167,170 @@ def save_feedback(request):
         obj = Feedback(isim=name, soyisim=lastname, mesaj=feedback)
         obj.save()
         return JsonResponse(data={})
+
+
+def word_list_ajax_search(request):
+    if request.method == 'GET':
+        search = request.GET.get('search')
+        if len(search) >= 2:
+            obj = WordEn.objects.filter(user=request.user, english__contains=search)
+        else:
+            unlearned_words = list(WordEn.objects.filter(user=request.user, is_learned=False)[:10])
+            learned_words = list(WordEn.objects.filter(user=request.user, is_learned=True)[:10])
+            obj = unlearned_words[:10] + learned_words[:10]
+        obj_list = []
+        for o in obj:
+            obj_list.append({
+                'id': o.id,
+                'english': o.english,
+                'is_learned': o.is_learned,
+                'is_seen': o.is_seen,
+                'is_starred': o.is_starred,
+                'audio': o.audio,
+                'tr_list': [tr["turkish"] for tr in o.turkish.all().values()]
+            })
+
+        data = {
+            'obj_list': obj_list
+        }
+
+        return JsonResponse(data=data)
+
+
+def get_nth_word(request, is_learned, word_no):
+    word_list = WordEn.objects.filter(user=request.user, is_learned=is_learned).order_by('-create_time')
+    data = {}
+
+    if len(word_list) >= 10:
+        obj = word_list[word_no-1]
+        tr_list = []
+        for tr in obj.turkish.all():
+            tr_list.append(tr.turkish)
+        data['word'] = {
+            'english': obj.english,
+            'id': obj.id,
+            'audio': obj.audio,
+            'is_seen': obj.is_seen,
+            'is_starred': obj.is_starred,
+            'tr_list': [tr["turkish"] for tr in obj.turkish.all().values()]
+        }
+    data['word_count'] = {
+        'count': len(word_list)
+    }
+
+    return data
+
+
+def api_get_category_products(request, search):
+    if request.method == "GET":
+        afyoresel_url = "https://www.afyoresel.com/{}"
+        if search == "peynir çesitleri":
+            formatted_url = afyoresel_url.format('peynir-cesitleri')
+        elif search == "süt ve süt ürünleri":
+            formatted_url = afyoresel_url.format('sut-ve-sut-urunleri')
+        elif search == "sucuk ve pastırma":
+            formatted_url = afyoresel_url.format('sucuk-pastirma')
+        elif search == "lokum çeşitleri":
+            formatted_url = afyoresel_url.format('lokum-cesitleri')
+        elif search == "şerbetli tatlılar":
+            formatted_url = afyoresel_url.format('afyon-ekmek-kadayifi')
+        elif search == "yöresel lezzetler":
+            formatted_url = afyoresel_url.format('yoresel-lezzetler')
+        elif search == "kampanyalı paketler":
+            formatted_url = afyoresel_url.format('kampanyali-paketler')
+        else:
+            formatted_url = "https://www.afyoresel.com/"
+        request = requests.get(formatted_url, headers={"User-Agent": "Mozilla/5.0"}).content
+        soup = BeautifulSoup(request, 'lxml')
+        find_products = soup.find_all('div', class_='ItemOrj')
+        product_list = []
+
+        data = {}
+
+        for prod in find_products:
+            prod_image = prod.find("div", class_='productImage')
+            link = prod_image.find("a").get("href")
+            image = prod_image.find("img").get("data-original")
+            title = prod_image.find("img").get("alt")
+            price = prod.find('div', class_='productPrice')
+            old_price = ''
+            new_price = ''
+            if price.find('div', class_='regularPrice'):
+                old_price = prod.find('div', class_='regularPrice').find('span').text
+            if price.find('div', class_='discountPrice'):
+                new_price = prod.find('div', class_='discountPrice').find('span').text
+
+            product_list.append({
+                'link': f'afyoresel.com{link}',
+                'image': f'afyoresel.com{image}',
+                'title': title,
+                'old_price': old_price,
+                'new_price': new_price
+            })
+
+            data['product_list'] = product_list
+
+        return JsonResponse(data=data)
+
+
+def api_get_categories(request):
+    if request.method == "GET":
+        afyoresel_url = "https://www.afyoresel.com"
+        request = requests.get(afyoresel_url, headers={"User-Agent": "Mozilla/5.0"}).content
+        soup = BeautifulSoup(request, 'lxml')
+        find_categories = soup.find('ul', id='ResimliMenu1').find_all('li')
+        category_list = []
+
+        data = {}
+
+        for cat in find_categories:
+            category_name = cat.find('a').text
+            if not category_name == "ANASAYFA":
+                category_list.append({
+                    'category_name': category_name
+                })
+            else:
+                pass
+
+            data['category_list'] = category_list
+
+        return JsonResponse(data=data)
+
+
+def api_get_search_results(request, search):
+    if request.method == "GET":
+        afyoresel_url = "https://www.afyoresel.com/Arama?1&kelime={}"
+        formatted_url = afyoresel_url.format(search)
+        request = requests.get(formatted_url, headers={"User-Agent": "Mozilla/5.0"}).content
+        soup = BeautifulSoup(request, 'lxml')
+        find_products = soup.find_all('div', class_='ItemOrj')
+        product_list = []
+
+        data = {}
+
+        for prod in find_products:
+            prod_image = prod.find("div", class_='productImage')
+            link = prod_image.find("a").get("href")
+            image = prod_image.find("img").get("data-original")
+            title = prod_image.find("img").get("alt")
+            price = prod.find('div', class_='productPrice')
+            old_price = ''
+            new_price = ''
+            if price.find('div', class_='regularPrice'):
+                old_price = prod.find('div', class_='regularPrice').find('span').text
+            if price.find('div', class_='discountPrice'):
+                new_price = prod.find('div', class_='discountPrice').find('span').text
+
+            product_list.append({
+                'link': f'afyoresel.com{link}',
+                'image': f'afyoresel.com{image}',
+                'title': title,
+                'old_price': old_price,
+                'new_price': new_price
+            })
+
+            data['product_list'] = product_list
+
+        return JsonResponse(data=data)
+
+

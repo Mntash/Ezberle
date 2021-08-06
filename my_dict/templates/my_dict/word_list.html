@@ -23,7 +23,7 @@
                 <div><i class="material-icons">check_box</i>Kelimeyi ezberledim</div>
                 <div><i class="material-icons">undo</i>Kelimeyi unuttum</div>
                 <div><i class="material-icons">remove_red_eye</i>Kelimenin Türkçesini göster</div>
-                <div><i class="material-icons">star_border</i>kelimeyi Favorilerime ekle</div>
+                <div><i class="material-icons">star_border</i>Kelimeyi Favorilerime ekle</div>
                 <div><i class="material-icons">delete</i>Kelimeyi listeden kaldır</div>
               </div>
             </div>
@@ -35,7 +35,7 @@
                             <div class="align-self-center word">
                                 <a href="{% url 'dictionary-search' word.english %}" target="_blank">{{ word.english }}</a>
                             </div>
-                            <div data-id="{{word.id}}" class="btn-grp">
+                            <div data-id="{{word.id}}" class="btn-grp btn-grp-unl">
                                 {% if word.audio %}
                                 <i title="Dinle" class="material-icons audio">volume_up</i>
                                 <audio src="{{word.audio}}"></audio>
@@ -44,19 +44,19 @@
                                 <audio src="{{word.audio}}"></audio>
                                 {% endif %}
                                 {% if word.is_seen %}
-                                <i title="Görüldü" class="material-icons tick-seen dodger">done_all</i>
+                                <i title="Görüldü" class="material-icons check-seen word-seen">done_all</i>
                                 {% else %}
-                                <i title="Görüldü" class="material-icons tick-seen cadet">done_all</i>
+                                <i title="Görülmedi" class="material-icons check-seen word-unseen">done_all</i>
                                 {% endif %}
-                                <i title="Ezberledim" class="material-icons tick-learn memorize">check_box</i>
+                                <i title="Ezberledim" class="material-icons check-learn memorize">check_box</i>
                                 <i data-toggle="collapse" data-target=".tr{{word.id}}" title="Türkçelerini göster"
                                    class="material-icons eye">remove_red_eye</i>
                                 {% if not word.is_starred %}
                                 <i title="Favorilere ekle" class="material-icons star">star_border</i>
                                 {% else %}
-                                <i title="Favorilere eklendi" class="material-icons star pale-yellow">star</i>
+                                <i title="Favorilerden çıkar" class="material-icons star pale-yellow">star</i>
                                 {% endif %}
-                                <i title="Sil" class="material-icons del del-unl">delete</i>
+                                <i title="Sil" class="material-icons del">delete</i>
                             </div>
                         </div>
                         <div class="tr-section collapse tr{{word.id}}">
@@ -90,7 +90,7 @@
         </div>
         {% if 'kelime_listesi/q=' not in request.path or unl_pg_count > 9 %}
         <nav aria-label="Page navigation example">
-          <ul class="pagination pagination-sm justify-content-center">
+          <ul class="pagination pagination-unl pagination-sm justify-content-center">
           {% if page_obj_unl.has_previous %}
               <li class="page-item">
               <a class="page-link" href="?s={{ page_obj_unl.previous_page_number }}">&laquo</a>
@@ -148,7 +148,7 @@
                 <div><i class="material-icons">check_box</i>Kelimeyi ezberledim</div>
                 <div><i class="material-icons">undo</i>Kelimeyi unuttum</div>
                 <div><i class="material-icons">remove_red_eye</i>Kelimenin Türkçesini göster</div>
-                <div><i class="material-icons">star_border</i>kelimeyi Favorilerime ekle</div>
+                <div><i class="material-icons">star_border</i>Kelimeyi Favorilerime ekle</div>
                 <div><i class="material-icons">delete</i>Kelimeyi listeden kaldır</div>
               </div>
             </div>
@@ -160,7 +160,7 @@
                             <div class="align-self-center word">
                                 <a href="{% url 'dictionary-search' word.english %}" target="_blank">{{ word.english }}</a>
                             </div>
-                            <div data-id="{{word.id}}" class="btn-grp">
+                            <div data-id="{{word.id}}" class="btn-grp btn-grp-l">
                                 {% if word.audio %}
                                 <i title="Dinle" class="material-icons audio">volume_up</i>
                                 <audio src="{{word.audio}}"></audio>
@@ -169,11 +169,11 @@
                                 <audio src="{{word.audio}}"></audio>
                                 {% endif %}
                                 {% if word.is_seen %}
-                                <i title="Görüldü" class="material-icons tick-seen dodger">done_all</i>
+                                <i title="Görüldü" class="material-icons check-seen word-seen">done_all</i>
                                 {% else %}
-                                <i title="Görüldü" class="material-icons tick-seen cadet">done_all</i>
+                                <i title="Görülmedi" class="material-icons check-seen word-unseen">done_all</i>
                                 {% endif %}
-                                <i title="Unuttum" class="material-icons tick-unlearn memorize">undo</i>
+                                <i title="Unuttum" class="material-icons check-unlearn memorize">undo</i>
                                 {% if word.turkish %}
                                 <i data-toggle="collapse" data-target=".tr{{word.id}}" title="Türkçelerini göster"
                                    class="material-icons eye">remove_red_eye</i>
@@ -181,9 +181,9 @@
                                 {% if not word.is_starred %}
                                 <i title="Favorilere ekle" class="material-icons star">star_border</i>
                                 {% else %}
-                                <i title="Favorilere eklendi" class="material-icons star pale-yellow">star</i>
+                                <i title="Favorilerden çıkar" class="material-icons star pale-yellow">star</i>
                                 {% endif %}
-                                <i title="Sil" class="material-icons del del-l">delete</i>
+                                <i title="Sil" class="material-icons del">delete</i>
                             </div>
                         </div>
                         <div class="tr-section collapse tr{{word.id}}">
@@ -217,7 +217,7 @@
         </div>
         {% if 'kelime_listesi/q=' not in request.path or l_pg_count > 9 %}
         <nav aria-label="Page navigation example">
-          <ul class="pagination pagination-sm justify-content-center">
+          <ul class="pagination pagination-l pagination-sm justify-content-center">
           {% if page_obj_l.has_previous %}
               <li class="page-item">
               <a class="page-link" href="?p={{ page_obj_l.previous_page_number }}">&laquo</a>
@@ -300,16 +300,16 @@
                     <span id="add-title-unl">Öğreneceklerime</span><br>
                     <label for="english-unl">Kelime Ekle:</label>
                 </div>
-                <div><input type="text" id="english-unl" name="english-unl" required autocomplete="off"></div>
+                <div><input type="text" id="english-unl" name="english-unl" class="keycode-input" required autocomplete="off"></div>
                 <div><label for="turkish-unl">Türkçesi:</label></div>
-                <div><input type="text" id="turkish-unl" name="turkish-unl" class="input-tr-unl mt-1 turkish w-75" autocomplete="off"></div>
+                <div><input type="text" id="turkish-unl" name="turkish-unl" class="input-tr-unl mt-1 w-75 keycode-input" autocomplete="off"></div>
                 <div class="d-flex justify-content-center">
                   <button class="del-tr del-tr-unl d-none"><i class="material-icons">indeterminate_check_box</i></button>
                   <button class="add-tr add-tr-unl"><i class="material-icons">add_box</i></button>
                 </div>
                 <div class="d-flex justify-content-center mb-1">
-                  <input class="btn-danger-custom reset-unl" type="reset" value="Sıfırla">
-                  <input class="btn-before add2unl" type="submit" value="Ekle">
+                  <input class="btn-danger-custom" type="reset" value="Sıfırla">
+                  <input class="btn-before add_word_unl" type="submit" value="Ekle">
                 </div>
             </div>
         </div>
@@ -320,16 +320,16 @@
                 <span id="add-title-l">Öğrendiklerime</span> <br>
                 <label for="english-l">Kelime Ekle:</label>
             </div>
-            <div><input type="text" id="english-l" name="english-l" required autocomplete="off"></div>
+            <div><input type="text" id="english-l" name="english-l" class="keycode-input" required autocomplete="off"></div>
             <div><label for="turkish-l">Türkçesi:</label></div>
-            <div><input type="text" id="turkish-l" name="turkish-l" class="input-tr-l mt-1 turkish w-75" autocomplete="off"></div>
+            <div><input type="text" id="turkish-l" name="turkish-l" class="input-tr-l mt-1 w-75 keycode-input" autocomplete="off"></div>
             <div class="d-flex justify-content-center">
               <button class="del-tr del-tr-l d-none"><i class="material-icons">indeterminate_check_box</i></button>
               <button class="add-tr add-tr-l"><i class="material-icons">add_box</i></button>
             </div>
             <div class="d-flex justify-content-center mng-form2 mb-sm-1 mb-lg-0">
-              <input class="btn-danger-custom reset-l" type="reset" value="Sıfırla">
-              <input class="btn-before add2l" type="submit" value="Ekle">
+              <input class="btn-danger-custom" type="reset" value="Sıfırla">
+              <input class="btn-before add_word_l" type="submit" value="Ekle">
             </div>
         </div>
     </div>
