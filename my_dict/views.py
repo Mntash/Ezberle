@@ -13,14 +13,6 @@ import datetime
 from django.core.paginator import Paginator
 import json
 from .forms import FeedbackForm
-import time
-from selenium import webdriver
-from selenium.webdriver import Chrome
-from selenium.webdriver.chrome.options import Options
-from selenium.common.exceptions import TimeoutException
-from selenium.webdriver.support.ui import WebDriverWait
-from selenium.webdriver.support import expected_conditions as EC
-from selenium.webdriver.common.by import By
 
 tureng_url = 'https://tureng.com/tr/turkce-ingilizce/{}'
 saurus_url = 'https://www.thesaurus.com/browse/{}'
