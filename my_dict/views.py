@@ -289,9 +289,10 @@ def dictionary_search(request, word):
                         text = antonym.find('a').text
                         antonym_list.append(text)
             if soup_saur.find('div', id='example-sentences'):
-                examples = soup_saur.find('div', id='example-sentences').find('h2').next_siblings
+                examples = soup_saur.find('div', id='example-sentences').find('span', class_='collapsible-content')\
+                    .contents[2:]
                 for example in examples:
-                    text = example.find('div').find('div').find('div').find('span').text
+                    text = example.find('span').text
                     example_list.append(text)
             return synonym_list, antonym_list, example_list
 
@@ -528,12 +529,12 @@ class DelSeenLearnedStarred(View):
             word.is_learned = True
             word.save()
             word_no = int(request.GET.get('get_nth_word')) * 10
-            data = get_nth_word(request, False, word_no)
+            data = get_nth_word(request, False, word_no, False)
         elif request.GET.get('memo-unl'):
             word.is_learned = False
             word.save()
             word_no = int(request.GET.get('get_nth_word')) * 10
-            data = get_nth_word(request, True, word_no)
+            data = get_nth_word(request, True, word_no, False)
         elif request.GET.get('star'):
             if not word.is_starred:
                 word.is_starred = True
@@ -546,10 +547,11 @@ class DelSeenLearnedStarred(View):
         elif request.GET.get('delete'):
             word.delete()
             word_no = int(request.GET.get('get_nth_word')) * 10
+            is_last_page = json.loads(request.GET.get('is_last_page'))
             if request.GET.get('del_unl'):
-                data = get_nth_word(request, False, word_no)
+                data = get_nth_word(request, False, word_no, is_last_page)
             else:
-                data = get_nth_word(request, True, word_no)
+                data = get_nth_word(request, True, word_no, is_last_page)
 
         return JsonResponse(data)
 
@@ -1189,23 +1191,24 @@ def word_list_ajax_search(request):
         return JsonResponse(data=data)
 
 
-def get_nth_word(request, is_learned, word_no):
+def get_nth_word(request, is_learned, word_no, del_is_last_page):
     word_list = WordEn.objects.filter(user=request.user, is_learned=is_learned).order_by('-create_time')
     data = {}
 
-    if len(word_list) >= 10:
-        obj = word_list[word_no-1]
-        tr_list = []
-        for tr in obj.turkish.all():
-            tr_list.append(tr.turkish)
-        data['word'] = {
-            'english': obj.english,
-            'id': obj.id,
-            'audio': obj.audio,
-            'is_seen': obj.is_seen,
-            'is_starred': obj.is_starred,
-            'tr_list': [tr["turkish"] for tr in obj.turkish.all().values()]
-        }
+    if not del_is_last_page:
+        if len(word_list) >= 10:
+            obj = word_list[word_no-1]
+            tr_list = []
+            for tr in obj.turkish.all():
+                tr_list.append(tr.turkish)
+            data['word'] = {
+                'english': obj.english,
+                'id': obj.id,
+                'audio': obj.audio,
+                'is_seen': obj.is_seen,
+                'is_starred': obj.is_starred,
+                'tr_list': [tr["turkish"] for tr in obj.turkish.all().values()]
+            }
     data['word_count'] = {
         'count': len(word_list)
     }

@@ -29,7 +29,7 @@ $("input[type='submit']").click(function(e){
                     if (data.is_added) {
                         var obj_id = data.id
                         notifWordAdded()
-                        var return_list = ajaxAddOrFetchWord("manual_add", data, type, obj_id)
+                        var return_list = ajaxAddOrFetchWord("manual_add", data, type, obj_id, false)
                         pagination("manual_add", return_list[1], type)
                     } else {
                         $(".err-msg").html("Bu kelime zaten kayıtlı.")
@@ -105,7 +105,7 @@ $(".srch-i").keyup(function() {
             data_obj_list.map(function(e){
                 var type = (e.is_learned) ? "l" : "unl"
                 var obj_id = e.id
-                ajaxAddOrFetchWord("search", e, type, obj_id)
+                ajaxAddOrFetchWord("search", e, type, obj_id, false)
             })
 
         }
@@ -245,7 +245,7 @@ $(document).on("click", ".memorize", function(){
         },
         dataType: 'json',
         success: function (data) {
-            return_list = ajaxAddOrFetchWord("memorize", data, type, wordId)
+            return_list = ajaxAddOrFetchWord("memorize", data, type, wordId, false)
             if ( $(`.pagination-${other_type} .page-item`).eq(1).hasClass("active") ) {
                 if ($(`.${other_type}-word > li`).length >= 10) {
                     $(`.${other_type}-word > li:last-child`).remove()
@@ -306,7 +306,7 @@ $(document).on("click", ".del", function(){
         dataType: 'json',
         success: function(data) {
             notifWordDeleted()
-            return_list = ajaxAddOrFetchWord("delete", data, type, wordId)
+            return_list = ajaxAddOrFetchWord("delete", data, type, wordId, is_last_page)
             return_list[0].remove()
             pagination("delete", return_list[1], type)
         },
@@ -320,7 +320,7 @@ $(document).on("click", "i.audio", function(){
     $(this).next()[0].play()
 })
 
-function ajaxAddOrFetchWord(purpose, data, type, wordId) {
+function ajaxAddOrFetchWord(purpose, data, type, wordId, del_is_last_page) {
     if (purpose=="delete" || purpose=="memorize" ) {
         var data_obj = data["word"]
         var word_count = data["word_count"]["count"]
@@ -332,121 +332,123 @@ function ajaxAddOrFetchWord(purpose, data, type, wordId) {
     var i_title = (type==="unl") ? "Ezberledim" : "Unuttum"
     var memo_icon = (type==="unl") ? "check_box" : "undo"
     var list_el = $(".li" + wordId)
-    if (!($(".srch-i").val().length > 0) || purpose=="search") {
-        if (word_count >= 10 || purpose=="search" || purpose=="manual_add") {
-            var obj_eng = data_obj["english"]
-            var obj_id = data_obj["id"]
-            var tr_list = data_obj["tr_list"]
-            var obj_audio = data_obj["audio"]
-            var obj_is_seen = data_obj["is_seen"]
-            var obj_is_starred = data_obj["is_starred"]
-            var result = `<li data-id="${obj_id}" class="li${obj_id}">
-                    <div class="en-section d-flex justify-content-between">
-                        <div class="align-self-center word">
-                            <a href="/sözlük/q=${obj_eng}">${obj_eng}</a>
-                        </div>
-                        <div data-id="${obj_id}" class="btn-grp btn-grp-${type}">
-                            <i title="" class="material-icons audio"></i>
-                            <audio src=""></audio>
-                            <i title="" class="material-icons check-seen">done_all</i>
-                            <i title="${i_title}" class="material-icons ${memo_class} memorize">${memo_icon}</i>
-                            <i data-toggle="collapse" data-target=".tr${obj_id}" title="Türkçelerini göster"
-                               class="material-icons eye">remove_red_eye</i>
-                            <i title="" class="material-icons star"></i>
-                            <i title="Sil" class="material-icons del">delete</i>
-                        </div>
-                    </div>
-                    <div class="tr-section collapse tr${obj_id}">
-                        <div>
-                          <span></span>
-                        </div>
-                        <ul></ul>
-                    </div>
-                </li>`
-            if (purpose=="manual_add") {
-                if ( $(`.pagination-${type} .page-item`).eq(1).hasClass("active") ) {
-                    if ($(`.${type}-word > li`).length >= 10) {
-                        $(`.${type}-word > li:last-child`).remove()
+        if ( !($(".srch-i").val().length > 0) || purpose=="search" ) {
+            if (word_count >= 10 || purpose=="search" || purpose=="manual_add") {
+                if (!(del_is_last_page)) {
+                    var obj_eng = data_obj["english"]
+                    var obj_id = data_obj["id"]
+                    var tr_list = data_obj["tr_list"]
+                    var obj_audio = data_obj["audio"]
+                    var obj_is_seen = data_obj["is_seen"]
+                    var obj_is_starred = data_obj["is_starred"]
+                    var result = `<li data-id="${obj_id}" class="li${obj_id}">
+                            <div class="en-section d-flex justify-content-between">
+                                <div class="align-self-center word">
+                                    <a href="/sözlük/q=${obj_eng}">${obj_eng}</a>
+                                </div>
+                                <div data-id="${obj_id}" class="btn-grp btn-grp-${type}">
+                                    <i title="" class="material-icons audio"></i>
+                                    <audio src=""></audio>
+                                    <i title="" class="material-icons check-seen">done_all</i>
+                                    <i title="${i_title}" class="material-icons ${memo_class} memorize">${memo_icon}</i>
+                                    <i data-toggle="collapse" data-target=".tr${obj_id}" title="Türkçelerini göster"
+                                       class="material-icons eye">remove_red_eye</i>
+                                    <i title="" class="material-icons star"></i>
+                                    <i title="Sil" class="material-icons del">delete</i>
+                                </div>
+                            </div>
+                            <div class="tr-section collapse tr${obj_id}">
+                                <div>
+                                  <span></span>
+                                </div>
+                                <ul></ul>
+                            </div>
+                        </li>`
+                }
+                if (purpose=="manual_add") {
+                    if ( $(`.pagination-${type} .page-item`).eq(1).hasClass("active") ) {
+                        if ($(`.${type}-word > li`).length >= 10) {
+                            $(`.${type}-word > li:last-child`).remove()
+                        }
+                        $(result).prependTo($(`.${type}-word`)).addClass("word-memo")
+                        setTimeout(function(){
+                            $(result).removeClass("word-memo")
+                        }, 700)
+                        $(`.add_word_${type}`).parent().parent().find("input[type='text']").each(function(){
+                            $(this).val("")
+                        })
                     }
-                    $(result).prependTo($(`.${type}-word`)).addClass("word-memo")
-                    setTimeout(function(){
-                        $(result).removeClass("word-memo")
-                    }, 700)
-                    $(`.add_word_${type}`).parent().parent().find("input[type='text']").each(function(){
-                        $(this).val("")
-                    })
-                }
-                if (type === "unl") {
-                    addUnlWordPrgTrackerAjax()
-                    count_unl += 1
-                    $(".count-unl").html(count_unl)
-                    $(".count-l").html(count_l)
-                } else if (type === "l") {
-                    addLWordPrgTrackerAjax()
-                    count_l += 1
-                    $(".count-unl").html(count_unl)
-                    $(".count-l").html(count_l)
-                }
-            } else {
-                $(`.${type}-word`).append(result)
-            }
-            if (tr_list) {
-                if (tr_list.length == 1) {
-                    $(`.${type}-word .tr${obj_id} span`).html("Türkçesi:")
-                    $(`.${type}-word .tr${obj_id} ul`).append(`<li>${tr_list[0]}</li>`)
+                    if (type === "unl") {
+                        addUnlWordPrgTrackerAjax()
+                        count_unl += 1
+                        $(".count-unl").html(count_unl)
+                        $(".count-l").html(count_l)
+                    } else if (type === "l") {
+                        addLWordPrgTrackerAjax()
+                        count_l += 1
+                        $(".count-unl").html(count_unl)
+                        $(".count-l").html(count_l)
+                    }
                 } else {
-                    $(`.${type}-word .tr${obj_id} span`).html("Türkçeleri:")
-                    tr_list.map(function(obj){
-                        $(`.${type}-word .tr${obj_id} ul`).append(`<li>${obj}</li>`)
-                    })
+                    $(`.${type}-word`).append(result)
                 }
-            } else {
-                $(`.${type}-word .tr${obj_id} ul`).append(`
-                <div>
-                    <strong>&#8722;</strong><span>Bu kelimeye Türkçe eklenmemiş</span><strong>&#8722;</strong>
-                </div>`)
+                if (tr_list) {
+                    if (tr_list.length == 1) {
+                        $(`.${type}-word .tr${obj_id} span`).html("Türkçesi:")
+                        $(`.${type}-word .tr${obj_id} ul`).append(`<li>${tr_list[0]}</li>`)
+                    } else {
+                        $(`.${type}-word .tr${obj_id} span`).html("Türkçeleri:")
+                        tr_list.map(function(obj){
+                            $(`.${type}-word .tr${obj_id} ul`).append(`<li>${obj}</li>`)
+                        })
+                    }
+                } else {
+                    $(`.${type}-word .tr${obj_id} ul`).append(`
+                    <div>
+                        <strong>&#8722;</strong><span>Bu kelimeye Türkçe eklenmemiş</span><strong>&#8722;</strong>
+                    </div>`)
+                }
+                if (obj_audio) {
+                    $(`[data-id=${obj_id}] i.audio`).attr("title", "Dinle").html("volume_up")
+                    $(`[data-id=${obj_id}] audio`).attr("src", `${obj_audio}`)
+                } else {
+                    $(`[data-id=${obj_id}] i.audio`).attr("title", "Ses mevcut değil").html("volume_off")
+                }
+                if (obj_is_seen) {
+                    $(`[data-id=${obj_id}] i.check-seen`).addClass("word-seen").attr("title", "Görüldü")
+                } else {
+                    $(`[data-id=${obj_id}] i.check-seen`).addClass("word-unseen").attr("title", "Görülmedi")
+                }
+                if (!(obj_is_starred)) {
+                    $(`[data-id=${obj_id}] i.star`).attr("title", "Favorilere ekle").html("star_border")
+                } else {
+                    $(`[data-id=${obj_id}] i.star`).attr("title", "Favorilerden çıkar").addClass("pale-yellow").html("star")
+                }
             }
-            if (obj_audio) {
-                $(`[data-id=${obj_id}] i.audio`).attr("title", "Dinle").html("volume_up")
-                $(`[data-id=${obj_id}] audio`).attr("src", `${obj_audio}`)
-            } else {
-                $(`[data-id=${obj_id}] i.audio`).attr("title", "Ses mevcut değil").html("volume_off")
-            }
-            if (obj_is_seen) {
-                $(`[data-id=${obj_id}] i.check-seen`).addClass("word-seen").attr("title", "Görüldü")
-            } else {
-                $(`[data-id=${obj_id}] i.check-seen`).addClass("word-unseen").attr("title", "Görülmedi")
-            }
-            if (!(obj_is_starred)) {
-                $(`[data-id=${obj_id}] i.star`).attr("title", "Favorilere ekle").html("star_border")
-            } else {
-                $(`[data-id=${obj_id}] i.star`).attr("title", "Favorilerden çıkar").addClass("pale-yellow").html("star")
-            }
-        }
-        if (purpose=="delete") {
-            if (type=="unl") {
-                count_unl -= 1
+            if (purpose=="delete") {
+                if (type=="unl") {
+                    count_unl -= 1
+                    $(".count-unl").html(count_unl)
+                } else {
+                    count_l -= 1
+                    $(".count-l").html(count_l)
+                }
+            } else if (purpose=="memorize") {
+                if (type=="unl") {
+                    $(`div[data-id=${wordId}] .memorize`).html("undo").toggleClass("check-learn check-unlearn").attr("title", "Unuttum")
+                    count_unl -= 1
+                    count_l += 1
+                    addLWordPrgTrackerAjax()
+                } else if (type=="l") {
+                    $(`div[data-id=${wordId}] .memorize`).html("check_box").toggleClass("check-unlearn check-learn").attr("title", "Ezberledim")
+                    count_l -= 1
+                    count_unl += 1
+                    deleteLWordAjax()
+                }
                 $(".count-unl").html(count_unl)
-            } else {
-                count_l -= 1
                 $(".count-l").html(count_l)
             }
-        } else if (purpose=="memorize") {
-            if (type=="unl") {
-                $(`div[data-id=${wordId}] .memorize`).html("undo").toggleClass("check-learn check-unlearn").attr("title", "Unuttum")
-                count_unl -= 1
-                count_l += 1
-                addLWordPrgTrackerAjax()
-            } else if (type=="l") {
-                $(`div[data-id=${wordId}] .memorize`).html("check_box").toggleClass("check-unlearn check-learn").attr("title", "Ezberledim")
-                count_l -= 1
-                count_unl += 1
-                deleteLWordAjax()
-            }
-            $(".count-unl").html(count_unl)
-            $(".count-l").html(count_l)
         }
-    }
     var new_count = parseInt( $(`.count-${type}`).html() )
     var return_array = [list_el, new_count]
 
@@ -481,12 +483,14 @@ function pagination(purpose, count, type) {
     } else if (purpose=="delete") {
         if ( (count != 0) && (count % 10 == 0) ) {
             var pagination_last_el = $(`.pagination-${type} .page-item`).eq(-2)
-            pagination_last_el.remove()
             if (pagination_last_el.hasClass("active")) {
-                var prev_page_no = $(`.pagination-${type} .page-item`).eq(-2).find("a").html()
+                var prev_page_no = parseInt(pagination_last_el.text()) - 1
+                pagination_last_el.remove()
                 setTimeout(function() {
                     window.location.href = "/kelime_listesi/?" + query_name + "=" + prev_page_no
                 }, 200)
+            } else {
+                pagination_last_el.remove()
             }
         }
     }
