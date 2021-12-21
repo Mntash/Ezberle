@@ -661,8 +661,7 @@ def get_reminder_list(request):
         'quiz_unl': quiz_unl,
         'quiz_l': quiz_l,
         'user_email': user_email,
-        'is_registered_to_reminder': is_registered_to_reminder,
-        'reminder_subscriber_list': reminder_subscriber_list
+        'is_registered_to_reminder': is_registered_to_reminder
     }
 
     return JsonResponse(data=data)

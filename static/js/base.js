@@ -987,8 +987,7 @@ async function getReminderAjax(args) {
                 list = data.reminder_list
                 user_email = data.user_email
                 is_registered_to_reminder = data.is_registered_to_reminder
-                reminder_subscriber_list = data.reminder_subscriber_list
-                console.log(reminder_subscriber_list)
+                console.log(user_email)
                 new_words = data.new_in_reminder_list
                 new_words.map(function(i){
                     new_words_reminder.push(i)
@@ -1107,7 +1106,6 @@ $(".reminder").click(function(){
                                 </div>
                                 <div class="times times-reminder pointer"><span>&times;</span></div>
                                 </div>`)
-                                console.log(is_registered_to_reminder)
                                 if (is_registered_to_reminder) {
                                     $(".register-rem").addClass("btn-after")
                                 } else {
