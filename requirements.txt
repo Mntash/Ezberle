@@ -1,6 +1,7 @@
 ansicon==1.89.0
 appdirs==1.4.4
 APScheduler==3.7.0
+arrow==0.17.0
 asgiref==3.3.1
 attrs==20.3.0
 Automat==20.2.0
@@ -40,10 +41,12 @@ jinxed==1.0.1
 jmespath==0.10.0
 lxml==4.6.2
 oauthlib==3.1.0
+packaging==21.3
 parse==1.19.0
 parsel==1.6.0
 phantomjs==1.4.1
 Pillow==8.2.0
+pip-review==1.1.0
 Protego==0.1.16
 psycopg2==2.8.6
 pyasn1==0.4.8
@@ -52,11 +55,12 @@ pycparser==2.20
 PyDispatcher==2.0.5
 pyee==8.1.0
 PyHamcrest==2.0.2
-PyJWT==2.0.1
+PyJWT==2.3.0
 pyOpenSSL==20.0.0
+pyparsing==3.0.6
 pyppeteer==0.2.5
 pyquery==1.4.3
-python-dateutil==1.5
+python-dateutil==2.8.1
 python-scrapyd-api==2.1.2
 python3-openid==3.2.0
 pytz==2020.4
