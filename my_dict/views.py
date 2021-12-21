@@ -1232,7 +1232,7 @@ def reminder_subscription(request, sub, email, is_external):
         if not ReminderSubscription.objects.filter(email=email) and sub == 'subscribe' and is_external == 'false':
             create_sub = ReminderSubscription.objects.create(email=email)
             create_sub.save()
-        elif email and not is_external and is_external == 'false':
+        elif ReminderSubscription.objects.filter(email=email) and sub == 'unsubscribe' and is_external == 'false':
             delete_sub = ReminderSubscription.objects.get(email=email)
             delete_sub.delete()
         elif email and is_external == 'true':
