@@ -237,7 +237,7 @@ def reminder_subscription():
                        ".column-table {float: left;width: 20%;padding: 5px;}" \
                        "</style>" \
                        "<br><br><a href='https://ezberle.herokuapp.com/accounts/login/'>Ezberle'ye git</a><br>" \
-                       f"<a href='http://127.0.0.1:8000/reminder_sub/unsubscribe/{email}/true'>Aboneliği iptal et (Siteye yönlendirir)</a>" \
+                       f"<a href='https://ezberle.herokuapp.com/reminder_sub/unsubscribe/{email}/true'>Aboneliği iptal et (Siteye yönlendirir)</a>" \
                        "<div class='row-table'>"
         html_message += reminder_words_table + quiz_table + '</div>'
         send_mail(subject, "", email_from, (email, ), fail_silently=False, html_message=html_message)

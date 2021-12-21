@@ -614,6 +614,7 @@ def get_reminder_list(request):
         is_registered_to_reminder = True
     else:
         is_registered_to_reminder = False
+
     if request.method == "GET":
         words = WordEn.objects.filter(user=request.user, is_in_reminder_list=True).order_by('-is_new_in_reminder_list')
         for word in words:
@@ -660,7 +661,8 @@ def get_reminder_list(request):
         'quiz_unl': quiz_unl,
         'quiz_l': quiz_l,
         'user_email': user_email,
-        'is_registered_to_reminder': is_registered_to_reminder
+        'is_registered_to_reminder': is_registered_to_reminder,
+        'reminder_subscriber_list': reminder_subscriber_list
     }
 
     return JsonResponse(data=data)
