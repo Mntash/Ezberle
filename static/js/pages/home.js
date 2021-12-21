@@ -66,7 +66,11 @@ $(".start").click(function() {
         }
         var quiz_rights = parseInt( $(`.quiz_${type}_rights`).html() )
 
-        if ( quiz_rights > 0 ) {
+        var count = parseInt($(`#count_${type}`).html())
+        var value = $(`#sel-${type}`).val()
+        var gap = value - count
+
+        if ( quiz_rights > 0 && gap < 0 ) {
             $.ajax({
                 type:"POST",
                 url: "/complete_quiz/",
@@ -76,7 +80,6 @@ $(".start").click(function() {
                 },
                 dataType: 'json',
             })
-            var value = $(`#sel-${type}`).val()
             var correct_list = []
             var incorrect_list = []
             $(`.modal-body-content-${type}`).fadeOut()
@@ -385,12 +388,21 @@ $(".start").click(function() {
                     }
                 }
             })
-        } else {
+        } else if (quiz_rights === 0) {
             $(`.quiz-err-${type}`).remove()
             ths.after(`
                 <div class="quiz-err-${type} mt-1">* Günlük Quiz haklarınızı tamamlamışsınız.
                 Yarın tekrar gelin!</div>
             `)
+        } else if (gap > 0) {
+            if ( !($(`.quiz-err-${type}`).length) ) {
+            ths.after(`<div class="quiz-err-${type} mt-1">* Quiz\'e başlamak için listenizde yeterince kelime bulunmuyor.
+                        En az ${gap} kelime daha ekleyip tekrar deneyin.</div>`)
+          } else {
+            $(`.quiz-err-${type}`).remove()
+            ths.after(`<div class="quiz-err-${type} mt-1">* Quiz\'e başlamak için listenizde yeterince kelime bulunmuyor.
+                        En az ${gap} kelime daha ekleyip tekrar deneyin.</div>`)
+          }
         }
     }
 })

@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from bs4 import BeautifulSoup
 import requests
 from .models import *
@@ -289,8 +289,8 @@ def dictionary_search(request, word):
                         text = antonym.find('a').text
                         antonym_list.append(text)
             if soup_saur.find('div', id='example-sentences'):
-                examples = soup_saur.find('div', id='example-sentences').find('span', class_='collapsible-content')\
-                    .contents[2:]
+                examples = soup_saur.find('div', id='example-sentences').find('span', class_='collapsible-content') \
+                               .contents[2:]
                 for example in examples:
                     text = example.find('span').text
                     example_list.append(text)
@@ -529,12 +529,14 @@ class DelSeenLearnedStarred(View):
             word.is_learned = True
             word.save()
             word_no = int(request.GET.get('get_nth_word')) * 10
-            data = get_nth_word(request, False, word_no, False)
+            is_last_page = json.loads(request.GET.get('is_last_page'))
+            data = get_nth_word(request, False, word_no, is_last_page)
         elif request.GET.get('memo-unl'):
             word.is_learned = False
             word.save()
             word_no = int(request.GET.get('get_nth_word')) * 10
-            data = get_nth_word(request, True, word_no, False)
+            is_last_page = json.loads(request.GET.get('is_last_page'))
+            data = get_nth_word(request, True, word_no, is_last_page)
         elif request.GET.get('star'):
             if not word.is_starred:
                 word.is_starred = True
@@ -604,6 +606,14 @@ def get_reminder_list(request):
     quiz_unl = []
     quiz_l = []
     new_in_reminder_list = []
+    user_email = request.user.email
+    reminder_subscriber_list = []
+    for obj in ReminderSubscription.objects.all():
+        reminder_subscriber_list.append(obj.email)
+    if user_email in reminder_subscriber_list:
+        is_registered_to_reminder = True
+    else:
+        is_registered_to_reminder = False
     if request.method == "GET":
         words = WordEn.objects.filter(user=request.user, is_in_reminder_list=True).order_by('-is_new_in_reminder_list')
         for word in words:
@@ -648,7 +658,9 @@ def get_reminder_list(request):
         'new_in_reminder_list': new_in_reminder_list,
         'quiz_db': quiz_db,
         'quiz_unl': quiz_unl,
-        'quiz_l': quiz_l
+        'quiz_l': quiz_l,
+        'user_email': user_email,
+        'is_registered_to_reminder': is_registered_to_reminder
     }
 
     return JsonResponse(data=data)
@@ -1194,10 +1206,9 @@ def word_list_ajax_search(request):
 def get_nth_word(request, is_learned, word_no, del_is_last_page):
     word_list = WordEn.objects.filter(user=request.user, is_learned=is_learned).order_by('-create_time')
     data = {}
-
     if not del_is_last_page:
         if len(word_list) >= 10:
-            obj = word_list[word_no-1]
+            obj = word_list[word_no - 1]
             tr_list = []
             for tr in obj.turkish.all():
                 tr_list.append(tr.turkish)
@@ -1216,116 +1227,22 @@ def get_nth_word(request, is_learned, word_no, del_is_last_page):
     return data
 
 
-def api_get_category_products(request, search):
+def reminder_subscription(request, sub, email, is_external):
     if request.method == "GET":
-        afyoresel_url = "https://www.afyoresel.com/{}"
-        if search == "peynir çesitleri":
-            formatted_url = afyoresel_url.format('peynir-cesitleri')
-        elif search == "süt ve süt ürünleri":
-            formatted_url = afyoresel_url.format('sut-ve-sut-urunleri')
-        elif search == "sucuk ve pastırma":
-            formatted_url = afyoresel_url.format('sucuk-pastirma')
-        elif search == "lokum çeşitleri":
-            formatted_url = afyoresel_url.format('lokum-cesitleri')
-        elif search == "şerbetli tatlılar":
-            formatted_url = afyoresel_url.format('afyon-ekmek-kadayifi')
-        elif search == "yöresel lezzetler":
-            formatted_url = afyoresel_url.format('yoresel-lezzetler')
-        elif search == "kampanyalı paketler":
-            formatted_url = afyoresel_url.format('kampanyali-paketler')
-        else:
-            formatted_url = "https://www.afyoresel.com/"
-        request = requests.get(formatted_url, headers={"User-Agent": "Mozilla/5.0"}).content
-        soup = BeautifulSoup(request, 'lxml')
-        find_products = soup.find_all('div', class_='ItemOrj')
-        product_list = []
+        if not ReminderSubscription.objects.filter(email=email) and sub == 'subscribe' and is_external == 'false':
+            create_sub = ReminderSubscription.objects.create(email=email)
+            create_sub.save()
+        elif email and not is_external and is_external == 'false':
+            delete_sub = ReminderSubscription.objects.get(email=email)
+            delete_sub.delete()
+        elif email and is_external == 'true':
+            delete_sub = ReminderSubscription.objects.get(email=email)
+            delete_sub.delete()
+            return redirect(home)
 
-        data = {}
-
-        for prod in find_products:
-            prod_image = prod.find("div", class_='productImage')
-            link = prod_image.find("a").get("href")
-            image = prod_image.find("img").get("data-original")
-            title = prod_image.find("img").get("alt")
-            price = prod.find('div', class_='productPrice')
-            old_price = ''
-            new_price = ''
-            if price.find('div', class_='regularPrice'):
-                old_price = prod.find('div', class_='regularPrice').find('span').text
-            if price.find('div', class_='discountPrice'):
-                new_price = prod.find('div', class_='discountPrice').find('span').text
-
-            product_list.append({
-                'link': f'afyoresel.com{link}',
-                'image': f'afyoresel.com{image}',
-                'title': title,
-                'old_price': old_price,
-                'new_price': new_price
-            })
-
-            data['product_list'] = product_list
-
-        return JsonResponse(data=data)
+    return HttpResponse()
 
 
-def api_get_categories(request):
-    if request.method == "GET":
-        afyoresel_url = "https://www.afyoresel.com"
-        request = requests.get(afyoresel_url, headers={"User-Agent": "Mozilla/5.0"}).content
-        soup = BeautifulSoup(request, 'lxml')
-        find_categories = soup.find('ul', id='ResimliMenu1').find_all('li')
-        category_list = []
 
-        data = {}
-
-        for cat in find_categories:
-            category_name = cat.find('a').text
-            if not category_name == "ANASAYFA":
-                category_list.append({
-                    'category_name': category_name
-                })
-            else:
-                pass
-
-            data['category_list'] = category_list
-
-        return JsonResponse(data=data)
-
-
-def api_get_search_results(request, search):
-    if request.method == "GET":
-        afyoresel_url = "https://www.afyoresel.com/Arama?1&kelime={}"
-        formatted_url = afyoresel_url.format(search)
-        request = requests.get(formatted_url, headers={"User-Agent": "Mozilla/5.0"}).content
-        soup = BeautifulSoup(request, 'lxml')
-        find_products = soup.find_all('div', class_='ItemOrj')
-        product_list = []
-
-        data = {}
-
-        for prod in find_products:
-            prod_image = prod.find("div", class_='productImage')
-            link = prod_image.find("a").get("href")
-            image = prod_image.find("img").get("data-original")
-            title = prod_image.find("img").get("alt")
-            price = prod.find('div', class_='productPrice')
-            old_price = ''
-            new_price = ''
-            if price.find('div', class_='regularPrice'):
-                old_price = prod.find('div', class_='regularPrice').find('span').text
-            if price.find('div', class_='discountPrice'):
-                new_price = prod.find('div', class_='discountPrice').find('span').text
-
-            product_list.append({
-                'link': f'afyoresel.com{link}',
-                'image': f'afyoresel.com{image}',
-                'title': title,
-                'old_price': old_price,
-                'new_price': new_price
-            })
-
-            data['product_list'] = product_list
-
-        return JsonResponse(data=data)
 
 

@@ -30,7 +30,7 @@ $("input[type='submit']").click(function(e){
                         var obj_id = data.id
                         notifWordAdded()
                         var return_list = ajaxAddOrFetchWord("manual_add", data, type, obj_id, false)
-                        pagination("manual_add", return_list[1], type)
+                        pagination("add", return_list[1], type)
                     } else {
                         $(".err-msg").html("Bu kelime zaten kayıtlı.")
                         $(`#add-title-${type}`).before($("#err-mng"))
@@ -246,6 +246,8 @@ $(document).on("click", ".memorize", function(){
         dataType: 'json',
         success: function (data) {
             return_list = ajaxAddOrFetchWord("memorize", data, type, wordId, false)
+            pagination("delete", return_list[1], type)
+            pagination("add", return_list[1], type)
             if ( $(`.pagination-${other_type} .page-item`).eq(1).hasClass("active") ) {
                 if ($(`.${other_type}-word > li`).length >= 10) {
                     $(`.${other_type}-word > li:last-child`).remove()
@@ -457,7 +459,7 @@ function ajaxAddOrFetchWord(purpose, data, type, wordId, del_is_last_page) {
 
 function pagination(purpose, count, type) {
     var query_name = (type=="unl") ? "s" : "p"
-    if (purpose=="manual_add") {
+    if (purpose=="add") {
         if ( (count != 1) && (count % 10 == 1) ) {
             var pagination_last_el = $(`.pagination-${type} .page-item`).eq(-2)
             if (count == 11) {

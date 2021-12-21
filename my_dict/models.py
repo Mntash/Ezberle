@@ -220,3 +220,14 @@ class Feedback(models.Model):
 
     class Meta:
         verbose_name_plural = "Geri Bildirimler"
+
+
+class ReminderSubscription(models.Model):
+    email = models.EmailField()
+
+    def __str__(self):
+        return f"{self.email}"
+
+    class Meta:
+        verbose_name_plural = "Hatırlatıcıya Abone Olanlar"
+

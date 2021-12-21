@@ -30,7 +30,7 @@ $("input[type='submit']").click(function(e){
                         var obj_id = data.id
                         notifWordAdded()
                         var return_list = ajaxAddOrFetchWord("manual_add", data, type, obj_id, false)
-                        pagination("manual_add", return_list[1], type)
+                        pagination("add", return_list[1], type)
                     } else {
                         $(".err-msg").html("Bu kelime zaten kayıtlı.")
                         $(`#add-title-${type}`).before($("#err-mng"))
@@ -245,7 +245,9 @@ $(document).on("click", ".memorize", function(){
         },
         dataType: 'json',
         success: function (data) {
-            return_list = ajaxAddOrFetchWord("memorize", data, type, wordId, false)
+            return_list = ajaxAddOrFetchWord("memorize", data, type, wordId, is_last_page)
+            pagination("delete", return_list[1], type)
+            pagination("add", return_list[2], other_type)
             if ( $(`.pagination-${other_type} .page-item`).eq(1).hasClass("active") ) {
                 if ($(`.${other_type}-word > li`).length >= 10) {
                     $(`.${other_type}-word > li:last-child`).remove()
@@ -450,18 +452,21 @@ function ajaxAddOrFetchWord(purpose, data, type, wordId, del_is_last_page) {
             }
         }
     var new_count = parseInt( $(`.count-${type}`).html() )
-    var return_array = [list_el, new_count]
+    var other_count = parseInt( $(`.count-${other_type}`).html() )
+    var return_array = [list_el, new_count, other_count]
 
     return return_array
 }
 
 function pagination(purpose, count, type) {
     var query_name = (type=="unl") ? "s" : "p"
-    if (purpose=="manual_add") {
+    if (purpose=="add") {
+        last_page_no = ""
         if ( (count != 1) && (count % 10 == 1) ) {
             var pagination_last_el = $(`.pagination-${type} .page-item`).eq(-2)
             if (count == 11) {
-                var last_page_no = parseInt( pagination_last_el.find("span").eq(0).html() )
+                var last_page_no = parseInt( pagination_last_el.find("span").html() )
+                console.log(1, parseInt(last_page_no))
             } else {
                 var last_page = pagination_last_el.find("a").html()
                 if ( last_page != "…" ) {
@@ -469,6 +474,7 @@ function pagination(purpose, count, type) {
                 } else {
                     var last_page_no = "…"
                 }
+                console.log(2, parseInt(last_page_no))
             }
             if (last_page_no != "…") {
                 var new_page_no = last_page_no + 1

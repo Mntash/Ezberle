@@ -4,6 +4,7 @@ from bs4 import BeautifulSoup
 import requests
 import lxml
 import cchardet
+from django.core.mail import send_mail
 
 
 def reset_quiz():
@@ -146,6 +147,103 @@ def reset_daily_achievements():
             ach.progress_current = 0
             ach.progress_star = 0
             ach.save()
+
+
+def reminder_subscription():
+    subject = 'Hatırlatıcı'
+    email_from = 'Ezberle <ezberle@outlook.com.tr>'
+    email_list = []
+    reminder_subs = ReminderSubscription.objects.all()
+    html_message = ''
+    for sub in reminder_subs:
+        email_list.append(sub.email)
+    for email in email_list:
+        user = User.objects.get(email=email)
+        reminder_words_table = "<div class='column-table'><table><tr><th>Hatırlatıcıya Kaydedilen Kelimeler</th></tr>"
+        if WordEn.objects.filter(user=user, is_in_reminder_list=True):
+            reminder_list = []
+            reminder_words = WordEn.objects.filter(user=user, is_in_reminder_list=True)
+            for word in reminder_words:
+                reminder_list.append(word.english.capitalize())
+            for i, word in enumerate(reminder_list):
+                if i is not len(reminder_list) - 1:
+                    reminder_words_table += f'<tr><td>{word}</td></tr>'
+                else:
+                    reminder_words_table += f'<tr><td>{word}</td></tr></table></div>'
+        else:
+            data_is_null = "<tr><td>Yok</td></tr></table></div>"
+            reminder_words_table += data_is_null
+
+        types = ['db', 'unl', 'l']
+        quiz_table = ''
+        for type in types:
+
+            if type == 'db':
+                obj_filter = QuizRecorder.objects.filter(user=user, is_db=True)
+            elif type == 'unl':
+                obj_filter = QuizRecorder.objects.filter(user=user, is_db=False, is_learned=False)
+            else:
+                obj_filter = QuizRecorder.objects.filter(user=user, is_db=False, is_learned=True)
+
+            if obj_filter:
+                quiz = []
+                obj = obj_filter
+                for obj in obj:
+                    quiz.append(
+                        {
+                            'english': obj.english.capitalize(),
+                            'is_correct': obj.is_correct,
+                            'create_time': obj.create_time.strftime('%d/%m/%Y')
+                        }
+                    )
+                for i, word in enumerate(quiz):
+                    is_correct = "#2cb74c" if word['is_correct'] else "#cd5c5c"
+                    quiz_ctime = word['create_time']
+                    if i == 0:
+                        if type == 'db':
+                            if quiz_ctime:
+                                quiz_table += f"<div class='column-table'><table><tr><th>Biliyor Muydun? Quizi Sonuçları (<span style='font-size:small'>{quiz_ctime}</span>)</th></tr>"
+                            else:
+                                quiz_table += "<div class='column-table'><table><tr><th>Biliyor Muydun? Quizi Sonuçları</th></tr>"
+                        elif type == 'unl':
+                            if quiz_ctime:
+                                quiz_table += f"<div class='column-table'><table><tr><th>Öğreneceklerim Quizi Sonuçları (<span style='font-size:small'>{quiz_ctime}</span>)</th></tr>"
+                            else:
+                                quiz_table += "<div class='column-table'><table><tr><th>Öğreneceklerim Quizi Sonuçları</th></tr>"
+                        else:
+                            if quiz_ctime:
+                                quiz_table += f"<div class='column-table'><table><tr><th>Öğrendiklerim Quizi Sonuçları (<span style='font-size:small'>{quiz_ctime}</span>)</th></tr>"
+                            else:
+                                quiz_table += "<div class='column-table'><table><tr><th>Öğrendiklerim Quizi Sonuçları</th></tr>"
+                    if i is not len(quiz) - 1:
+                        quiz_table += f'<tr><td style="color:{is_correct}">{word["english"]}</td></tr>'
+                    else:
+                        quiz_table += f'<tr><td style="color:{is_correct}">{word["english"]}</td></tr></table></div>'
+            else:
+                if type == 'db':
+                    quiz_table += "<div class='column-table'><table><tr><th>Biliyor Muydun? Quizi Sonuçları</th></tr>"
+                elif type == 'unl':
+                    quiz_table += "<div class='column-table'><table><tr><th>Öğreneceklerim Quizi Sonuçları</th></tr>"
+                else:
+                    quiz_table += "<div class='column-table'><table><tr><th>Öğrendiklerim Quizi Sonuçları</th></tr>"
+                data_is_null = "<tr><td>Yok</td></tr></table></div>"
+                quiz_table += data_is_null
+
+        html_message = "<style>" \
+                       "td,th {border:1px solid #dddddd;text-align:left;padding:8px}" \
+                       "td {background:ghostwhite;font-family:audiowide}" \
+                       "table {border-collapse:collapse}" \
+                       ".row-table::after {content: "";clear: both;display: table;}" \
+                       ".column-table {float: left;width: 20%;padding: 5px;}" \
+                       "</style>" \
+                       "<br><br><a href='https://ezberle.herokuapp.com/accounts/login/'>Ezberle'ye git</a><br>" \
+                       f"<a href='http://127.0.0.1:8000/reminder_sub/unsubscribe/{email}/true'>Aboneliği iptal et (Siteye yönlendirir)</a>" \
+                       "<div class='row-table'>"
+        html_message += reminder_words_table + quiz_table + '</div>'
+        send_mail(subject, "", email_from, (email, ), fail_silently=False, html_message=html_message)
+
+
+
 
 
 

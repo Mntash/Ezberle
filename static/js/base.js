@@ -985,6 +985,8 @@ async function getReminderAjax(args) {
             dataType: 'json',
             success: function(data) {
                 list = data.reminder_list
+                user_email = data.user_email
+                is_registered_to_reminder = data.is_registered_to_reminder
                 new_words = data.new_in_reminder_list
                 new_words.map(function(i){
                     new_words_reminder.push(i)
@@ -1025,6 +1027,7 @@ $(".reminder").click(function(){
             quiz_db_list = []
             quiz_unl_list = []
             quiz_l_list = []
+            user_email = ""
             $.when(getReminderAjax()).then( () => {
                 ths.addClass("reminder-modal py-4 px-sm-4 px-2").find("img").remove()
                 setTimeout(function(){
@@ -1056,6 +1059,11 @@ $(".reminder").click(function(){
                                                 <i class="material-icons">filter_3</i>
                                             </a>
                                         </li>
+                                        <li>
+                                            <a class="nav-link" data-toggle="tab" href=".send-email">
+                                                <i class="material-icons">email</i>
+                                            </a>
+                                        </li>
                                     </ul>
                                     <div class="tab-content">
                                         <div id="kelimeler" class="tab-pane active text-center">
@@ -1070,6 +1078,19 @@ $(".reminder").click(function(){
                                         <div class="tab-pane quiz-3 text-center">
                                             <ul class="modal-list"></ul>
                                         </div>
+                                        <div class="tab-pane send-email text-center">
+                                            <div>
+                                                <div class="m-3 p-4" style="background:aliceblue;border:medium solid teal;border-radius:20px">
+                                                    Hatırlatıcıya kaydettiğiniz kelimelerin ve son olduğunuz quizlerin sonuçlarının
+                                                    her gün aşağıdaki email adresine gönderilmesini isterseniz lütfen aşağıdaki butona tıklayınız.
+                                                </div>
+                                                <div class="m-3 p-4" style="background:whitesmoke;outline:2px solid rgb(0%,50.2%,50.2%,0.2)">
+                                                    ${user_email}
+                                                </div>
+                                                <button class="register-rem">
+                                                </button>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                                 <div class="rem-tt">
@@ -1079,10 +1100,16 @@ $(".reminder").click(function(){
                                         <div><i class="material-icons">filter_1</i>En son olduğun "Öğreneceğim Kelimeler" quizinin sonuçları</div>
                                         <div><i class="material-icons">filter_2</i>En son olduğun "Öğrendiğim Kelimeler" quizinin sonuçları</div>
                                         <div><i class="material-icons">filter_3</i>En son olduğun "Biliyor muydun?" quizinin sonuçları</div>
+                                        <div><i class="material-icons">email</i>Hatırlatıcı email kaydı</div>
                                     </div>
                                 </div>
                                 <div class="times times-reminder pointer"><span>&times;</span></div>
                                 </div>`)
+                                if (is_registered_to_reminder) {
+                                    $(".register-rem").addClass("btn-after")
+                                } else {
+                                    $(".register-rem").addClass("btn-before")
+                                }
                                 if (word_list.length > 0) {
                                     word_list.map(function(i){
                                         if (new_words_reminder.includes(i)) {
@@ -1114,61 +1141,61 @@ $(".reminder").click(function(){
                                         } else {
                                             $("#kelimeler").find($(".modal-list"))
                                                .append(`<li>
-                                                  <span>${i}</span>
-                                                  <div class="dropdown">
-                                                      <button class="btn-dd"
-                                                              type="button" id="dropdownReminder" data-toggle="dropdown"
-                                                              aria-haspopup="true" aria-expanded="false">
-                                                        <img src="/static/img/menu.png" alt="Menu">
-                                                      </button>
-                                                      <div class="dropdown-menu" data-reminder="true" aria-labelledby="dropdownReminder">
-                                                        <a target="_blank" class="dropdown-item" href="/sözlük/q=${i}">
-                                                            <i class="fa fa-search"></i>
-                                                            <span>Sözlükte arat</span>
-                                                        </a>
-                                                        <a target="_blank" class="dropdown-item" href="/kelime_listesi/q=${i}">
-                                                            <i class="fas fa-clipboard-list"></i>
-                                                            <span>Listende görüntüle</span>
-                                                        </a>
-                                                        <a class="dropdown-item" href="#!">
-                                                            <i class="fas fa-bell"></i>
-                                                            <span>Hatırlatıcıdan kaldır</span>
-                                                        </a>
-                                                      </div>
+                                              <span>${i}</span>
+                                              <div class="dropdown">
+                                                  <button class="btn-dd"
+                                                          type="button" id="dropdownReminder" data-toggle="dropdown"
+                                                          aria-haspopup="true" aria-expanded="false">
+                                                    <img src="/static/img/menu.png" alt="Menu">
+                                                  </button>
+                                                  <div class="dropdown-menu" data-reminder="true" aria-labelledby="dropdownReminder">
+                                                    <a target="_blank" class="dropdown-item" href="/sözlük/q=${i}">
+                                                        <i class="fa fa-search"></i>
+                                                        <span>Sözlükte arat</span>
+                                                    </a>
+                                                    <a target="_blank" class="dropdown-item" href="/kelime_listesi/q=${i}">
+                                                        <i class="fas fa-clipboard-list"></i>
+                                                        <span>Listende görüntüle</span>
+                                                    </a>
+                                                    <a class="dropdown-item" href="#!">
+                                                        <i class="fas fa-bell"></i>
+                                                        <span>Hatırlatıcıdan kaldır</span>
+                                                    </a>
                                                   </div>
-                                               </li>`)
+                                              </div>
+                                           </li>`)
                                         }
                                     })
                                 } else {
                                     $("#kelimeler").find($(".modal-list"))
                                                        .append(`<li>
-                                                                  <span>Hatırlatıcıya kelime kaydettiğinde burada gösterilir.</span>
-                                                                </li>`)
+                                                          <span>Hatırlatıcıya kelime kaydettiğinde burada gösterilir.</span>
+                                                        </li>`)
                                 }
                                 if (quiz_unl_list.length > 0) {
                                     $(".quiz-1").prepend(`<h6 class="d-flex justify-content-end mt-2">Son olduğun quiz'in tarihi: ${quiz_unl_list[0]['create_time']}</h6>`)
                                     quiz_unl_list.map(function(i){
                                         if (i.is_correct) {
                                             $(".quiz-1").find("ul").append(`<li>
-                                                                          <span class="correct">${i.english}</span>
-                                                                          <div class="dropdown">
-                                                                              <button class="btn-dd"
-                                                                                      type="button" id="dropdownReminder" data-toggle="dropdown"
-                                                                                      aria-haspopup="true" aria-expanded="false">
-                                                                                <img src="/static/img/menu.png" alt="Menu">
-                                                                              </button>
-                                                                              <div class="dropdown-menu" data-reminder="true" aria-labelledby="dropdownReminder">
-                                                                                <a target="_blank" class="dropdown-item" href="/sözlük/q=${i.english}">
-                                                                                    <i class="fa fa-search"></i>
-                                                                                    <span>Sözlükte arat</span>
-                                                                                </a>
-                                                                                <a target="_blank" class="dropdown-item" href="/kelime_listesi/q=${i.english}">
-                                                                                    <i class="fas fa-clipboard-list"></i>
-                                                                                    <span>Listende görüntüle</span>
-                                                                                </a>
-                                                                              </div>
-                                                                          </div>
-                                                                        </li>`)
+                                              <span class="correct">${i.english}</span>
+                                              <div class="dropdown">
+                                                  <button class="btn-dd"
+                                                          type="button" id="dropdownReminder" data-toggle="dropdown"
+                                                          aria-haspopup="true" aria-expanded="false">
+                                                    <img src="/static/img/menu.png" alt="Menu">
+                                                  </button>
+                                                  <div class="dropdown-menu" data-reminder="true" aria-labelledby="dropdownReminder">
+                                                    <a target="_blank" class="dropdown-item" href="/sözlük/q=${i.english}">
+                                                        <i class="fa fa-search"></i>
+                                                        <span>Sözlükte arat</span>
+                                                    </a>
+                                                    <a target="_blank" class="dropdown-item" href="/kelime_listesi/q=${i.english}">
+                                                        <i class="fas fa-clipboard-list"></i>
+                                                        <span>Listende görüntüle</span>
+                                                    </a>
+                                                  </div>
+                                              </div>
+                                            </li>`)
                                         } else {
                                             $(".quiz-1").find("ul").append(`<li>
                                                                           <span class="incorrect">${i.english}</span>
@@ -1586,3 +1613,37 @@ function topFunction() {
 }
 
 $(this).scrollTop(0)
+
+$(document).on("click", ".register-rem", ()=>{
+    if ($(".register-rem").hasClass("btn-after")) {
+        $.ajax({
+            type:"GET",
+            url: `/reminder_sub/unsubscribe/${user_email}/false`,
+            success: function(data) {
+                $(".register-rem").toggleClass("btn-before btn-after")
+                stopNotif()
+                $(".notif").addClass("notif-show success").append(`<div class="notif-timer"></div>`).find("span")
+                  .html("Hatırlatıcı kaydından çıkıldı")
+                notifHide()
+            },
+            error: function() {
+                notifAjaxError()
+            }
+        })
+    } else {
+        $.ajax({
+            type:"GET",
+            url: `/reminder_sub/subscribe/${user_email}/false`,
+            success: function(data) {
+                $(".register-rem").toggleClass("btn-after btn-before")
+                stopNotif()
+                $(".notif").addClass("notif-show success").append(`<div class="notif-timer"></div>`).find("span")
+                  .html("Hatırlatıcıya kayıt olundu!")
+                notifHide()
+            },
+            error: function() {
+                notifAjaxError()
+            }
+        })
+    }
+})

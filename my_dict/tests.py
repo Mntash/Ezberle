@@ -43,12 +43,43 @@ class SearchTurengTests(TestCase):
                 self.assertEquals(len(tables), 2)
 
                 # Thesaurus -> Synonyms // Antonyms // Examples
+
                 url_saur = self.saurus_url.format(word)
                 html_saur = requests.get(url_saur).content
                 soup_saur = BeautifulSoup(html_saur, 'lxml')
-                self.assertTrue(soup_saur.find('div', id='meanings'))
+
+                # Antonyms
+
                 self.assertTrue(soup_saur.find('div', id='antonyms'))
+                antonym_list = []
+                antonyms = soup_saur.find('div', id='antonyms').find_all('li')
+                for antonym in antonyms:
+                    if antonym.find('a'):
+                        text = antonym.find('a').text
+                        antonym_list.append(text)
+                self.assertTrue(antonym_list)
+
+                # Synonyms
+
+                self.assertTrue(soup_saur.find('div', id='meanings'))
+                synonym_list = []
+                synonyms = soup_saur.find('div', id='meanings').find_all('li')
+                for synonym in synonyms:
+                    if synonym.find('a'):
+                        text = synonym.find('a').text
+                        synonym_list.append(text)
+                self.assertTrue(synonym_list)
+
+                # Examples
+
                 self.assertTrue(soup_saur.find('div', id='example-sentences'))
+                example_list = []
+                examples = soup_saur.find('div', id='example-sentences').find('span', class_='collapsible-content') \
+                    .contents[2:]
+                for example in examples:
+                    text = example.find('span').text
+                    example_list.append(text)
+                self.assertTrue(example_list)
 
             if i == 2:
                 tables = soup_tur.find_all('table')
