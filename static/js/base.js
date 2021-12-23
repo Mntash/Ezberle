@@ -987,6 +987,7 @@ async function getReminderAjax(args) {
                 list = data.reminder_list
                 user_email = data.user_email
                 is_registered_to_reminder = data.is_registered_to_reminder
+                console.log(data.is_registered_to_reminder)
                 new_words = data.new_in_reminder_list
                 new_words.map(function(i){
                     new_words_reminder.push(i)
@@ -1082,7 +1083,7 @@ $(".reminder").click(function(){
                                             <div>
                                                 <div class="m-3 p-4" style="background:aliceblue;border:medium solid teal;border-radius:20px">
                                                     Hatırlatıcıya kaydettiğiniz kelimelerin ve son olduğunuz quizlerin sonuçlarının
-                                                    her gün aşağıdaki email adresine gönderilmesini isterseniz lütfen aşağıdaki butona tıklayınız.
+                                                    her gün aşağıdaki email adresine gönderilmesini isterseniz lütfen aşağıdaki butona tıklayarak kayıt olunuz.
                                                 </div>
                                                 <div class="m-3 p-4" style="background:whitesmoke;outline:2px solid rgb(0%,50.2%,50.2%,0.2)">
                                                     ${user_email}
