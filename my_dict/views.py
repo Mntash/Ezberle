@@ -607,15 +607,16 @@ def get_reminder_list(request):
     quiz_l = []
     new_in_reminder_list = []
     user_email = request.user.email
-    reminder_subscriber_list = []
-    for obj in ReminderSubscription.objects.all():
-        reminder_subscriber_list.append(obj.email)
-    if user_email in reminder_subscriber_list:
-        is_registered_to_reminder = 'True'
-    else:
-        is_registered_to_reminder = 'False'
+    is_registered_to_reminder = ''
 
     if request.method == "GET":
+        reminder_subscriber_list = []
+        for obj in ReminderSubscription.objects.all():
+            reminder_subscriber_list.append(obj.email)
+        if user_email in reminder_subscriber_list:
+            is_registered_to_reminder = 'True'
+        else:
+            is_registered_to_reminder = 'False'
         words = WordEn.objects.filter(user=request.user, is_in_reminder_list=True).order_by('-is_new_in_reminder_list')
         for word in words:
             reminder_list.append(word.english)
