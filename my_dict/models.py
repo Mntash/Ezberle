@@ -223,7 +223,7 @@ class Feedback(models.Model):
 
 
 class ReminderSubscription(models.Model):
-    email = models.EmailField()
+    email = models.CharField(max_length=35)
 
     def __str__(self):
         return f"{self.email}"

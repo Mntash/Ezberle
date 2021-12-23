@@ -987,7 +987,6 @@ async function getReminderAjax(args) {
                 list = data.reminder_list
                 user_email = data.user_email
                 is_registered_to_reminder = data.is_registered_to_reminder
-                console.log(data.is_registered_to_reminder)
                 new_words = data.new_in_reminder_list
                 new_words.map(function(i){
                     new_words_reminder.push(i)
