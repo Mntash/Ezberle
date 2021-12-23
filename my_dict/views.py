@@ -1234,7 +1234,8 @@ def get_nth_word(request, is_learned, word_no, del_is_last_page):
 
 def reminder_subscription(request, sub, email, is_external):
     if request.method == "GET":
-        prof = Profile.objects.get(user=request.user)
+        user = User.objects.get(email=email)
+        prof = Profile.objects.get(user=user)
         if not prof.is_registered_to_reminder and sub == 'subscribe' and is_external == 'false':
             prof.is_registered_to_reminder = True
             prof.save()
@@ -1244,16 +1245,7 @@ def reminder_subscription(request, sub, email, is_external):
         elif email and is_external == 'true':
             prof.is_registered_to_reminder = False
             prof.save()
-        # if not ReminderSubscription.objects.filter(email=email) and sub == 'subscribe' and is_external == 'false':
-        #     create_sub = ReminderSubscription.objects.create(email=email)
-        #     create_sub.save()
-        # elif ReminderSubscription.objects.filter(email=email) and sub == 'unsubscribe' and is_external == 'false':
-        #     delete_sub = ReminderSubscription.objects.get(email=email)
-        #     delete_sub.delete()
-        # elif email and is_external == 'true':
-        #     delete_sub = ReminderSubscription.objects.get(email=email)
-        #     delete_sub.delete()
-        #     return redirect(home)
+            return redirect(home)
 
     return HttpResponse()
 

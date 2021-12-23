@@ -153,10 +153,10 @@ def reminder_subscription():
     subject = 'Hatırlatıcı'
     email_from = 'Ezberle <ezberle@outlook.com.tr>'
     email_list = []
-    reminder_subs = ReminderSubscription.objects.all()
-    html_message = ''
-    for sub in reminder_subs:
-        email_list.append(sub.email)
+    profs = Profile.objects.all()
+    for prof in profs:
+        if prof.is_registered_to_reminder:
+            email_list.append(User.objects.get(profile=prof).email)
     for email in email_list:
         user = User.objects.get(email=email)
         reminder_words_table = "<div class='column-table'><table><tr><th>Hatırlatıcıya Kaydedilen Kelimeler</th></tr>"
