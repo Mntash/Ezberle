@@ -611,9 +611,9 @@ def get_reminder_list(request):
     for obj in ReminderSubscription.objects.all():
         reminder_subscriber_list.append(obj.email)
     if user_email in reminder_subscriber_list:
-        is_registered_to_reminder = True
+        is_registered_to_reminder = 'True'
     else:
-        is_registered_to_reminder = False
+        is_registered_to_reminder = 'False'
 
     if request.method == "GET":
         words = WordEn.objects.filter(user=request.user, is_in_reminder_list=True).order_by('-is_new_in_reminder_list')
