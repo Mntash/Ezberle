@@ -611,8 +611,10 @@ def get_reminder_list(request):
     for obj in ReminderSubscription.objects.all():
         reminder_subscriber_list.append(obj.email)
     if user_email in reminder_subscriber_list:
+        print(123)
         is_registered_to_reminder = True
     else:
+        print(35)
         is_registered_to_reminder = False
 
     if request.method == "GET":
