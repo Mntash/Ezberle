@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <button style="position:absolute;left:50%;top:50%" class="asd"">Uygula</button>
+<script>
+$( document ).ready(function() {
+    $(".asd").click(()=>{
+        $.ajax({
+            type:"GET",
+            url: "/database_apply_all/"
+        })
+    })
+});
+
+</script>
+{% endblock %}

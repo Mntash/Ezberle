@@ -34,5 +34,6 @@ urlpatterns = [
     path('customization/', customization, name="customization"),
     path('save_feedback/', save_feedback, name="save-feedback"),
     path('word_list_ajax_search/', word_list_ajax_search, name="ajax-search"),
-    path('reminder_sub/<str:sub>/<str:email>/<str:is_external>', reminder_subscription, name="reminder-sub")
+    path('reminder_sub/<str:sub>/<str:email>/<str:is_external>', reminder_subscription, name="reminder-sub"),
+    path('database_apply_all/', database_apply_all),
 ]

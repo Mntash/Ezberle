@@ -78,11 +78,11 @@ class QuizRecorderAdmin(admin.ModelAdmin):
 class WordEnAdmin(admin.ModelAdmin):
     search_fields = ['user__username']
 
-
-class ReminderSubscriptionAdmin(admin.ModelAdmin):
-    search_fields = ['email']
-
-admin.site.register(ReminderSubscription)
+#
+# class ReminderSubscriptionAdmin(admin.ModelAdmin):
+#     search_fields = ['email']
+#
+# admin.site.register(ReminderSubscription)
 admin.site.register(Feedback)
 admin.site.register(WordEn, WordEnAdmin)
 admin.site.register(QuizRecorder, QuizRecorderAdmin)

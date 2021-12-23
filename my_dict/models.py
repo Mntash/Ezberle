@@ -18,6 +18,7 @@ class Profile(models.Model):
     custom_navbar_color = models.CharField(max_length=100, null=True, blank=True, default="teal")
     custom_background_color = models.CharField(max_length=100, null=True, blank=True, default="teal")
     custom_background_image = models.CharField(max_length=100, null=True, blank=True)
+    is_registered_to_reminder = models.BooleanField(default=False)
 
     def __str__(self):
         return self.user.username
@@ -222,12 +223,12 @@ class Feedback(models.Model):
         verbose_name_plural = "Geri Bildirimler"
 
 
-class ReminderSubscription(models.Model):
-    email = models.CharField(max_length=35)
-
-    def __str__(self):
-        return f"{self.email}"
-
-    class Meta:
-        verbose_name_plural = "Hatırlatıcıya Abone Olanlar"
+# class ReminderSubscription(models.Model):
+#     email = models.CharField(max_length=35)
+#
+#     def __str__(self):
+#         return f"{self.email}"
+#
+#     class Meta:
+#         verbose_name_plural = "Hatırlatıcıya Abone Olanlar"
 

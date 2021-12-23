@@ -1105,7 +1105,7 @@ $(".reminder").click(function(){
                                 </div>
                                 <div class="times times-reminder pointer"><span>&times;</span></div>
                                 </div>`)
-                                if (is_registered_to_reminder === "True") {
+                                if (is_registered_to_reminder) {
                                     $(".register-rem").addClass("btn-after")
                                 } else {
                                     $(".register-rem").addClass("btn-before")

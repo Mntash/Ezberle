@@ -607,16 +607,18 @@ def get_reminder_list(request):
     quiz_l = []
     new_in_reminder_list = []
     user_email = request.user.email
-    is_registered_to_reminder = ''
+    is_registered_to_reminder = False
 
     if request.method == "GET":
-        reminder_subscriber_list = []
-        for obj in ReminderSubscription.objects.all():
-            reminder_subscriber_list.append(obj.email)
-        if user_email in reminder_subscriber_list:
-            is_registered_to_reminder = 'True'
-        else:
-            is_registered_to_reminder = 'False'
+        prof = Profile.objects.get(user=request.user)
+        is_registered_to_reminder = True if prof.is_registered_to_reminder else False
+
+        # for obj in ReminderSubscription.objects.all():
+        #     reminder_subscriber_list.append(obj.email)
+        # if user_email in reminder_subscriber_list:
+        #     is_registered_to_reminder = 'True'
+        # else:
+        #     is_registered_to_reminder = 'False'
         words = WordEn.objects.filter(user=request.user, is_in_reminder_list=True).order_by('-is_new_in_reminder_list')
         for word in words:
             reminder_list.append(word.english)
@@ -655,14 +657,15 @@ def get_reminder_list(request):
                 obj.is_new_in_reminder_list = False
                 obj.save()
 
+
     data = {
         'reminder_list': reminder_list,
         'new_in_reminder_list': new_in_reminder_list,
         'quiz_db': quiz_db,
         'quiz_unl': quiz_unl,
         'quiz_l': quiz_l,
-        'user_email': user_email,
-        'is_registered_to_reminder': is_registered_to_reminder
+        'is_registered_to_reminder': is_registered_to_reminder,
+        'user_email': user_email
     }
 
     return JsonResponse(data=data)
@@ -1231,20 +1234,37 @@ def get_nth_word(request, is_learned, word_no, del_is_last_page):
 
 def reminder_subscription(request, sub, email, is_external):
     if request.method == "GET":
-        if not ReminderSubscription.objects.filter(email=email) and sub == 'subscribe' and is_external == 'false':
-            create_sub = ReminderSubscription.objects.create(email=email)
-            create_sub.save()
-        elif ReminderSubscription.objects.filter(email=email) and sub == 'unsubscribe' and is_external == 'false':
-            delete_sub = ReminderSubscription.objects.get(email=email)
-            delete_sub.delete()
+        prof = Profile.objects.get(user=request.user)
+        if not prof.is_registered_to_reminder and sub == 'subscribe' and is_external == 'false':
+            prof.is_registered_to_reminder = True
+            prof.save()
+        elif prof.is_registered_to_reminder and sub == 'unsubscribe' and is_external == 'false':
+            prof.is_registered_to_reminder = False
+            prof.save()
         elif email and is_external == 'true':
-            delete_sub = ReminderSubscription.objects.get(email=email)
-            delete_sub.delete()
-            return redirect(home)
+            prof.is_registered_to_reminder = False
+            prof.save()
+        # if not ReminderSubscription.objects.filter(email=email) and sub == 'subscribe' and is_external == 'false':
+        #     create_sub = ReminderSubscription.objects.create(email=email)
+        #     create_sub.save()
+        # elif ReminderSubscription.objects.filter(email=email) and sub == 'unsubscribe' and is_external == 'false':
+        #     delete_sub = ReminderSubscription.objects.get(email=email)
+        #     delete_sub.delete()
+        # elif email and is_external == 'true':
+        #     delete_sub = ReminderSubscription.objects.get(email=email)
+        #     delete_sub.delete()
+        #     return redirect(home)
 
     return HttpResponse()
 
 
+def database_apply_all(request):
+    if request.method == 'GET':
+        profs = Profile.objects.all()
+        for prof in profs:
+            prof.is_registered_to_reminder = False
+            prof.save()
+    return render(request, 'my_dict/daa.html', context={})
 
 
 
