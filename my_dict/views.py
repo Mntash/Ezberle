@@ -97,7 +97,10 @@ def home(request):
             data['quiz_l_rights'] = True
 
         # Hatırlatıcıyı günde 1 kere aç
-
+        reminder_words = WordEn.objects.filter(user=request.user, is_in_reminder_list=True)
+        prof = Profile.objects.get(user=request.user)
+        prof.reminder_count = len(reminder_words)
+        prof.save()
         data['open_reminder_daily'] = Profile.objects.get(user_id=request.user.id).open_reminder_daily
         data['reminder_count'] = Profile.objects.get(user_id=request.user.id).reminder_count
     return render(request, 'my_dict/home.html', context=data)
