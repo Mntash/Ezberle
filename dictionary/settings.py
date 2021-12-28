@@ -23,7 +23,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/3.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = '+$*jtuqrjxh=-q2_!(%q96k_etxmx12!udcj578@+9*me@bb8='
+SECRET_KEY = ''
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
@@ -178,7 +178,7 @@ EMAIL_HOST_USER = 'ezberle@outlook.com.tr'
 EMAIL_HOST = 'smtp.office365.com'
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
-EMAIL_HOST_PASSWORD = "mtas3469"
+EMAIL_HOST_PASSWORD = ""
 
 django_heroku.settings(locals())
 
@@ -191,7 +191,7 @@ Q_CLUSTER = {
     'cpu_affinity': 1,
     'redis': {
         'host': 'spinyfin.redistogo.com',
-        'password': '3655feb8e93d20133c6734084d1b7100',
+        'password': '',
         'port': 9178,
         'db': 0, }
 }
