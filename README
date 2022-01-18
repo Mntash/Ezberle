@@ -1,0 +1,22 @@
+In this project:
+1-Backend/Language/Framework => The website was built with Python and Django.
+2-Front-end Tools => HTML/CSS/JS(mostly jQuery and jQuery UI)/Bootstrap/Font Awesome.
+3-Sqlite/PostgreSQL => The database was written in Sqlite(development) and PostgreSQL(deployment).
+4-Version Control => Git was used throughout the project for version controlling.
+5-User Authentication => A Django-integrated login package named "Allauth" was used to handle authentication, registration, account management and as well as 3rd party (social) authentication.
+6-Gmail API => Gmail API was used as an alternative to registration and to make the login quicker and easier.
+7-Words API (quick search) => An English dictionary API called "Words API" was used in "quick search" section. To open the quick search section just simply select a word with the cursor.
+8-Cron job => Cron jobs were implemented in many places for the sake of automating daily stuff such as resetting the daily quiz rights. To build the cron jobs a Django package named "Django-Q" was used with the connection to Redis.
+9-Webscraping => Webscraping was used in a few places such as searching for a word in dictionary and bringing the 4 daily words from 4 different websites every day.
+10-Responsive => The website is 100% responsive on mobile devices, laptops and desktops.
+11-Admin page => A general Django admin page that shows most of the data to admin and allows them to adjust the data. 
+12-Tests => In case of any code goes wrong and throws an error, all the errors are controlled in a test file.
+13-Daily Quiz => The user can take a quiz for each category once a day (upgradable up to 2) to test themselves in vocabulary knowledge.
+14-Dictionary => This is the place for searching for words. The searched word's translations to other language will be here as well as the word's example sentences, snynomys and antonyms. All the English search records will be saved in the history section.
+15-Word List => The word list allows the user to move the words between the lists and study them in one page. It's also the place for adding words manually and marking words as favorites and to access them in the same page.
+16-Pagination => There is a pagination system in the word list for limiting the data per page to prevent longer page loads.
+17-Reminder => The section where the words that are added to reminder and quiz results are stored.
+18-Sending Emails => A subscription system for sending user's "reminder" datas with daily emails.
+19-Achievements => Achievements section is the place for daily and general tasks that can be accomplished through memorizing words or completing daily quizzes to encourage the user to study and learn.
+20-Shop and Customization => By completing the achievement tasks the user can earn in-site currency. With this currency the user can buy background colors, background images, and extra daily quiz rights. And the customization section is where the user can customize and apply what they bought from the shop. 
+
