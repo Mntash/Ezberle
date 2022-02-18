@@ -14,9 +14,10 @@ In this project:
 13-Daily Quiz => The user can take a quiz for each category once a day (upgradable up to 2) to test themselves in vocabulary knowledge.
 14-Dictionary => This is the place for searching for words. The searched word's translations to other language will be here as well as the word's example sentences, snynomys and antonyms. All the English search records will be saved in the history section.
 15-Word List => The word list allows the user to move the words between the lists and study them in one page. It's also the place for adding words manually and marking words as favorites and to access them in the same page.
-16-Pagination => There is a pagination system in the word list for limiting the data per page to prevent longer page loads.
-17-Reminder => The section where the words that are added to reminder and quiz results are stored.
-18-Sending Emails => A subscription system for sending user's "reminder" datas with daily emails.
-19-Achievements => Achievements section is the place for daily and general tasks that can be accomplished through memorizing words or completing daily quizzes to encourage the user to study and learn.
-20-Shop and Customization => By completing the achievement tasks the user can earn in-site currency. With this currency the user can buy background colors, background images, and extra daily quiz rights. And the customization section is where the user can customize and apply what they bought from the shop. 
+16-MasterWord => Made a game focusing on English vocabulary, inspired by Wordle.
+17-Pagination => There is a pagination system in the word list for limiting the data per page to prevent longer page loads.
+18-Reminder => The section where the words that are added to reminder and quiz results are stored.
+19-Sending Emails => A subscription system for sending user's "reminder" datas with daily emails.
+20-Achievements => Achievements section is the place for daily and general tasks that can be accomplished through memorizing words or completing daily quizzes to encourage the user to study and learn.
+21-Shop and Customization => By completing the achievement tasks the user can earn in-site currency. With this currency the user can buy background colors, background images, and extra daily quiz rights. And the customization section is where the user can customize and apply what they bought from the shop. 
 
